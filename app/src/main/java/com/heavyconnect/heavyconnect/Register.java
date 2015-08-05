@@ -8,6 +8,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+/**
+ * Created by andremenezes on 8/4/15.
+ */
 public class Register extends AppCompatActivity implements View.OnClickListener{
 
     Button buttonRegister;
@@ -30,6 +33,13 @@ public class Register extends AppCompatActivity implements View.OnClickListener{
     public void onClick(View v) {
         switch(v.getId()){
             case R.id.buttonRegister:
+                //Get the variables values
+                String name = etName.getText().toString();
+                String username = etUsername.getText().toString();
+                int password = Integer.parseInt(etPassword.getText().toString());
+
+                User registeredData = new User(name, username, password);
+
                 break;
         }
     }

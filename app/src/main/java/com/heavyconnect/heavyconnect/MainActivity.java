@@ -9,10 +9,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+/**
+ * Created by andremenezes on 8/4/15.
+ */
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     Button buttonLogout;
     EditText etName, etUsername;
+
+    UserLocalStore userLocalStore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,13 +29,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         buttonLogout = (Button) findViewById(R.id.buttonLogout);
 
         buttonLogout.setOnClickListener(this);
+
+        userLocalStore = new UserLocalStore(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        if (authenticate() == true){
+            displayUserDetails();
+        }
+    }
+
+    private boolean authenticate(){
+        return userLocalStore.getUserLoggedIn();
+    }
+
+    private void displayUserDetails(){
+        User user = userLocalStore.getLoggedInUser();
+        etUsername.setText(user.username);
+        etName.setText(user.name);
     }
 
     @Override
     public void onClick(View v) {
         switch(v.getId()){
             case R.id.buttonLogout:
+                userLocalStore.clearUserData();
+                userLocalStore.setUserLoggedIn(false);
                 startActivity(new Intent(this, Login.class));
+
                 break;
         }
     }
