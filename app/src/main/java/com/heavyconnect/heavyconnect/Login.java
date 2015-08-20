@@ -1,5 +1,6 @@
 package com.heavyconnect.heavyconnect;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -47,16 +48,47 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         //Get the listener and execute the function
         switch(v.getId()){
             case R.id.buttonLogin:
-                User user =  new User(null, 0);
+                String username = etUsername.getText().toString();
+                int password = Integer.parseInt(etPassword.getText().toString());
 
-                userLocalStore.storeUserData(user);
-                userLocalStore.setUserLoggedIn(true);
+                User user =  new User(username, password);
+
+                authenticate(user);
 
                 break;
+
             case R.id.tvRegisterLink:
                 startActivity(new Intent(this, Register.class ));
 
                 break;
         }
+    }
+
+    private void authenticate(User user){
+        ServerRequests serverRequests = new ServerRequests(this);
+        serverRequests.fetchUserDataInBackground(user, new GetUserCallback() {
+            @Override
+            public void done(User returnedUser) {
+                if (returnedUser == null) {
+                    showErrorMessage();
+                } else {
+                    logUserIn(returnedUser);
+                }
+            }
+        });
+    }
+
+    private void showErrorMessage(){
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(Login.this );
+        dialogBuilder.setMessage("Incorrect user details");
+        dialogBuilder.setPositiveButton("Ok", null);
+        dialogBuilder.show();
+    }
+
+    private void logUserIn(User returnedUser){
+        userLocalStore.storeUserData(returnedUser);
+        userLocalStore.setUserLoggedIn(true);
+
+        startActivity(new Intent(this, MainActivity.class));
     }
 }

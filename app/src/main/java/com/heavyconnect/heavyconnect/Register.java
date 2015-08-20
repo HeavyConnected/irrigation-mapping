@@ -1,5 +1,6 @@
 package com.heavyconnect.heavyconnect;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -38,9 +39,21 @@ public class Register extends AppCompatActivity implements View.OnClickListener{
                 String username = etUsername.getText().toString();
                 int password = Integer.parseInt(etPassword.getText().toString());
 
-                User registeredData = new User(name, username, password);
+                User user = new User(name, username, password);
+
+                registerUser(user);
 
                 break;
         }
+    }
+
+    private void registerUser(User user){
+        ServerRequests serverRequests = new ServerRequests(this);
+        serverRequests.storeUserDataInBackground(user, new GetUserCallback() {
+            @Override
+            public void done(User returnedUser) {
+                startActivity(new Intent(Register.this, Login.class));
+            }
+        });
     }
 }
