@@ -3,8 +3,6 @@ package com.heavyconnect.heavyconnect;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,8 +15,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button buttonLogout;
     EditText etName, etUsername;
 
-    UserLocalStore userLocalStore;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,7 +26,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         buttonLogout.setOnClickListener(this);
 
-        userLocalStore = new UserLocalStore(this);
     }
 
     @Override
@@ -39,16 +34,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (authenticate() == true){
             displayUserDetails();
         }else{
-            startActivity(new Intent(MainActivity.this, Login.class));
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
         }
     }
 
     private boolean authenticate(){
-        return userLocalStore.getUserLoggedIn();
+        return StorageUtils.getIsLoggedIn(this);
     }
 
     private void displayUserDetails(){
-        User user = userLocalStore.getLoggedInUser();
+        User user = StorageUtils.getUserData(this);
         etUsername.setText(user.username);
         etName.setText(user.name);
     }
@@ -57,9 +52,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch(v.getId()){
             case R.id.buttonLogout:
-                userLocalStore.clearUserData();
-                userLocalStore.setUserLoggedIn(false);
-                startActivity(new Intent(this, Login.class));
+                StorageUtils.clearPrefs(this);
+                startActivity(new Intent(this, LoginActivity.class));
 
                 break;
         }

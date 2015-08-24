@@ -1,29 +1,33 @@
 package com.heavyconnect.heavyconnect;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.heavyconnect.heavyconnect.rest.LoginResult;
+import com.heavyconnect.heavyconnect.resttasks.LoginTask;
+import com.heavyconnect.heavyconnect.resttasks.TaskCallback;
 
 /**
  * Created by andremenezes on 8/4/15.
  */
 
-//Login page
-public class Login extends AppCompatActivity implements View.OnClickListener {
+//LoginActivity page
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener, TaskCallback{
 
     //Start variables
     Button buttonLogin;
     EditText etUsername, etPassword;
     TextView tvRegisterLink;
+    ProgressDialog mProgress;
 
-    UserLocalStore userLocalStore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +44,12 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         buttonLogin.setOnClickListener(this);
         tvRegisterLink.setOnClickListener(this);
 
-        userLocalStore = new UserLocalStore(this);
+
+        mProgress = new ProgressDialog(this);
+        mProgress.setTitle(null);
+        mProgress.setMessage("Signing in...");
+        mProgress.setIndeterminate(true);
+
     }
 
     @Override
@@ -49,7 +58,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         switch(v.getId()){
             case R.id.buttonLogin:
                 String username = etUsername.getText().toString();
-                int password = Integer.parseInt(etPassword.getText().toString());
+                String password = etPassword.getText().toString();
 
                 User user =  new User(username, password);
 
@@ -58,37 +67,53 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                 break;
 
             case R.id.tvRegisterLink:
-                startActivity(new Intent(this, Register.class ));
+                startActivity(new Intent(this, RegisterActivity.class ));
 
                 break;
         }
     }
 
     private void authenticate(User user){
-        ServerRequests serverRequests = new ServerRequests(this);
-        serverRequests.fetchUserDataInBackground(user, new GetUserCallback() {
-            @Override
-            public void done(User returnedUser) {
-                if (returnedUser == null) {
-                    showErrorMessage();
-                } else {
-                    logUserIn(returnedUser);
-                }
-            }
-        });
+        if(mProgress != null && !mProgress.isShowing())
+            mProgress.show();
+
+        new LoginTask(this).execute(user);
     }
 
     private void showErrorMessage(){
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(Login.this );
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(LoginActivity.this );
         dialogBuilder.setMessage("Incorrect user details");
         dialogBuilder.setPositiveButton("Ok", null);
         dialogBuilder.show();
     }
 
     private void logUserIn(User returnedUser){
-        userLocalStore.storeUserData(returnedUser);
-        userLocalStore.setUserLoggedIn(true);
+        StorageUtils.storeUserData(this, returnedUser);
+        StorageUtils.putIsLoggedIn(this, true);
 
         startActivity(new Intent(this, MainActivity.class));
+    }
+
+    @Override
+    public void error(int code) {
+        if(mProgress != null && mProgress.isShowing())
+            mProgress.dismiss();
+
+        Toast.makeText(this, "Invalid user or password. Try again...", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void done(Object result) {
+        if(mProgress != null && mProgress.isShowing())
+            mProgress.dismiss();
+
+        if(!(result instanceof LoginResult))
+            error(100);
+
+        LoginResult loginResult = (LoginResult) result;
+        User user = loginResult.getUser();
+        logUserIn(user);
+        Toast.makeText(this, "Welcome back, " +  user.getName() +  "!", Toast.LENGTH_LONG).show();
+
     }
 }

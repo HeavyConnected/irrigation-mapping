@@ -1,21 +1,25 @@
 package com.heavyconnect.heavyconnect;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import com.heavyconnect.heavyconnect.resttasks.TaskCallback;
+import com.heavyconnect.heavyconnect.resttasks.RegisterTask;
 
 /**
  * Created by andremenezes on 8/4/15.
  */
-public class Register extends AppCompatActivity implements View.OnClickListener{
+public class RegisterActivity extends AppCompatActivity implements View.OnClickListener, TaskCallback {
 
     Button buttonRegister;
     EditText etName, etUsername, etPassword;
+    ProgressDialog mProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +31,11 @@ public class Register extends AppCompatActivity implements View.OnClickListener{
         etPassword = (EditText) findViewById(R.id.etPassword);
         buttonRegister = (Button) findViewById(R.id.buttonRegister);
 
+        mProgress = new ProgressDialog(this);
+        mProgress.setTitle(null);
+        mProgress.setMessage("Creating a new user...");
+        mProgress.setIndeterminate(true);
+
         buttonRegister.setOnClickListener(this);
     }
 
@@ -37,7 +46,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener{
                 //Get the variables values
                 String name = etName.getText().toString();
                 String username = etUsername.getText().toString();
-                int password = Integer.parseInt(etPassword.getText().toString());
+                String password = etPassword.getText().toString();
 
                 User user = new User(name, username, password);
 
@@ -48,12 +57,26 @@ public class Register extends AppCompatActivity implements View.OnClickListener{
     }
 
     private void registerUser(User user){
-        ServerRequests serverRequests = new ServerRequests(this);
-        serverRequests.storeUserDataInBackground(user, new GetUserCallback() {
-            @Override
-            public void done(User returnedUser) {
-                startActivity(new Intent(Register.this, Login.class));
-            }
-        });
+        if(mProgress != null &&  !mProgress.isShowing())
+            mProgress.show();
+
+        new RegisterTask(this).execute(user);
+    }
+
+    @Override
+    public void error(int code) {
+        Toast.makeText(this, "User register failed!", Toast.LENGTH_LONG).show();
+        if(mProgress != null &&  mProgress.isShowing())
+            mProgress.dismiss();
+    }
+
+    @Override
+    public void done(Object result) {
+        Toast.makeText(this, "User register done!", Toast.LENGTH_LONG).show();
+        if(mProgress != null &&  mProgress.isShowing())
+            mProgress.dismiss();
+
+        startActivity(new Intent(this, MainActivity.class));
+        finish();
     }
 }
