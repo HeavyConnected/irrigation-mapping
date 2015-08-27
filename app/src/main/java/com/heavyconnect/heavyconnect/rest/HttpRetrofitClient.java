@@ -16,7 +16,7 @@ import java.net.HttpURLConnection;
  * Class that handle http client.
  */
 public class HttpRetrofitClient {
-    private final String API_URL = "http://heavytest.comuf.com/"; // Tests
+    private final String API_URL = "http://sheltered-dusk-6568.herokuapp.com"; // Heroku server
 
     private final RestAdapter restAdapter;
     public final API client;
@@ -28,14 +28,14 @@ public class HttpRetrofitClient {
     public interface API {
 		
         @FormUrlEncoded
-        @POST("/Register.php")
+        @POST("/register")
         RegisterResult createUser(
-                @Field("name") String name,
+                @Field("first_name") String name,
                 @Field("username") String username,
                 @Field("password") String password);
 
         @FormUrlEncoded
-        @POST("/FetchUserData.php")
+        @POST("/login")
         LoginResult fetchUser(
                 @Field("username") String username,
                 @Field("password") String password);
