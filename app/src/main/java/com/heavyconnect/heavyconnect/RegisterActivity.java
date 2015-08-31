@@ -65,14 +65,14 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void error(int code) {
-        Toast.makeText(this, "User register failed!", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "User registration failed!", Toast.LENGTH_LONG).show();
         if(mProgress != null &&  mProgress.isShowing())
             mProgress.dismiss();
     }
 
     @Override
     public void done(Object result) {
-        Toast.makeText(this, "User register done!", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "User registration done!", Toast.LENGTH_LONG).show();
         if(mProgress != null &&  mProgress.isShowing())
             mProgress.dismiss();
 
