@@ -28,14 +28,14 @@ public class HttpRetrofitClient {
     public interface API {
 		
         @FormUrlEncoded
-        @POST("/register")
+        @POST("/register/")
         RegisterResult createUser(
                 @Field("first_name") String name,
                 @Field("username") String username,
                 @Field("password") String password);
 
         @FormUrlEncoded
-        @POST("/login")
+        @POST("/login/")
         LoginResult fetchUser(
                 @Field("username") String username,
                 @Field("password") String password);

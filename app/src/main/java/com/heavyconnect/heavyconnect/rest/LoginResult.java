@@ -6,24 +6,30 @@ import com.heavyconnect.heavyconnect.User;
  * RegisterResult class.
  */
 public class LoginResult {
-    public String error;
-    public static final String OK = "ok";
-    private User data;
+    public static final int OK = 0;
+
+    private boolean success = false;
+    private String username;
+    private String name;
+    private int code = OK;
 
     /**
      * Get result status.
      *
      * @return the text.
      */
-    public String getStatus() {
-        if (this.error != null) {
-            return error;
-        } else {
-            return OK;
-        }
+    public int getStatus() {
+        return code;
     }
 
     public User getUser() {
-        return data;
+        if (code != OK)
+            return null;
+
+        User result = new User();
+        result.setName(name);
+        result.setUsername(username);
+
+        return result;
     }
 }

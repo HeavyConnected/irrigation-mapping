@@ -34,7 +34,9 @@ public class LoginTask extends AsyncTask<User, Void, LoginResult> {
     @Override
     protected void onPostExecute(LoginResult result) {
         if(result == null)
-           callback.error(10);
+            callback.error(-1);
+        else if(result.getStatus() != LoginResult.OK)
+           callback.error(result.getStatus());
         else
             callback.done(result);
     }
