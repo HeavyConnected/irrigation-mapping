@@ -1,7 +1,11 @@
 package com.heavyconnect.heavyconnect.rest;
 
 import com.google.gson.Gson;
+import com.heavyconnect.heavyconnect.entities.Equipment;
 import com.heavyconnect.heavyconnect.utils.Constants;
+
+import java.io.IOException;
+import java.net.HttpURLConnection;
 
 import retrofit.RestAdapter;
 import retrofit.android.AndroidLog;
@@ -9,14 +13,11 @@ import retrofit.client.Request;
 import retrofit.converter.GsonConverter;
 import retrofit.http.*;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-
 /**
  * Class that handle http client.
  */
 public class HttpRetrofitClient {
-    private final String API_URL = "http://sheltered-dusk-6568.herokuapp.com"; // Heroku server
+    private final String API_URL = "http://hcdroidapi.herokuapp.com/"; //"http://sheltered-dusk-6568.herokuapp.com"; Heroku server
 
     private final RestAdapter restAdapter;
     public final API client;
@@ -39,6 +40,12 @@ public class HttpRetrofitClient {
         LoginResult fetchUser(
                 @Field("username") String username,
                 @Field("password") String password);
+
+        @FormUrlEncoded
+        @POST("/equips/")
+        Equipment[] fetchUserEquips(
+                @Field("username") String username);
+
     }
 
     /**

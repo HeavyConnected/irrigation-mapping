@@ -2,7 +2,7 @@ package com.heavyconnect.heavyconnect.resttasks;
 
 import android.os.AsyncTask;
 
-import com.heavyconnect.heavyconnect.User;
+import com.heavyconnect.heavyconnect.entities.User;
 import com.heavyconnect.heavyconnect.rest.HttpRetrofitClient;
 import com.heavyconnect.heavyconnect.rest.LoginResult;
 

@@ -1,6 +1,6 @@
 package com.heavyconnect.heavyconnect.rest;
 
-import com.heavyconnect.heavyconnect.User;
+import com.heavyconnect.heavyconnect.entities.User;
 
 /**
  * RegisterResult class.

@@ -1,9 +1,10 @@
-package com.heavyconnect.heavyconnect;
+package com.heavyconnect.heavyconnect.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
+import com.heavyconnect.heavyconnect.entities.User;
 
 /**
  * Created by andremenezes on 8/4/15.

@@ -11,9 +11,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.heavyconnect.heavyconnect.entities.User;
 import com.heavyconnect.heavyconnect.rest.LoginResult;
 import com.heavyconnect.heavyconnect.resttasks.LoginTask;
 import com.heavyconnect.heavyconnect.resttasks.TaskCallback;
+import com.heavyconnect.heavyconnect.utils.StorageUtils;
 
 /**
  * Created by andremenezes on 8/4/15.
@@ -91,7 +93,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         StorageUtils.storeUserData(this, returnedUser);
         StorageUtils.putIsLoggedIn(this, true);
 
-        startActivity(new Intent(this, MainActivity.class));
+        startActivity(new Intent(this, GridActivity.class));
     }
 
     @Override

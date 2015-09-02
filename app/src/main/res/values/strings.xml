@@ -1,9 +1,13 @@
 <resources>
-    <string name="app_name">Heavy Connect</string>
-
+    <string name="app_name">HeavyConnect</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_login">Login</string>
-    <string name="title_activity_register">Register</string>
-    <string name="title_activity_main">MainActivity</string>
+
+
+    <string name="grid_equipment">Equipment</string>
+    <string name="grid_map">Map</string>
+    <string name="grid_settings">Settings</string>
+    <string name="grid_exit">Exit</string>
+
+    <string name="equip_add">Add Equipment</string>
 </resources>

@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.heavyconnect.heavyconnect.entities.User;
 import com.heavyconnect.heavyconnect.resttasks.TaskCallback;
 import com.heavyconnect.heavyconnect.resttasks.RegisterTask;
 
@@ -76,7 +77,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         if(mProgress != null &&  mProgress.isShowing())
             mProgress.dismiss();
 
-        startActivity(new Intent(this, MainActivity.class));
+        startActivity(new Intent(this, LoginActivity.class));
         finish();
     }
 }

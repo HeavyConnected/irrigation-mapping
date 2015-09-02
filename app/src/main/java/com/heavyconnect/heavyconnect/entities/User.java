@@ -1,4 +1,4 @@
-package com.heavyconnect.heavyconnect;
+package com.heavyconnect.heavyconnect.entities;
 
 /**
  * Created by andremenezes on 8/4/15.
