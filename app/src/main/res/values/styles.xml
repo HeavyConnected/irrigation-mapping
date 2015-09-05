@@ -5,4 +5,18 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="blackShadowText">
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:shadowColor">#c43d3d3d</item>
+        <item name="android:shadowDx">2</item>
+        <item name="android:shadowDy">2</item>
+        <item name="android:shadowRadius">2</item>
+    </style>
+
+    <style name="whiteShadowText">
+        <item name="android:shadowColor">#FFFFFF</item>
+        <item name="android:shadowDx">2</item>
+        <item name="android:shadowDy">2</item>
+        <item name="android:shadowRadius">2</item>
+    </style>
 </resources>

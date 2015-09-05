@@ -10,4 +10,28 @@
     <string name="grid_exit">Exit</string>
 
     <string name="equip_add">Add Equipment</string>
+
+    #Equipment page
+    <string name="equip_reg_title">Equipment Registration</string>
+
+    <string name="equip_reg_name">Name</string>
+    <string name="equip_reg_name_hint">Machine 1</string>
+
+    <string name="equip_reg_model">Model Number</string>
+    <string name="equip_reg_model_hint">942015614</string>
+
+    <string name="equip_reg_asset">Asset Number</string>
+    <string name="equip_reg_asset_hint">416510249</string>
+
+    <string name="equip_reg_hour">Engine Hours</string>
+    <string name="equip_reg_hour_hint">1000</string>
+
+    <string name="equip_reg_status">Status</string>
+    <string name="equip_reg_status_ok">OK</string>
+    <string name="equip_reg_status_service">ATTENTION</string>
+    <string name="equip_reg_status_broken">BROKEN</string>
+
+    <string name="equip_reg_btn_reg">Register</string>
+    <string name="equip_reg_btn_clf">Clear</string>
+
 </resources>

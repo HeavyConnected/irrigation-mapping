@@ -1,9 +1,11 @@
 package com.heavyconnect.heavyconnect;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
 
 import com.heavyconnect.heavyconnect.adapters.EquipmentListAdapter;
@@ -12,7 +14,7 @@ import com.heavyconnect.heavyconnect.entities.Equipment;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class EquipmentListActivity extends AppCompatActivity {
+public class EquipmentListActivity extends AppCompatActivity implements View.OnClickListener{
 
     private ListView mListView;
     private EquipmentListAdapter mAdapter;
@@ -56,5 +58,14 @@ public class EquipmentListActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.equip_add:
+                startActivity(new Intent(this, EquipmentRegisterActivity.class));
+                break;
+        }
     }
 }

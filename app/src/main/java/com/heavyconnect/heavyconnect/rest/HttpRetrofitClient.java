@@ -17,7 +17,7 @@ import retrofit.http.*;
  * Class that handle http client.
  */
 public class HttpRetrofitClient {
-    private final String API_URL = "http://hcdroidapi.herokuapp.com/"; //"http://sheltered-dusk-6568.herokuapp.com"; Heroku server
+    private final String API_URL = "http://hcdroidapi-dev.herokuapp.com/"; //"http://sheltered-dusk-6568.herokuapp.com"; Heroku server
 
     private final RestAdapter restAdapter;
     public final API client;
