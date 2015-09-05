@@ -1,31 +1,20 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="com.heavyconnect.heavyconnect.EquipmentRegisterActivity">
+    tools:context=".EquipmentRegisterActivity">
 
     <LinearLayout
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:orientation="vertical"
         android:layout_height="fill_parent"
         android:id="@+id/linearLayout"
-
         android:layout_alignParentTop="true">
-
-        <TextView
-            android:id="@+id/TextViewTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/equip_reg_title"
-            android:textSize="12pt"
-            android:textAlignment="center"
-            android:layout_gravity="center_horizontal"
-            android:textStyle="bold"
-            android:textColor="#000000"
-            android:fontFamily="sans-serif-light">
-        </TextView>
 
         <!--Name-->
         <TextView
@@ -33,11 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/equip_reg_name"
-            android:id="@+id/editEquipNameTitle"
-            android:textStyle="normal"
-            android:textColor="#000000"
-            android:fontFamily="sans-serif"/>
+            android:text="@string/equip_reg_name"/>
 
         <EditText
             android:layout_marginTop="0dp"
@@ -47,8 +32,7 @@
             android:ems="15"
             android:hint="@string/equip_reg_name_hint"
             android:id="@+id/editEquipName"
-            android:layout_marginBottom="5dp"
-            android:textColor="#000000"
+            android:layout_marginBottom="12dp"
             />
 
         <!--Model-->
@@ -57,10 +41,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="@string/equip_reg_model"
-            android:id="@+id/editEquipModelTitle"
-            android:textStyle="normal"
-            android:textColor="#000000"
-            android:fontFamily="sans-serif"/>
+            android:id="@+id/editEquipModelTitle"/>
 
         <EditText
             android:layout_width="match_parent"
@@ -69,7 +50,7 @@
             android:hint="@string/equip_reg_model_hint"
             android:ems="15"
             android:id="@+id/editEquipModel"
-            android:layout_marginBottom="5dp" />
+            android:layout_marginBottom="12dp" />
 
         <!--Asset-->
         <TextView
@@ -77,10 +58,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="@string/equip_reg_asset"
-            android:id="@+id/editEquipAssetlTitle"
-            android:textStyle="normal"
-            android:textColor="#000000"
-            android:fontFamily="sans-serif"/>
+            android:id="@+id/editEquipAssetlTitle"/>
 
         <EditText
             android:layout_width="match_parent"
@@ -89,7 +67,7 @@
             android:hint="@string/equip_reg_asset_hint"
             android:ems="15"
             android:id="@+id/editEquipAsset"
-            android:layout_marginBottom="5dp" />
+            android:layout_marginBottom="12dp" />
 
         <!--Hours-->
         <TextView
@@ -97,10 +75,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="@string/equip_reg_hour"
-            android:id="@+id/editEquipHoursTitle"
-            android:textStyle="normal"
-            android:textColor="#000000"
-            android:fontFamily="sans-serif"/>
+            android:id="@+id/editEquipHoursTitle"/>
 
         <EditText
             android:layout_width="match_parent"
@@ -109,7 +84,7 @@
             android:hint="@string/equip_reg_hour_hint"
             android:ems="15"
             android:id="@+id/editEquipHours"
-            android:layout_marginBottom="5dp" />
+            android:layout_marginBottom="12dp" />
 
         <!--Status-->
         <TextView
@@ -117,15 +92,13 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="@string/equip_reg_status"
-            android:id="@+id/editEquipStatusTitle"
-            android:textStyle="normal"
-            android:textColor="#000000"
-            android:fontFamily="sans-serif"/>
+            android:id="@+id/editEquipStatusTitle"/>
 
         <RadioGroup
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
+
             <RadioButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -133,6 +106,7 @@
                 android:layout_weight="0.33"
                 android:id="@+id/equip_reg_status_ok_radio"
                 android:textColor="@color/regular_green"/>
+
             <RadioButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -140,6 +114,7 @@
                 android:layout_weight="0.33"
                 android:id="@+id/equip_reg_status_service_radio"
                 android:textColor="@color/regular_yellow"/>
+
             <RadioButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -147,32 +122,42 @@
                 android:layout_weight="0.33"
                 android:id="@+id/equip_reg_status_broken_radio"
                 android:textColor="@color/regular_red" />
+
         </RadioGroup>
 
-        <!--Buttons-->
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center">
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/equip_reg_btn_clf"
-                android:id="@+id/equipRegBtnClf"
-                android:layout_weight="0.5"
-                android:textAlignment="center"
-                android:background="@color/regular_green"
-                android:textColor="@color/white" />
+    </LinearLayout>
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/equip_reg_btn_reg"
-                android:id="@+id/button2"
-                android:textAlignment="center"
-                android:layout_weight="0.5"
-                android:textColor="@color/white"
-                android:background="@color/regular_green"/>
-        </LinearLayout>
+
+    <!--Buttons-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+
+
+        <Button
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:text="@string/equip_reg_btn_clf"
+            android:id="@+id/equipRegBtnClf"
+            android:background="@color/regular_green"
+            android:textColor="#fff"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="2dp"/>
+
+        <Button
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:text="@string/equip_reg_btn_reg"
+            android:id="@+id/equipRegBtnReg"
+            android:background="@color/regular_green"
+            android:textColor="#fff"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="2dp"/>
+
     </LinearLayout>
 </RelativeLayout>
