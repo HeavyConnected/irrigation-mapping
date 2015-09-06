@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:paddingLeft="@dimen/activity_horizontal_margin"
+android:paddingRight="@dimen/activity_horizontal_margin"
+android:paddingTop="@dimen/activity_vertical_margin"
+android:paddingBottom="@dimen/activity_vertical_margin"
+tools:context=".EquipmentRegisterActivity">
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="fill_parent"
+    android:id="@+id/linearLayout"
+    android:layout_alignParentTop="true">
+
+    <!--Status-->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/equip_reg_status"
+        android:id="@+id/editEquipStatusTitle"/>
+    <!--Name-->
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="12dp">
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/equip_reg_status_ok"
+            android:layout_weight="0.33"
+            android:id="@+id/equip_reg_status_ok_radio"
+            android:textColor="@color/regular_green"/>
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/equip_reg_status_service"
+            android:layout_weight="0.33"
+            android:id="@+id/equip_reg_status_service_radio"
+            android:textColor="@color/regular_yellow"/>
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/equip_reg_status_broken"
+            android:layout_weight="0.33"
+            android:id="@+id/equip_reg_status_broken_radio"
+            android:textColor="@color/regular_red" />
+    </RadioGroup>
+
+    <TextView
+        android:layout_marginTop="22dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/equip_reg_name"/>
+
+    <EditText
+        android:layout_marginTop="0dp"
+        android:editable="false"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="15"
+        android:id="@+id/editEquipName"
+        android:layout_marginBottom="12dp"
+        />
+
+    <!--Model-->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/equip_reg_model"
+        android:id="@+id/editEquipModelTitle"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:editable="false"
+        android:inputType="number"
+        android:ems="15"
+        android:id="@+id/editEquipModel"
+        android:layout_marginBottom="12dp" />
+
+    <!--Asset-->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/equip_reg_asset"
+        android:id="@+id/editEquipAssetlTitle"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:editable="false"
+        android:inputType="number"
+        android:ems="15"
+        android:id="@+id/editEquipAsset"
+        android:layout_marginBottom="12dp" />
+
+    <!--Hours-->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/equip_reg_hour"
+        android:id="@+id/editEquipHoursTitle"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:editable="false"
+        android:inputType="number"
+        android:ems="15"
+        android:id="@+id/editEquipHours"
+        android:layout_marginBottom="12dp" />
+</LinearLayout>
+
+<!--Buttons-->
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:layout_alignParentBottom="true"
+    android:orientation="horizontal">
+
+    <Button
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:text="@string/equip_reg_btn_edit"
+        android:id="@+id/equipRegBtnClf"
+        android:background="@color/regular_green"
+        android:textColor="#fff"
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="2dp"/>
+
+    <Button
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:text="@string/equip_reg_btn_map"
+        android:id="@+id/equipRegBtnReg"
+        android:background="@color/regular_green"
+        android:textColor="#fff"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="2dp"/>
+
+    <Button
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:text="@string/equip_reg_btn_delete"
+        android:id="@+id/equipRegBtnReg"
+        android:background="@color/regular_red"
+        android:textColor="#fff"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="2dp"/>
+
+</LinearLayout>
+</RelativeLayout>

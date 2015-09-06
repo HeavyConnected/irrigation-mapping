@@ -10,7 +10,7 @@
         android:text="@string/equip_add"
         android:id="@+id/equip_add"
         android:background="@color/regular_green"
-        android:textColor="#fff"
+        android:textColor="@color/black"
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="@dimen/activity_margin"
         android:layout_marginRight="@dimen/activity_margin"

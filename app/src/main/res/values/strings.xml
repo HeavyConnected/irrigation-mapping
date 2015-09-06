@@ -11,6 +11,22 @@
     <string name="grid_exit">Exit</string>
     <!-- GridActivity - END -->
 
+    <!-- Activity Login Strings - BEGIN -->
+    <string name="login_username">Username</string>
+    <string name="login_password">Password</string>
+    <string name="login_button">Login</string>
+    <string name="login_register">Register Here</string>
+    <string name="login_username_hint">Type your username here</string>
+    <string name="login_password_hint">Type your password here</string>
+    <!-- END -->
+
+    <!-- Activity Register Strings - BEGIN -->
+    <string name="register_name">Name</string>
+    <string name="register_username">Username</string>
+    <string name="register_password">Password</string>
+    <string name="register_button_register">Register</string>
+    <!-- END -->
+
     <!-- Equipment Strings - BEGIN -->
     <string name="equip_add">Add Equipment</string>
 
@@ -35,6 +51,10 @@
 
     <string name="equip_reg_btn_reg">Register</string>
     <string name="equip_reg_btn_clf">Clear</string>
+
+    <string name="equip_reg_btn_edit">Edit</string>
+    <string name="equip_reg_btn_map">Map</string>
+    <string name="equip_reg_btn_delete">Delete</string>
     <!-- GridActivity - END -->
 
 </resources>

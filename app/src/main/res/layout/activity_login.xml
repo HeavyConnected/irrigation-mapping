@@ -15,34 +15,36 @@
 
     <TextView
         android:layout_width="wrap_content"
-        android:text="Username"
+        android:text="@string/login_username"
         android:layout_height="wrap_content" />
     <EditText
         android:id="@+id/etUsername"
         android:singleLine="true"
+        android:hint="@string/login_username_hint"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"/>
     <TextView
         android:layout_width="wrap_content"
-        android:text="Password"
+        android:text="@string/login_password"
         android:layout_height="wrap_content" />
     <EditText
         android:id="@+id/etPassword"
         android:inputType="numberPassword"
+        android:hint="@string/login_password_hint"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"/>
     <Button
         android:id="@+id/buttonLogin"
-        android:text="Login"
+        android:text="@string/login_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"/>
     <TextView
         android:id="@+id/tvRegisterLink"
         android:layout_width="wrap_content"
-        android:text="Register Here"
+        android:text="@string/login_register"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:textStyle="bold"/>
