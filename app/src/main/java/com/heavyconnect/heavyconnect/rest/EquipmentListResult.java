@@ -1,12 +1,13 @@
 package com.heavyconnect.heavyconnect.rest;
 
-import com.google.gson.annotations.SerializedName;
-import com.heavyconnect.heavyconnect.entities.User;
+import com.heavyconnect.heavyconnect.entities.Equipment;
+
+import java.util.ArrayList;
 
 /**
  * RegisterResult class.
  */
-public class LoginResult {
+public class EquipmentListResult {
     public static final int OK = 0;
     public static final int INVALID_REQUEST = 1;
     public static final int INVALID_INFO = 2;
@@ -14,11 +15,9 @@ public class LoginResult {
     public static final int NEED_TO_ACTIVATE = 4;
 
     private boolean success = false;
-    private String username;
-    private String name;
+    private int count;
+    private Equipment[] results;
 
-    @SerializedName("api-token")
-    private String token;
     private int code = OK;
 
     /**
@@ -30,14 +29,13 @@ public class LoginResult {
         return code;
     }
 
-    public User getUser() {
-        if (code != OK)
+    public ArrayList<Equipment> getUserEquips() {
+        if (code != OK || results == null)
             return null;
 
-        User result = new User();
-        result.setName(name);
-        result.setUsername(username);
-        result.setToken(token);
+        ArrayList<Equipment> result = new ArrayList<Equipment>();
+        for(int i = 0; i < results.length; i++)
+            result.add(results[i]);
 
         return result;
     }

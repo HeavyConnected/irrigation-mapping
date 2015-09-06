@@ -14,49 +14,68 @@ import com.heavyconnect.heavyconnect.resttasks.TaskCallback;
 import com.heavyconnect.heavyconnect.resttasks.RegisterTask;
 
 /**
- * Created by andremenezes on 8/4/15.
+ * This class represents the Register screen.
  */
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener, TaskCallback {
 
-    Button buttonRegister;
-    EditText etName, etUsername, etPassword;
-    ProgressDialog mProgress;
+    private Button mRegisterBt;
+    private EditText mNameEt, mUsernameEt, mPasswordEt;
+    private ProgressDialog mProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        etName = (EditText) findViewById(R.id.etName);
-        etUsername = (EditText) findViewById(R.id.etUsername);
-        etPassword = (EditText) findViewById(R.id.etPassword);
-        buttonRegister = (Button) findViewById(R.id.buttonRegister);
+        mNameEt = (EditText) findViewById(R.id.register_name);
+        mUsernameEt = (EditText) findViewById(R.id.register_username);
+        mPasswordEt = (EditText) findViewById(R.id.register_password);
+
+        mRegisterBt = (Button) findViewById(R.id.register_bt);
+        mRegisterBt.setOnClickListener(this);
 
         mProgress = new ProgressDialog(this);
         mProgress.setTitle(null);
-        mProgress.setMessage("Creating a new user...");
+        mProgress.setMessage(getString(R.string.register_signing_up));
         mProgress.setIndeterminate(true);
-
-        buttonRegister.setOnClickListener(this);
+        mProgress.setCancelable(false);
     }
 
     @Override
     public void onClick(View v) {
         switch(v.getId()){
-            case R.id.buttonRegister:
+            case R.id.register_bt:
                 //Get the variables values
-                String name = etName.getText().toString();
-                String username = etUsername.getText().toString();
-                String password = etPassword.getText().toString();
+                String name = mNameEt.getText().toString();
+                String username = mUsernameEt.getText().toString();
+                String password = mPasswordEt.getText().toString();
+
+                if(name.length() < 3){
+                    Toast.makeText(this, getString(R.string.register_invalid_name), Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                if(username.length() < 3){
+                    Toast.makeText(this, getString(R.string.register_short_username), Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                if(password.length() < 3){
+                    Toast.makeText(this, getString(R.string.register_short_password), Toast.LENGTH_LONG).show();
+                    return;
+                }
 
                 User user = new User(name, username, password);
-
                 registerUser(user);
 
                 break;
         }
     }
 
+    /**
+     * This method creates a new user in backend.
+     * @param user - User to create.
+     */
     private void registerUser(User user){
         if(mProgress != null &&  !mProgress.isShowing())
             mProgress.show();
@@ -65,18 +84,45 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     }
 
     @Override
-    public void error(int code) {
-        Toast.makeText(this, "User registration failed!", Toast.LENGTH_LONG).show();
+    public void onTaskFailed(int errorCode) {
+
         if(mProgress != null &&  mProgress.isShowing())
             mProgress.dismiss();
+
+        String message;
+        switch(errorCode){
+            case 1:
+                message = getString(R.string.register_invalid_method);
+                break;
+            case 2:
+                message = getString(R.string.register_invalid_data);
+                break;
+            case 3:
+                message = getString(R.string.register_invalid_username);
+                break;
+            case 4:
+                message = getString(R.string.register_invalid_name);
+                break;
+            case 5:
+                message = getString(R.string.register_invalid_password);
+                break;
+            case 6:
+                message = getString(R.string.register_user_already_exists);
+                break;
+            default:
+                message = getString(R.string.register_registration_failed);
+                break;
+        }
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
     @Override
-    public void done(Object result) {
-        Toast.makeText(this, "User registration done!", Toast.LENGTH_LONG).show();
+    public void onTaskCompleted(Object result) {
+
         if(mProgress != null &&  mProgress.isShowing())
             mProgress.dismiss();
 
+        Toast.makeText(this, getString(R.string.register_registration_success), Toast.LENGTH_LONG).show();
         startActivity(new Intent(this, LoginActivity.class));
         finish();
     }

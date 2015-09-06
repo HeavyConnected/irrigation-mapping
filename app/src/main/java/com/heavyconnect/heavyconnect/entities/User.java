@@ -4,8 +4,10 @@ package com.heavyconnect.heavyconnect.entities;
  * Created by andremenezes on 8/4/15.
  */
 public class User {
-    String name, username;
-    String password;
+    private String name;
+    private String username;
+    private String password;
+    private String token;
 
     public User(){
 
@@ -35,6 +37,10 @@ public class User {
         this.password = password;
     }
 
+    public void setToken(String token) {
+        this.token = token;
+    }
+
     public String getName() {
         return name;
     }
@@ -45,5 +51,9 @@ public class User {
 
     public String getPassword() {
         return password;
+    }
+
+    public String getToken(){
+        return token;
     }
 }

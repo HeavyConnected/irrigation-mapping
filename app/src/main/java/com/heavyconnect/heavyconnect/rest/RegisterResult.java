@@ -4,48 +4,21 @@ package com.heavyconnect.heavyconnect.rest;
  * RegisterResult class.
  */
 public class RegisterResult {
-    public static final String OK = "ok";
-    public static final String ERROR = "error";
+    public static final int OK = 0;
+    public static final int INVALID_REQUEST = 1;
+    public static final int INVALID_INFO = 2;
+    public static final int USER_ALREADY_EXISTS = 3;
+
+    public String success;
     public String description;
-    public String error;
-    public String errors;
-    private Data data;
+    public int code = 0;
 
     /**
      * Get result status.
      *
-     * @return the text.
+     * @return Result code.
      */
-    public String getStatus() {
-        if (this.error != null) {
-            return ERROR;
-        } else if (this.errors != null) {
-            return ERROR;
-        } else {
-            return OK;
-        }
-    }
-
-    /**
-     * Get terms text.
-     *
-     * @return the breeds array.
-     */
-    public String getTermsText() {
-        String result = description;
-        if(result != null)
-            return result;
-
-        if(data != null)
-            return data.description;
-
-        return "";
-    }
-
-    /**
-     * Data class
-     */
-    private class Data{
-        private String description;
+    public int getStatus() {
+        return code;
     }
 }

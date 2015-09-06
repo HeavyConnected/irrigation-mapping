@@ -12,7 +12,8 @@ import com.heavyconnect.heavyconnect.entities.User;
 public class StorageUtils {
     public static final String SP_NAME = "heavyprefs";
     public static final String SP_USER_KEY = "user";
-    public static final String SP_IS_LOGGED_IN = "loggedIn";
+    public static final String SP_IS_LOGGED_IN_KEY = "loggedIn";
+    public static final String SP_TOKEN_KEY = "tk";
 
     public static void clearPrefs(Context context){
         SharedPreferences prefs = context.getSharedPreferences(SP_NAME, 0);
@@ -39,13 +40,13 @@ public class StorageUtils {
     public static void putIsLoggedIn(Context context, boolean isLoggedIn){
         SharedPreferences prefs = context.getSharedPreferences(SP_NAME, 0);
         SharedPreferences.Editor spEditor = prefs.edit();
-        spEditor.putBoolean(SP_IS_LOGGED_IN, isLoggedIn);
+        spEditor.putBoolean(SP_IS_LOGGED_IN_KEY, isLoggedIn);
         spEditor.commit();
     }
 
     public static boolean getIsLoggedIn(Context context){
         SharedPreferences prefs = context.getSharedPreferences(SP_NAME, 0);
-        return prefs.getBoolean(SP_IS_LOGGED_IN, false);
+        return prefs.getBoolean(SP_IS_LOGGED_IN_KEY, false);
     }
 
 }

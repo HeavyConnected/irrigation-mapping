@@ -1,7 +1,6 @@
 package com.heavyconnect.heavyconnect.rest;
 
 import com.google.gson.Gson;
-import com.heavyconnect.heavyconnect.entities.Equipment;
 import com.heavyconnect.heavyconnect.utils.Constants;
 
 import java.io.IOException;
@@ -41,10 +40,23 @@ public class HttpRetrofitClient {
                 @Field("username") String username,
                 @Field("password") String password);
 
+        @GET("/equipment/")
+        EquipmentListResult fetchUserEquips(
+                @Header("Authorization") String token);
+
         @FormUrlEncoded
-        @POST("/equips/")
-        Equipment[] fetchUserEquips(
-                @Field("username") String username);
+        @POST("/equipment/")
+        AddEquipmentResult createEquip(
+                @Header("Authorization") String token,
+                @Field("name") String name,
+                @Field("model_number") int modelNumber,
+                @Field("asset_number") int assetNumber,
+                @Field("status") int status,
+                @Field("hours") int hours,
+                @Field("latitude") double latitude,
+                @Field("longitude") double longitude
+        );
+
 
     }
 

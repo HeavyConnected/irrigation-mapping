@@ -59,4 +59,10 @@ public class EquipmentListAdapter extends ArrayAdapter<Equipment> {
     public int getCount(){
         return mEquips == null? 0 : mEquips.size();
     }
+
+    @Override
+    public void add(Equipment equip){
+        mEquips.add(equip);
+        notifyDataSetChanged();
+    }
 }

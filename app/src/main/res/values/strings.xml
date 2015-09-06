@@ -2,6 +2,7 @@
     <!-- General Strings - BEGIN -->
     <string name="app_name">HeavyConnect</string>
     <string name="action_logout">Logout</string>
+    <string name="logout_message">See you soon...</string>
     <!-- General Strings - END -->
 
     <!-- GridActivity - BEGIN -->
@@ -9,24 +10,33 @@
     <string name="grid_map">Map</string>
     <string name="grid_settings">Settings</string>
     <string name="grid_exit">Exit</string>
+    <string name="grid_user_isnt_logged_in">You need to login...</string>
     <!-- GridActivity - END -->
 
-    <!-- Equipment Strings - BEGIN -->
-    <string name="equip_add">Add Equipment</string>
+    <!-- EquipmentListActivity - BEGIN -->
+    <string name="equip_list_title">Equipments</string>
+    <string name="equip_list_add">Add Equipment</string>
 
+    <string name="equip_list_user_isnt_logged_in">You need to login...</string>
+    <string name="equip_list_loading">Loading...</string>
+
+    <string name="equip_list_load_failure">Failed when trying to get the equipment list... Try again...</string>
+    <!-- EquipmentListActivity - END -->
+
+    <!-- EquipmentRegistrationActivity - BEGIN -->
     <string name="equip_reg_title">Equipment Registration</string>
 
     <string name="equip_reg_name">Name</string>
-    <string name="equip_reg_name_hint">Ex: El Capitan 1</string>
+    <string name="equip_reg_name_hint">Ex: Tractor</string>
 
     <string name="equip_reg_model">Model Number</string>
-    <string name="equip_reg_model_hint">Ex:942015614</string>
+    <string name="equip_reg_model_hint">Ex: 942015614</string>
 
     <string name="equip_reg_asset">Asset Number</string>
-    <string name="equip_reg_asset_hint">Ex:416510249</string>
+    <string name="equip_reg_asset_hint">Ex: 416510249</string>
 
     <string name="equip_reg_hour">Engine Hours</string>
-    <string name="equip_reg_hour_hint">Ex:1000</string>
+    <string name="equip_reg_hour_hint">Ex: 100</string>
 
     <string name="equip_reg_status">Status</string>
     <string name="equip_reg_status_ok">OK</string>
@@ -35,6 +45,59 @@
 
     <string name="equip_reg_btn_reg">Register</string>
     <string name="equip_reg_btn_clf">Clear</string>
-    <!-- GridActivity - END -->
 
+    <string name="equip_reg_sending">Sending info...</string>
+    <string name="equip_reg_user_isnt_logged_in">You need to login...</string>
+
+    <string name="equip_reg_invalid_name">Invalid name! Verify the equipment information and try again.</string>
+    <string name="equip_reg_invalid_model_number">Invalid model number! Verify the equipment information and try again.</string>
+    <string name="equip_reg_invalid_asset_number">Invalid asset number! Verify the equipment information and try again.</string>
+    <string name="equip_reg_invalid_engine_hours_value">Invalid engine hours value! Verify the equipment information and try again.</string>
+    <string name="equip_reg_registration_failure">Equipment registration failed. Try again...</string>
+    <string name="equip_reg_registration_success">Equipment successfully added.</string>
+    <!-- EquipmentRegistrationActivity - END -->
+
+
+    <!--LoginActivity - BEGIN-->
+    <string name="login_username">Username</string>
+    <string name="login_password">Password</string>
+    <string name="login_sign_in">Login</string>
+    <string name="login_register">Register here</string>
+
+    <string name="login_signing_in">Signing in...</string>
+    <string name="login_welcome_back">Welcome back</string>
+
+    <string name="login_short_username">Invalid username. Your username must have 3 or more characters.</string>
+    <string name="login_short_password">Invalid password. Your password must have 3 or more characters.</string>
+
+    <string name="login_invalid_method">Invalid login method. Contact the support.</string>
+    <string name="login_invalid_data">Login failed. After verify your information, try again.</string>
+    <string name="login_invalid_username_or_password">Invalid username or password.</string>
+    <string name="login_user_no_longer_active">This user is no longer active.</string>
+    <string name="login_invalid_username">Invalid username. Verify your information and try again.</string>
+    <string name="login_invalid_password">Invalid password. Verify your information and try again.</string>
+    <string name="login_sign_in_failure">Login failed! Verify your information and try again...</string>
+    <!--LoginActivity - END-->
+
+
+    <!--RegisterActivity - BEGIN-->
+    <string name="register_title">Sign Up</string>
+    <string name="register_name">Name</string>
+    <string name="register_username">Username</string>
+    <string name="register_password">Password</string>
+    <string name="register_sign_up">Sign up</string>
+
+    <string name="register_signing_up">Creating a new user...</string>
+
+    <string name="register_invalid_name">Invalid name. Verify your information and try again.</string>
+    <string name="register_short_username">Invalid username. Your username must have 3 or more characters.</string>
+    <string name="register_short_password">Invalid password. Your password must have 3 or more characters.</string>
+    <string name="register_invalid_method">Invalid register method. Contact the support.</string>
+    <string name="register_invalid_data">User registration failed. Try again after verify your information.</string>
+    <string name="register_invalid_username">Invalid username. Verify your information and try again.</string>
+    <string name="register_invalid_password">Invalid password. Verify your information and try again.</string>
+    <string name="register_user_already_exists">This user already exists! Try to use another username.</string>
+    <string name="register_registration_failed">User registration failed! Try again later...</string>
+    <string name="register_registration_success">User successfully registered!</string>
+    <!--RegisterActivity - END-->
 </resources>

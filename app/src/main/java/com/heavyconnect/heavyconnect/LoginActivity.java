@@ -1,6 +1,5 @@
 package com.heavyconnect.heavyconnect;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -18,16 +17,14 @@ import com.heavyconnect.heavyconnect.resttasks.TaskCallback;
 import com.heavyconnect.heavyconnect.utils.StorageUtils;
 
 /**
- * Created by andremenezes on 8/4/15.
+ * This class represents the Login screen.
  */
-
-//LoginActivity page
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, TaskCallback{
 
     //Start variables
-    Button buttonLogin;
-    EditText etUsername, etPassword;
-    TextView tvRegisterLink;
+    Button mLoginBt;
+    EditText mUsernameEt, mPasswordEt;
+    TextView mSignUpTv;
     ProgressDialog mProgress;
 
 
@@ -37,20 +34,32 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_login);
 
         //Set variables
-        etUsername = (EditText) findViewById(R.id.etUsername);
-        etPassword = (EditText) findViewById(R.id.etPassword);
-        buttonLogin = (Button) findViewById(R.id.buttonLogin);
-        tvRegisterLink = (TextView) findViewById(R.id.tvRegisterLink);
+        mUsernameEt = (EditText) findViewById(R.id.login_username);
+        mPasswordEt = (EditText) findViewById(R.id.login_password);
+        mLoginBt = (Button) findViewById(R.id.login_sign_in);
+        mSignUpTv = (TextView) findViewById(R.id.login_sign_up);
 
         //Set listener
-        buttonLogin.setOnClickListener(this);
-        tvRegisterLink.setOnClickListener(this);
+        mLoginBt.setOnClickListener(this);
+        mSignUpTv.setOnClickListener(this);
 
 
         mProgress = new ProgressDialog(this);
         mProgress.setTitle(null);
-        mProgress.setMessage("Signing in...");
+        mProgress.setMessage(getString(R.string.login_signing_in));
         mProgress.setIndeterminate(true);
+        mProgress.setCancelable(false);
+
+        // Someone is already logged in?
+        if(StorageUtils.getIsLoggedIn(this)){
+            User user = StorageUtils.getUserData(this);
+            if(user == null){
+                StorageUtils.clearPrefs(this);
+                StorageUtils.putIsLoggedIn(this, false);
+            }else{
+                navigateToGrid(user);
+            }
+        }
 
     }
 
@@ -58,64 +67,105 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         //Get the listener and execute the function
         switch(v.getId()){
-            case R.id.buttonLogin:
-                String username = etUsername.getText().toString();
-                String password = etPassword.getText().toString();
-
-                User user =  new User(username, password);
-
-                authenticate(user);
-
+            case R.id.login_sign_in:
+                authenticate();
                 break;
 
-            case R.id.tvRegisterLink:
+            case R.id.login_sign_up:
                 startActivity(new Intent(this, RegisterActivity.class ));
-
                 break;
         }
     }
 
-    private void authenticate(User user){
+    /**
+     * This method verifies the user info and tries to log in.
+     */
+    private void authenticate(){
+        String username = mUsernameEt.getText().toString();
+        String password = mPasswordEt.getText().toString();
+
+        if(username.length() < 3){
+            Toast.makeText(this, getString(R.string.login_short_username), Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if(password.length() < 3){
+            Toast.makeText(this, getString(R.string.login_short_password), Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        User user =  new User(username, password);
+
         if(mProgress != null && !mProgress.isShowing())
             mProgress.show();
 
         new LoginTask(this).execute(user);
     }
 
-    private void showErrorMessage(){
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(LoginActivity.this );
-        dialogBuilder.setMessage("Incorrect user details");
-        dialogBuilder.setPositiveButton("Ok", null);
-        dialogBuilder.show();
-    }
 
-    private void logUserIn(User returnedUser){
+    /**
+     * This method stores locally some user information and navigates to GridActivity.
+     * @param returnedUser - Login result user.
+     */
+    private void navigateToGrid(User returnedUser){
         StorageUtils.storeUserData(this, returnedUser);
         StorageUtils.putIsLoggedIn(this, true);
 
+        Toast.makeText(this, getString(R.string.login_welcome_back) + ", " +  returnedUser.getName() +  "!", Toast.LENGTH_LONG).show();
         startActivity(new Intent(this, GridActivity.class));
+        finish();
     }
 
     @Override
-    public void error(int code) {
+    public void onTaskFailed(int code) {
         if(mProgress != null && mProgress.isShowing())
             mProgress.dismiss();
 
-        Toast.makeText(this, "Invalid user or password. Try again...", Toast.LENGTH_LONG).show();
+        String message;
+        switch(code){
+            case 1:
+                message = getString(R.string.login_invalid_method);
+                break;
+            case 2:
+                message = getString(R.string.login_invalid_data);
+                break;
+            case 3:
+                message = getString(R.string.login_invalid_username_or_password);
+                break;
+            case 4:
+                message = getString(R.string.login_user_no_longer_active);
+                break;
+            case 5:
+                message = getString(R.string.login_invalid_password);
+                break;
+            case 6:
+                message = getString(R.string.login_invalid_username);
+                break;
+            default:
+                message = getString(R.string.login_sign_in_failure);
+                break;
+        }
+
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
     @Override
-    public void done(Object result) {
+    public void onTaskCompleted(Object result) {
         if(mProgress != null && mProgress.isShowing())
             mProgress.dismiss();
 
-        if(!(result instanceof LoginResult))
-            error(100);
+        if(!(result instanceof LoginResult)) {
+            onTaskFailed(100);
+            return;
+        }
 
         LoginResult loginResult = (LoginResult) result;
         User user = loginResult.getUser();
-        logUserIn(user);
-        Toast.makeText(this, "Welcome back, " +  user.getName() +  "!", Toast.LENGTH_LONG).show();
+        if(user == null) {
+            onTaskFailed(101);
+            return;
+        }
 
+        navigateToGrid(user);
     }
 }

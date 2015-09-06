@@ -3,27 +3,27 @@ package com.heavyconnect.heavyconnect.resttasks;
 import android.os.AsyncTask;
 
 import com.heavyconnect.heavyconnect.entities.User;
+import com.heavyconnect.heavyconnect.rest.EquipmentListResult;
 import com.heavyconnect.heavyconnect.rest.HttpRetrofitClient;
-import com.heavyconnect.heavyconnect.rest.LoginResult;
 
 /**
  * Created by andremenezes on 8/24/15.
  */
-public class LoginTask extends AsyncTask<User, Void, LoginResult> {
+public class EquipmentListTask extends AsyncTask<User, Void, EquipmentListResult> {
 
     TaskCallback callback;
 
-    public LoginTask(TaskCallback userCallback) {
+    public EquipmentListTask(TaskCallback userCallback) {
         this.callback = userCallback;
     }
 
     @Override
-    protected LoginResult doInBackground(User... params) {
+    protected EquipmentListResult doInBackground(User... params) {
         HttpRetrofitClient retrofitClient = new HttpRetrofitClient();
         User user = params[0];
 
         try {
-            return retrofitClient.client.fetchUser(user.getUsername(), user.getPassword());
+            return retrofitClient.client.fetchUserEquips(user.getToken());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -32,10 +32,10 @@ public class LoginTask extends AsyncTask<User, Void, LoginResult> {
     }
 
     @Override
-    protected void onPostExecute(LoginResult result) {
+    protected void onPostExecute(EquipmentListResult result) {
         if(result == null)
             callback.onTaskFailed(-1);
-        else if(result.getStatus() != LoginResult.OK)
+        else if(result.getStatus() != EquipmentListResult.OK)
            callback.onTaskFailed(result.getStatus());
         else
             callback.onTaskCompleted(result);

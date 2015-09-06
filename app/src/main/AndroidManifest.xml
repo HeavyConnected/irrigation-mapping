@@ -4,6 +4,9 @@
 
     <uses-permission android:name="ANDROID.PERMISSION.CHANGE_WIFI_STATE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
     <application
         android:allowBackup="true"
@@ -23,7 +26,7 @@
         </activity>
 
         <activity android:name=".RegisterActivity"
-            android:label="@string/app_name"
+            android:label="@string/register_title"
             android:parentActivityName=".LoginActivity"/>
 
         <activity android:name=".GridActivity"
@@ -31,11 +34,11 @@
 
         <activity
             android:name=".EquipmentListActivity"
-            android:label="@string/app_name"
+            android:label="@string/equip_list_title"
             android:parentActivityName=".GridActivity"/>
 
-        <activity android:name=".EquipmentRegisterActivity"
-            android:label="Equipment Registration"
+        <activity android:name=".EquipmentRegistrationActivity"
+            android:label="@string/equip_reg_title"
             android:parentActivityName=".EquipmentListActivity"
             />
 

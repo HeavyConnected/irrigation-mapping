@@ -33,10 +33,11 @@ public class RegisterTask extends AsyncTask<User, Void, RegisterResult> {
 
     @Override
     protected void onPostExecute(RegisterResult result) {
-        // TODO: Need to implement php results!
-        // if(result == null)
-        //    callback.error(10);
-        //else
-            callback.done(null);
+         if(result == null)
+            callback.onTaskFailed(-1);
+        else if(result.getStatus() != RegisterResult.OK)
+            callback.onTaskFailed(result.getStatus());
+        else
+            callback.onTaskCompleted(result);
     }
 }
