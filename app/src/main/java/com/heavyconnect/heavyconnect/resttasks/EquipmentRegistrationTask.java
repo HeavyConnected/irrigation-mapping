@@ -10,13 +10,13 @@ import com.heavyconnect.heavyconnect.rest.HttpRetrofitClient;
 import com.heavyconnect.heavyconnect.utils.Constants;
 
 /**
- * Created by andremenezes on 8/24/15.
+ * This class represents the equipment registration task.
  */
-public class AddEquipmentTask extends AsyncTask<Object, Void, AddEquipmentResult> {
+public class EquipmentRegistrationTask extends AsyncTask<Object, Void, AddEquipmentResult> {
 
-    TaskCallback callback;
+    private TaskCallback callback;
 
-    public AddEquipmentTask(TaskCallback userCallback) {
+    public EquipmentRegistrationTask(TaskCallback userCallback) {
         this.callback = userCallback;
     }
 
@@ -25,12 +25,12 @@ public class AddEquipmentTask extends AsyncTask<Object, Void, AddEquipmentResult
         HttpRetrofitClient retrofitClient = new HttpRetrofitClient();
 
         if(!(params[0] instanceof String)) {
-            Log.w(Constants.DEBUG_TAG, "AddEquipmentTask: The first parameter must be the token.");
+            Log.w(Constants.DEBUG_TAG, "EquipmentRegistrationTask: The first parameter must be the token.");
             return null;
         }
 
         if(!(params[1] instanceof Equipment)) {
-            Log.w(Constants.DEBUG_TAG, "AddEquipmentTask: The second parameter must be the E.");
+            Log.w(Constants.DEBUG_TAG, "EquipmentRegistrationTask: The second parameter must be the E.");
             return null;
         }
         String token = (String) params[0];

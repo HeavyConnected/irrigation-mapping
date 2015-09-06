@@ -7,7 +7,7 @@ import com.heavyconnect.heavyconnect.entities.User;
 /**
  * RegisterResult class.
  */
-public class AddEquipmentResult extends Equipment {
+public class EquipmentDetailsResult extends Equipment {
     public static final int OK = 0;
 
     private boolean success = false;
