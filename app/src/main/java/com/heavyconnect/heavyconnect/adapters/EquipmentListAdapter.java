@@ -15,12 +15,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+/**
+ * This class represents the equipment list adapter.
+ */
 public class EquipmentListAdapter extends ArrayAdapter<Equipment> {
 
     private Context mContext;
     private LayoutInflater mInflater;
     private List<Equipment> mEquips = new ArrayList<Equipment>();
 
+    /**
+     * Constructor method.
+     * @param context - The context.
+     * @param objects - List of Equipments.
+     */
     public EquipmentListAdapter(Context context, List<Equipment> objects) {
         super(context, R.layout.equip_list_item, objects);
 
@@ -64,5 +72,14 @@ public class EquipmentListAdapter extends ArrayAdapter<Equipment> {
     public void add(Equipment equip){
         mEquips.add(equip);
         notifyDataSetChanged();
+    }
+
+    /**
+     * Returns current equip at a specific position.
+     * @param position - Position.
+     * @return - Equipment.
+     */
+    public Equipment get(int position){
+        return mEquips.get(position);
     }
 }

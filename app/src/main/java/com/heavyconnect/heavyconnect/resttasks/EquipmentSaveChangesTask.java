@@ -4,7 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.heavyconnect.heavyconnect.entities.Equipment;
-import com.heavyconnect.heavyconnect.rest.AddEquipmentResult;
+import com.heavyconnect.heavyconnect.rest.EquipmentDetailsResult;
 import com.heavyconnect.heavyconnect.rest.EquipmentListResult;
 import com.heavyconnect.heavyconnect.rest.HttpRetrofitClient;
 import com.heavyconnect.heavyconnect.utils.Constants;
@@ -12,7 +12,7 @@ import com.heavyconnect.heavyconnect.utils.Constants;
 /**
  * This class represents the equipment registration task.
  */
-public class EquipmentSaveChangesTask extends AsyncTask<Object, Void, AddEquipmentResult> {
+public class EquipmentSaveChangesTask extends AsyncTask<Object, Void, EquipmentDetailsResult> {
 
     private TaskCallback callback;
 
@@ -21,7 +21,7 @@ public class EquipmentSaveChangesTask extends AsyncTask<Object, Void, AddEquipme
     }
 
     @Override
-    protected AddEquipmentResult doInBackground(Object... params) {
+    protected EquipmentDetailsResult doInBackground(Object... params) {
         HttpRetrofitClient retrofitClient = new HttpRetrofitClient();
 
         if(!(params[0] instanceof String)) {
@@ -30,14 +30,15 @@ public class EquipmentSaveChangesTask extends AsyncTask<Object, Void, AddEquipme
         }
 
         if(!(params[1] instanceof Equipment)) {
-            Log.w(Constants.DEBUG_TAG, "EquipmentRegistrationTask: The second parameter must be the Equip.");
+            Log.w(Constants.DEBUG_TAG, "EquipmentRegistrationTask: The second parameter must be the Equipment.");
             return null;
         }
+
         String token = (String) params[0];
         Equipment equip = (Equipment) params[1];
 
         try {
-            return retrofitClient.client.createEquip(token, equip.getName(), equip.getModelNumber(),
+            return retrofitClient.client.saveEquipChanges(token, equip.getId(), equip.getName(), equip.getModelNumber(),
                     equip.getAssetNumber(), equip.getStatus(), equip.getEngineHours(),
                     equip.getLatitude(), equip.getLongitude());
         } catch (Exception e) {
@@ -48,7 +49,7 @@ public class EquipmentSaveChangesTask extends AsyncTask<Object, Void, AddEquipme
     }
 
     @Override
-    protected void onPostExecute(AddEquipmentResult result) {
+    protected void onPostExecute(EquipmentDetailsResult result) {
         if(result == null)
             callback.onTaskFailed(-1);
         else if(result.getStatus() != EquipmentListResult.OK)

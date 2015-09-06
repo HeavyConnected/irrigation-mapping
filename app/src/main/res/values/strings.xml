@@ -46,6 +46,10 @@
     <string name="equip_reg_btn_reg">Register</string>
     <string name="equip_reg_btn_clf">Clear</string>
 
+    <string name="equip_reg_btn_remove">Remove</string>
+    <string name="equip_reg_btn_map">Map</string>
+    <string name="equip_reg_btn_save">Save</string>
+
     <string name="equip_reg_sending">Sending info...</string>
     <string name="equip_reg_user_isnt_logged_in">You need to login...</string>
 
@@ -55,6 +59,17 @@
     <string name="equip_reg_invalid_engine_hours_value">Invalid engine hours value! Verify the equipment information and try again.</string>
     <string name="equip_reg_registration_failure">Equipment registration failed. Try again...</string>
     <string name="equip_reg_registration_success">Equipment successfully added.</string>
+
+    <string name="equip_reg_loading">Loading...</string>
+    <string name="equip_reg_invalid_equip_id">Invalid equipment ID.</string>
+    <string name="equip_reg_successfully_saved">Equipment successfully saved.</string>
+    <string name="equip_reg_failed_when_removing">Failed when trying to remove. Try again...</string>
+    <string name="equip_reg_successfully_removed">Equipment successfully removed.</string>
+    <string name="equip_reg_loading_failure">Failed when loading equipment information. Try again...</string>
+
+    <string name="equip_reg_remove_confirmation">Do you really want to remove this equipment?</string>
+    <string name="equip_reg_remove_yes">Remove</string>
+    <string name="equip_reg_remove_no">Cancel</string>
     <!-- EquipmentRegistrationActivity - END -->
 
 

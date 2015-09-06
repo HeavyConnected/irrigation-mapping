@@ -168,7 +168,8 @@
         android:gravity="center"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
-        android:id="@+id/equip_reg_edit_equip_bts">
+        android:id="@+id/equip_reg_edit_equip_bts"
+        android:visibility="gone">
 
         <Button
             android:layout_weight="1"

@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import com.heavyconnect.heavyconnect.entities.User;
 
 /**
- * RegisterResult class.
+ * This class represents the RegisterResult.
  */
 public class LoginResult {
     public static final int OK = 0;

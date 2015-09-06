@@ -4,7 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.heavyconnect.heavyconnect.entities.Equipment;
-import com.heavyconnect.heavyconnect.rest.AddEquipmentResult;
+import com.heavyconnect.heavyconnect.rest.EquipmentDetailsResult;
 import com.heavyconnect.heavyconnect.rest.EquipmentListResult;
 import com.heavyconnect.heavyconnect.rest.HttpRetrofitClient;
 import com.heavyconnect.heavyconnect.utils.Constants;
@@ -12,7 +12,7 @@ import com.heavyconnect.heavyconnect.utils.Constants;
 /**
  * This class represents the equipment registration task.
  */
-public class EquipmentRegistrationTask extends AsyncTask<Object, Void, AddEquipmentResult> {
+public class EquipmentRegistrationTask extends AsyncTask<Object, Void, EquipmentDetailsResult> {
 
     private TaskCallback callback;
 
@@ -21,16 +21,16 @@ public class EquipmentRegistrationTask extends AsyncTask<Object, Void, AddEquipm
     }
 
     @Override
-    protected AddEquipmentResult doInBackground(Object... params) {
+    protected EquipmentDetailsResult doInBackground(Object... params) {
         HttpRetrofitClient retrofitClient = new HttpRetrofitClient();
 
         if(!(params[0] instanceof String)) {
-            Log.w(Constants.DEBUG_TAG, "EquipmentRegistrationTask: The first parameter must be the token.");
+            Log.w(Constants.DEBUG_TAG, "EquipmentRegistrationTaskØ: The first parameter must be the token.");
             return null;
         }
 
         if(!(params[1] instanceof Equipment)) {
-            Log.w(Constants.DEBUG_TAG, "EquipmentRegistrationTask: The second parameter must be the E.");
+            Log.w(Constants.DEBUG_TAG, "EquipmentRegistrationTask: The second parameter must be the Equip.");
             return null;
         }
         String token = (String) params[0];
@@ -48,7 +48,7 @@ public class EquipmentRegistrationTask extends AsyncTask<Object, Void, AddEquipm
     }
 
     @Override
-    protected void onPostExecute(AddEquipmentResult result) {
+    protected void onPostExecute(EquipmentDetailsResult result) {
         if(result == null)
             callback.onTaskFailed(-1);
         else if(result.getStatus() != EquipmentListResult.OK)

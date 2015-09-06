@@ -1,6 +1,7 @@
 package com.heavyconnect.heavyconnect.rest;
 
 import com.google.gson.Gson;
+import com.heavyconnect.heavyconnect.entities.Equipment;
 import com.heavyconnect.heavyconnect.utils.Constants;
 
 import java.io.IOException;
@@ -46,7 +47,7 @@ public class HttpRetrofitClient {
 
         @FormUrlEncoded
         @POST("/equipment/")
-        AddEquipmentResult createEquip(
+        EquipmentDetailsResult createEquip(
                 @Header("Authorization") String token,
                 @Field("name") String name,
                 @Field("model_number") int modelNumber,
@@ -55,6 +56,33 @@ public class HttpRetrofitClient {
                 @Field("hours") int hours,
                 @Field("latitude") double latitude,
                 @Field("longitude") double longitude
+        );
+
+        @GET("/equipment/{id}")
+        Equipment fetchEquipmentDetails(
+                @Header("Authorization") String token,
+                @Path("id") int equipId
+        );
+
+        @FormUrlEncoded
+        @PUT("/equipment/{id}")
+        EquipmentDetailsResult saveEquipChanges(
+                @Header("Authorization") String token,
+                @Path("id") int equipId,
+                @Field("name") String name,
+                @Field("model_number") int modelNumber,
+                @Field("asset_number") int assetNumber,
+                @Field("status") int status,
+                @Field("hours") int hours,
+                @Field("latitude") double latitude,
+                @Field("longitude") double longitude
+        );
+
+        @FormUrlEncoded
+        @DELETE("/equipment/{id}")
+        void removeEquip(
+                @Header("Authorization") String token,
+                @Path("id") int equipId
         );
 
 

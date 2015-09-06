@@ -7,11 +7,11 @@ import com.heavyconnect.heavyconnect.rest.HttpRetrofitClient;
 import com.heavyconnect.heavyconnect.rest.LoginResult;
 
 /**
- * Created by andremenezes on 8/24/15.
+ * This class represents the login task.
  */
 public class LoginTask extends AsyncTask<User, Void, LoginResult> {
 
-    TaskCallback callback;
+    private TaskCallback callback;
 
     public LoginTask(TaskCallback userCallback) {
         this.callback = userCallback;

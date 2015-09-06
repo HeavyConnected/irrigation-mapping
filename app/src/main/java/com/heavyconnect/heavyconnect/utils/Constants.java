@@ -1,7 +1,7 @@
 package com.heavyconnect.heavyconnect.utils;
 
 /**
- * Created by andremenezes on 8/24/15.
+ * This class stores all constants.
  */
 public class Constants {
     public static final String DEBUG_TAG = "HeavyConnected";

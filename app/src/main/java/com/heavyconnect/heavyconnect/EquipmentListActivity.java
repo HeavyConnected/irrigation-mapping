@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -58,12 +59,7 @@ public class EquipmentListActivity extends AppCompatActivity implements View.OnC
         mAddEquip.setOnClickListener(this);
 
         mListView = (ListView) findViewById(R.id.equip_list_view);
-        mEquips.clear();
-
-        if(mProgress != null &&  !mProgress.isShowing())
-            mProgress.show();
-
-        new EquipmentListTask(this).execute(mUser);
+        loadEquipments();
     }
 
 
@@ -91,6 +87,18 @@ public class EquipmentListActivity extends AppCompatActivity implements View.OnC
     }
 
     /**
+     * This method loads the equipment list.
+     */
+    private void loadEquipments(){
+        mEquips.clear();
+
+        if(mProgress != null &&  !mProgress.isShowing())
+            mProgress.show();
+
+        new EquipmentListTask(this).execute(mUser);
+    }
+
+    /**
      * This method logs out the user.
      */
     private void logout(){
@@ -105,8 +113,8 @@ public class EquipmentListActivity extends AppCompatActivity implements View.OnC
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.equip_list_add:
-                startActivityForResult(new Intent(this, EquipmentRegistrationActivity.class), EquipmentRegistrationActivity.ADD_EQUIPMENT_REQUEST_CODE);
+            case R.id.equip_list_add:startActivityForResult(new Intent(this, EquipmentRegistrationActivity.class), EquipmentRegistrationActivity.ADD_EQUIPMENT_REQUEST_CODE);
+
                 break;
         }
     }
@@ -136,18 +144,45 @@ public class EquipmentListActivity extends AppCompatActivity implements View.OnC
         mAdapter = new EquipmentListAdapter(this, mEquips);
         mListView.setAdapter(mAdapter);
 
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                int equipId = mAdapter.get(position).getId();
+                Intent intent = new Intent(EquipmentListActivity.this, EquipmentRegistrationActivity.class);
+                intent.putExtra(EquipmentRegistrationActivity.MODE_KEY, EquipmentRegistrationActivity.EQUIPMENT_DETAILS_MODE);
+                intent.putExtra(EquipmentRegistrationActivity.EQUIP_ID_KEY, equipId);
+                startActivityForResult(intent, EquipmentRegistrationActivity.EDIT_EQUIPMENT_REQUEST_CODE);
+
+            }
+        });
+
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == EquipmentRegistrationActivity.ADD_EQUIPMENT_REQUEST_CODE && resultCode == Activity.RESULT_OK){
-            Bundle extras = data.getExtras();
-            Equipment newEquip;
-            if(extras != null){
-                newEquip = new Gson().fromJson((String) extras.get(EquipmentRegistrationActivity.ADD_EQUIPMENT_RESULT_KEY), Equipment.class);
-                if(mAdapter != null)
-                    mAdapter.add(newEquip);
-            }
-        }
+        if(resultCode == Activity.RESULT_OK)
+            loadEquipments();
+//
+//        if(requestCode == EquipmentRegistrationActivity.ADD_EQUIPMENT_REQUEST_CODE && resultCode == Activity.RESULT_OK){
+//            Bundle extras = data.getExtras();
+//            Equipment newEquip;
+//            if(extras != null){
+//                newEquip = new Gson().fromJson((String) extras.get(EquipmentRegistrationActivity.ADD_EQUIPMENT_RESULT_KEY), Equipment.class);
+//                if(mAdapter != null)
+//                    mAdapter.add(newEquip);
+//            }
+//        }
+//
+//        if(requestCode == EquipmentRegistrationActivity.EDIT_EQUIPMENT_REQUEST_CODE && resultCode == Activity.RESULT_OK){
+//            Bundle extras = data.getExtras();
+//            Equipment newEquip;
+//            if(extras != null){
+//                newEquip = new Gson().fromJson((String) extras.get(EquipmentRegistrationActivity.ADD_EQUIPMENT_RESULT_KEY), Equipment.class);
+//                if(mAdapter != null)
+//                    mAdapter.update(newEquip);
+//            }else{
+//                mAdapter.remove()
+//            }
+//        }
     }
 }

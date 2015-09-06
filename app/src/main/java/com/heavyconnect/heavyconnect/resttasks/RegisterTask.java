@@ -7,11 +7,11 @@ import com.heavyconnect.heavyconnect.rest.HttpRetrofitClient;
 import com.heavyconnect.heavyconnect.rest.RegisterResult;
 
 /**
- * Created by andremenezes on 8/24/15.
+ * This class represents the register task.
  */
 public class RegisterTask extends AsyncTask<User, Void, RegisterResult> {
 
-    TaskCallback callback;
+    private TaskCallback callback;
 
     public RegisterTask(TaskCallback userCallback) {
         this.callback = userCallback;

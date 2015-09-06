@@ -10,7 +10,7 @@ import com.heavyconnect.heavyconnect.utils.Constants;
 /**
  * This class represents the equipment details task.
  */
-public class RemoveEquipmentTask extends AsyncTask<Object, Void, Equipment> {
+public class RemoveEquipmentTask extends AsyncTask<Object, Void, Integer> {
 
     private TaskCallback callback;
 
@@ -19,31 +19,32 @@ public class RemoveEquipmentTask extends AsyncTask<Object, Void, Equipment> {
     }
 
     @Override
-    protected Equipment doInBackground(Object... params) {
+    protected Integer doInBackground(Object... params) {
         HttpRetrofitClient retrofitClient = new HttpRetrofitClient();
 
         if(!(params[0] instanceof String)) {
             Log.w(Constants.DEBUG_TAG, "EquipmentRegistrationTaskØ: The first parameter must be the token.");
-            return null;
+            return 1;
         }
 
         if(!(params[1] instanceof Integer)) {
             Log.w(Constants.DEBUG_TAG, "EquipmentRegistrationTask: The second parameter must be the Equipment id.");
-            return null;
+            return 1;
         }
 
         try {
-            return retrofitClient.client.fetchEquipmentDetails((String) params[0], (Integer) params[1]);
+            retrofitClient.client.removeEquip((String) params[0], (Integer) params[1]);
+            return 0;
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return null;
+        return 1;
     }
 
     @Override
-    protected void onPostExecute(Equipment result) {
-        if(result == null)
+    protected void onPostExecute(Integer result) {
+        if(result != 0)
             callback.onTaskFailed(-1);
         else
             callback.onTaskCompleted(result);

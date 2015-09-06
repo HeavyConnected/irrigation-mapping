@@ -1,7 +1,7 @@
 package com.heavyconnect.heavyconnect.rest;
 
 /**
- * RegisterResult class.
+ * This class represents the RegisterResult.
  */
 public class RegisterResult {
     public static final int OK = 0;
@@ -9,9 +9,9 @@ public class RegisterResult {
     public static final int INVALID_INFO = 2;
     public static final int USER_ALREADY_EXISTS = 3;
 
-    public String success;
-    public String description;
-    public int code = 0;
+    private String success;
+    private String description;
+    private int code = OK;
 
     /**
      * Get result status.

@@ -7,11 +7,11 @@ import com.heavyconnect.heavyconnect.rest.EquipmentListResult;
 import com.heavyconnect.heavyconnect.rest.HttpRetrofitClient;
 
 /**
- * Created by andremenezes on 8/24/15.
+ * This class represents the equipment list task.
  */
 public class EquipmentListTask extends AsyncTask<User, Void, EquipmentListResult> {
 
-    TaskCallback callback;
+    private TaskCallback callback;
 
     public EquipmentListTask(TaskCallback userCallback) {
         this.callback = userCallback;
