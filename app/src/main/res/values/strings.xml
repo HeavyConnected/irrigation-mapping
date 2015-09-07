@@ -50,6 +50,7 @@
     <string name="equip_reg_btn_map">Map</string>
     <string name="equip_reg_btn_save">Save</string>
 
+    <string name="equip_reg_getting_location">Getting your location...</string>
     <string name="equip_reg_sending">Sending info...</string>
     <string name="equip_reg_user_isnt_logged_in">You need to login...</string>
 

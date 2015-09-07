@@ -245,17 +245,21 @@ public class EquipmentRegistrationActivity extends AppCompatActivity implements 
         mEquip.setAssetNumber(Integer.parseInt(asset));
         mEquip.setEngineHours(Integer.parseInt(hours));
 
-        mProgress.setMessage(getString(R.string.equip_reg_sending));
-        if(mProgress != null && !mProgress.isShowing())
-            mProgress.show();
 
         isSendingEquip = true;
-        if (mLocation != null)
-            if(mMode == EQUIPMENT_REGISTRATION_MODE) {
+        if (mLocation != null) {
+            mProgress.setMessage(getString(R.string.equip_reg_sending));
+            if (mMode == EQUIPMENT_REGISTRATION_MODE) {
                 new EquipmentRegistrationTask(this).execute(mUser.getToken(), mEquip);
-            }else{
+            } else {
                 new EquipmentSaveChangesTask(this).execute(mUser.getToken(), mEquip);
             }
+        }else {
+            mProgress.setMessage(getString(R.string.equip_reg_getting_location));
+        }
+
+        if(mProgress != null && !mProgress.isShowing())
+            mProgress.show();
     }
 
     /**
@@ -358,8 +362,9 @@ public class EquipmentRegistrationActivity extends AppCompatActivity implements 
         mLocation = location;
         mEquip.setLatitude(mLocation.getLatitude());
         mEquip.setLongitude(mLocation.getLongitude());
-        
+
         if(isSendingEquip){
+            mProgress.setMessage(getString(R.string.equip_reg_sending));
             if(mMode == EQUIPMENT_REGISTRATION_MODE) {
                 new EquipmentRegistrationTask(this).execute(mUser.getToken(), mEquip);
             }else{
