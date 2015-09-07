@@ -10,6 +10,7 @@ import java.net.HttpURLConnection;
 import retrofit.RestAdapter;
 import retrofit.android.AndroidLog;
 import retrofit.client.Request;
+import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 import retrofit.http.*;
 
@@ -78,9 +79,8 @@ public class HttpRetrofitClient {
                 @Field("longitude") double longitude
         );
 
-        @FormUrlEncoded
         @DELETE("/equipment/{id}")
-        void removeEquip(
+        Response removeEquip(
                 @Header("Authorization") String token,
                 @Path("id") int equipId
         );
