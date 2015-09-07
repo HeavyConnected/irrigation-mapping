@@ -89,7 +89,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             return;
         }
 
-        if(password.length() < 3){
+        if(password.length() < 4){
             Toast.makeText(this, getString(R.string.login_short_password), Toast.LENGTH_LONG).show();
             return;
         }

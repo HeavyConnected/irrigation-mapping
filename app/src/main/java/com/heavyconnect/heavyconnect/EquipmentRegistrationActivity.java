@@ -150,10 +150,10 @@ public class EquipmentRegistrationActivity extends AppCompatActivity implements 
         // Remove dialog - END
 
 
-        if(mMode == EQUIPMENT_REGISTRATION_MODE) {
-            mGPSTracker = new GPSTracker(this);
-            mGPSTracker.setOnLocationChangedListener(this);
+        mGPSTracker = new GPSTracker(this);
+        mGPSTracker.setOnLocationChangedListener(this);
 
+        if(mMode == EQUIPMENT_REGISTRATION_MODE) {
             findViewById(R.id.equip_reg_new_equip_bts).setVisibility(View.VISIBLE);
             findViewById(R.id.equip_reg_edit_equip_bts).setVisibility(View.GONE);
         }else{
@@ -183,7 +183,7 @@ public class EquipmentRegistrationActivity extends AppCompatActivity implements 
                 saveEquip();
                 break;
             case R.id.equip_reg_remove:
-                removeEquip();
+                mRemoveDialog.show();
                 break;
             case R.id.equip_reg_map:
                 //TODO: Implement map.
@@ -249,13 +249,13 @@ public class EquipmentRegistrationActivity extends AppCompatActivity implements 
         if(mProgress != null && !mProgress.isShowing())
             mProgress.show();
 
-        if(mMode == EQUIPMENT_REGISTRATION_MODE) {
-            isSendingEquip = true;
-            if (mLocation != null)
+        isSendingEquip = true;
+        if (mLocation != null)
+            if(mMode == EQUIPMENT_REGISTRATION_MODE) {
                 new EquipmentRegistrationTask(this).execute(mUser.getToken(), mEquip);
-        }else{
-            new EquipmentSaveChangesTask(this).execute(mUser.getToken(), mEquip);
-        }
+            }else{
+                new EquipmentSaveChangesTask(this).execute(mUser.getToken(), mEquip);
+            }
     }
 
     /**
@@ -263,14 +263,25 @@ public class EquipmentRegistrationActivity extends AppCompatActivity implements 
      */
     private void removeEquip(){
 
+
+        if(mProgress != null && !mProgress.isShowing())
+            mProgress.show();
+
         new RemoveEquipmentTask(new TaskCallback() {
             @Override
             public void onTaskFailed(int errorCode) {
+
+                if(mProgress != null && mProgress.isShowing())
+                    mProgress.dismiss();
+
                 Toast.makeText(EquipmentRegistrationActivity.this, getString(R.string.equip_reg_failed_when_removing), Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void onTaskCompleted(Object result) {
+                if(mProgress != null && mProgress.isShowing())
+                    mProgress.dismiss();
+
                 Toast.makeText(EquipmentRegistrationActivity.this, getString(R.string.equip_reg_successfully_removed), Toast.LENGTH_LONG).show();
                 setResult(Activity.RESULT_OK);
                 finish();
@@ -347,8 +358,13 @@ public class EquipmentRegistrationActivity extends AppCompatActivity implements 
         mLocation = location;
         mEquip.setLatitude(mLocation.getLatitude());
         mEquip.setLongitude(mLocation.getLongitude());
+        
         if(isSendingEquip){
-            new EquipmentRegistrationTask(this).execute(mUser.getToken(), mEquip);
+            if(mMode == EQUIPMENT_REGISTRATION_MODE) {
+                new EquipmentRegistrationTask(this).execute(mUser.getToken(), mEquip);
+            }else{
+                new EquipmentSaveChangesTask(this).execute(mUser.getToken(), mEquip);
+            }
         }
     }
 }

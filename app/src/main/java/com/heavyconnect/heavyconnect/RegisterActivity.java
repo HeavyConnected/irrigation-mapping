@@ -60,7 +60,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     return;
                 }
 
-                if(password.length() < 3){
+                if(password.length() < 4){
                     Toast.makeText(this, getString(R.string.register_short_password), Toast.LENGTH_LONG).show();
                     return;
                 }

@@ -83,7 +83,7 @@
     <string name="login_welcome_back">Welcome back</string>
 
     <string name="login_short_username">Invalid username. Your username must have 3 or more characters.</string>
-    <string name="login_short_password">Invalid password. Your password must have 3 or more characters.</string>
+    <string name="login_short_password">Invalid password. Your password must have 4 or more characters.</string>
 
     <string name="login_invalid_method">Invalid login method. Contact the support.</string>
     <string name="login_invalid_data">Login failed. After verify your information, try again.</string>
@@ -106,7 +106,7 @@
 
     <string name="register_invalid_name">Invalid name. Verify your information and try again.</string>
     <string name="register_short_username">Invalid username. Your username must have 3 or more characters.</string>
-    <string name="register_short_password">Invalid password. Your password must have 3 or more characters.</string>
+    <string name="register_short_password">Invalid password. Your password must have 4 or more characters.</string>
     <string name="register_invalid_method">Invalid register method. Contact the support.</string>
     <string name="register_invalid_data">User registration failed. Try again after verify your information.</string>
     <string name="register_invalid_username">Invalid username. Verify your information and try again.</string>
