@@ -11,7 +11,8 @@
         android:layout_height="match_parent"
         android:scrollbars="vertical"
         android:fadeScrollbars="false"
-        android:layout_above="@+id/equip_reg_new_equip_bts">
+        android:layout_marginBottom="56dp">
+
         <LinearLayout
             android:layout_height="match_parent"
             android:layout_width="match_parent"
