@@ -29,18 +29,18 @@
     <string name="equip_reg_name">Name</string>
     <string name="equip_reg_name_hint">Ex: Tractor</string>
 
-    <string name="equip_reg_model">Model Number</string>
-    <string name="equip_reg_model_hint">Ex: 942015614</string>
+    <string name="equip_reg_model">Model Code</string>
+    <string name="equip_reg_model_hint">Ex: F94215614</string>
 
     <string name="equip_reg_asset">Asset Number</string>
     <string name="equip_reg_asset_hint">Ex: 416510249</string>
 
-    <string name="equip_reg_hour">Engine Hours</string>
+    <string name="equip_reg_hour">Engine Hours / Equipment Miles</string>
     <string name="equip_reg_hour_hint">Ex: 100</string>
 
     <string name="equip_reg_status">Status</string>
     <string name="equip_reg_status_ok">OK</string>
-    <string name="equip_reg_status_service">ATTENTION</string>
+    <string name="equip_reg_status_service">SERVICE</string>
     <string name="equip_reg_status_broken">BROKEN</string>
 
     <string name="equip_reg_btn_reg">Register</string>
@@ -55,7 +55,7 @@
     <string name="equip_reg_user_isnt_logged_in">You need to login...</string>
 
     <string name="equip_reg_invalid_name">Invalid name! Verify the equipment information and try again.</string>
-    <string name="equip_reg_invalid_model_number">Invalid model number! Verify the equipment information and try again.</string>
+    <string name="equip_reg_invalid_model_number">Invalid model code! Verify the equipment information and try again.</string>
     <string name="equip_reg_invalid_asset_number">Invalid asset number! Verify the equipment information and try again.</string>
     <string name="equip_reg_invalid_engine_hours_value">Invalid engine hours value! Verify the equipment information and try again.</string>
     <string name="equip_reg_registration_failure">Equipment registration failed. Try again...</string>

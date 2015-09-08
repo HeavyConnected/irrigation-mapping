@@ -223,7 +223,7 @@ public class EquipmentRegistrationActivity extends AppCompatActivity implements 
             return;
         }
 
-        if((model.length() < 1) || !model.matches("^\\d{1,}$")){
+        if(model.length() < 1){
             Toast.makeText(this, getString(R.string.equip_reg_invalid_model_number), Toast.LENGTH_LONG).show();
             return;
         }
