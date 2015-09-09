@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
-import com.heavyconnect.heavyconnect.entities.User;
+import com.heavyconnect.heavyconnect.entities.Manager;
 
 /**
  * This class allows to store locally some data.
@@ -26,30 +26,30 @@ public class StorageUtils {
     }
 
     /**
-     * This class stores user data.
+     * This class stores manager data.
      * @param context - The context.
-     * @param user - User data.
+     * @param manager - Manager data.
      */
-    public static void storeUserData(Context context, User user){
+    public static void storeUserData(Context context, Manager manager){
         SharedPreferences prefs = context.getSharedPreferences(SP_NAME, 0);
         SharedPreferences.Editor spEditor = prefs.edit();
-        spEditor.putString(SP_USER_KEY, (new Gson()).toJson(user));
+        spEditor.putString(SP_USER_KEY, (new Gson()).toJson(manager));
         spEditor.commit();
     }
 
     /**
      * This class gets user data stored.
      * @param context - The context.
-     * @return - User data.
+     * @return - Manager data.
      */
-    public static User getUserData(Context context){
+    public static Manager getUserData(Context context){
         SharedPreferences prefs = context.getSharedPreferences(SP_NAME, 0);
         String jsonString = prefs.getString(SP_USER_KEY, null);
 
         if(jsonString == null)
             return null;
 
-        return (new Gson()).fromJson(jsonString, User.class);
+        return (new Gson()).fromJson(jsonString, Manager.class);
     }
 
     /**

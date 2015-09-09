@@ -89,7 +89,7 @@
     <string name="login_invalid_method">Invalid login method. Contact the support.</string>
     <string name="login_invalid_data">Login failed. After verify your information, try again.</string>
     <string name="login_invalid_username_or_password">Invalid username or password.</string>
-    <string name="login_user_no_longer_active">This user is no longer active.</string>
+    <string name="login_user_no_longer_active">This manager is no longer active.</string>
     <string name="login_invalid_username">Invalid username. Verify your information and try again.</string>
     <string name="login_invalid_password">Invalid password. Verify your information and try again.</string>
     <string name="login_sign_in_failure">Login failed! Verify your information and try again...</string>
@@ -98,22 +98,24 @@
 
     <!--RegisterActivity - BEGIN-->
     <string name="register_title">Sign Up</string>
-    <string name="register_name">Name</string>
+    <string name="register_firstName">First Name</string>
+    <string name="register_lastName">Last Name</string>
     <string name="register_username">Username</string>
     <string name="register_password">Password</string>
     <string name="register_sign_up">Sign up</string>
     <string name="register_email">Email</string>
 
-    <string name="register_signing_up">Creating a new user...</string>
+    <string name="register_signing_up">Creating a new manager...</string>
 
-    <string name="register_invalid_name">Invalid name. Verify your information and try again.</string>
+    <string name="register_invalid_firstName">Invalid First Name. Verify your information and try again.</string>
+    <string name="register_invalid_lastName">Invalist Last Name. Verify your information and try again.</string>
     <string name="register_short_username">Invalid username. Your username must have 3 or more characters.</string>
     <string name="register_short_password">Invalid password. Your password must have 4 or more characters.</string>
     <string name="register_invalid_method">Invalid register method. Contact the support.</string>
     <string name="register_invalid_data">User registration failed. Try again after verify your information.</string>
     <string name="register_invalid_username">Invalid username. Verify your information and try again.</string>
     <string name="register_invalid_password">Invalid password. Verify your information and try again.</string>
-    <string name="register_user_already_exists">This user already exists! Try to use another username.</string>
+    <string name="register_user_already_exists">This manager already exists! Try to use another username.</string>
     <string name="register_registration_failed">User registration failed! Try again later...</string>
     <string name="register_registration_success">User successfully registered!</string>
     <!--RegisterActivity - END-->

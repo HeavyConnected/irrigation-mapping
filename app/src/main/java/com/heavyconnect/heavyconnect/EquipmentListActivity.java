@@ -13,10 +13,9 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.heavyconnect.heavyconnect.adapters.EquipmentListAdapter;
 import com.heavyconnect.heavyconnect.entities.Equipment;
-import com.heavyconnect.heavyconnect.entities.User;
+import com.heavyconnect.heavyconnect.entities.Manager;
 import com.heavyconnect.heavyconnect.rest.EquipmentListResult;
 import com.heavyconnect.heavyconnect.resttasks.EquipmentListTask;
 import com.heavyconnect.heavyconnect.resttasks.TaskCallback;
@@ -33,7 +32,7 @@ public class EquipmentListActivity extends AppCompatActivity implements View.OnC
     private EquipmentListAdapter mAdapter;
     private ArrayList<Equipment> mEquips = new ArrayList<Equipment>();
 
-    private User mUser;
+    private Manager mManager;
     private ProgressDialog mProgress;
 
     private Button mAddEquip;
@@ -44,7 +43,7 @@ public class EquipmentListActivity extends AppCompatActivity implements View.OnC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_equipment);
 
-        if(!StorageUtils.getIsLoggedIn(this) || (mUser = StorageUtils.getUserData(this)) == null){
+        if(!StorageUtils.getIsLoggedIn(this) || (mManager = StorageUtils.getUserData(this)) == null){
             startActivity(new Intent(this, LoginActivity.class));
             Toast.makeText(this, getString(R.string.equip_list_user_isnt_logged_in), Toast.LENGTH_LONG).show();
             finish();
@@ -95,7 +94,7 @@ public class EquipmentListActivity extends AppCompatActivity implements View.OnC
         if(mProgress != null &&  !mProgress.isShowing())
             mProgress.show();
 
-        new EquipmentListTask(this).execute(mUser);
+        new EquipmentListTask(this).execute(mManager);
     }
 
     /**

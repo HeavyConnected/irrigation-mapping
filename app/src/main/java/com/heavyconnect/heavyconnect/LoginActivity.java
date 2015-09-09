@@ -10,7 +10,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.heavyconnect.heavyconnect.entities.User;
+import com.heavyconnect.heavyconnect.entities.Manager;
 import com.heavyconnect.heavyconnect.rest.LoginResult;
 import com.heavyconnect.heavyconnect.resttasks.LoginTask;
 import com.heavyconnect.heavyconnect.resttasks.TaskCallback;
@@ -52,12 +52,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         // Someone is already logged in?
         if(StorageUtils.getIsLoggedIn(this)){
-            User user = StorageUtils.getUserData(this);
-            if(user == null){
+            Manager manager = StorageUtils.getUserData(this);
+            if(manager == null){
                 StorageUtils.clearPrefs(this);
                 StorageUtils.putIsLoggedIn(this, false);
             }else{
-                navigateToGrid(user);
+                navigateToGrid(manager);
             }
         }
 
@@ -94,24 +94,24 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             return;
         }
 
-        User user =  new User(username, password);
+        Manager manager =  new Manager(username, password);
 
         if(mProgress != null && !mProgress.isShowing())
             mProgress.show();
 
-        new LoginTask(this).execute(user);
+        new LoginTask(this).execute(manager);
     }
 
 
     /**
      * This method stores locally some user information and navigates to GridActivity.
-     * @param returnedUser - Login result user.
+     * @param returnedManager - Login result user.
      */
-    private void navigateToGrid(User returnedUser){
-        StorageUtils.storeUserData(this, returnedUser);
+    private void navigateToGrid(Manager returnedManager){
+        StorageUtils.storeUserData(this, returnedManager);
         StorageUtils.putIsLoggedIn(this, true);
 
-        Toast.makeText(this, getString(R.string.login_welcome_back) + ", " +  returnedUser.getName() +  "!", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, getString(R.string.login_welcome_back) + ", " +  returnedManager.getFirstName() +  "!", Toast.LENGTH_LONG).show();
         startActivity(new Intent(this, GridActivity.class));
         finish();
     }
@@ -160,12 +160,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
 
         LoginResult loginResult = (LoginResult) result;
-        User user = loginResult.getUser();
-        if(user == null) {
+        Manager manager = loginResult.getUser();
+        if(manager == null) {
             onTaskFailed(101);
             return;
         }
 
-        navigateToGrid(user);
+        navigateToGrid(manager);
     }
 }

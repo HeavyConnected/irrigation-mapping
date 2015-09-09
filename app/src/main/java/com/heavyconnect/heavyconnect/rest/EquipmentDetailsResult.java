@@ -1,8 +1,6 @@
 package com.heavyconnect.heavyconnect.rest;
 
-import com.google.gson.annotations.SerializedName;
 import com.heavyconnect.heavyconnect.entities.Equipment;
-import com.heavyconnect.heavyconnect.entities.User;
 
 /**
  * RegisterResult class.
