@@ -9,7 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.heavyconnect.heavyconnect.entities.User;
+import com.heavyconnect.heavyconnect.entities.Manager;
 import com.heavyconnect.heavyconnect.resttasks.TaskCallback;
 import com.heavyconnect.heavyconnect.resttasks.RegisterTask;
 
@@ -19,7 +19,7 @@ import com.heavyconnect.heavyconnect.resttasks.RegisterTask;
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener, TaskCallback {
 
     private Button mRegisterBt;
-    private EditText mNameEt, mUsernameEt, mPasswordEt;
+    private EditText mFirstNameEt, mLastNameEt, mUsernameEt, mPasswordEt, mEmailEt;
     private ProgressDialog mProgress;
 
     @Override
@@ -27,9 +27,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        mNameEt = (EditText) findViewById(R.id.register_name);
+        mFirstNameEt = (EditText) findViewById(R.id.register_firstName);
+        mLastNameEt = (EditText) findViewById(R.id.register_lastName);
         mUsernameEt = (EditText) findViewById(R.id.register_username);
         mPasswordEt = (EditText) findViewById(R.id.register_password);
+        mEmailEt = (EditText) findViewById(R.id.register_email);
 
         mRegisterBt = (Button) findViewById(R.id.register_bt);
         mRegisterBt.setOnClickListener(this);
@@ -46,12 +48,19 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         switch(v.getId()){
             case R.id.register_bt:
                 //Get the variables values
-                String name = mNameEt.getText().toString();
+                String firstName = mFirstNameEt.getText().toString();
+                String lastName = mLastNameEt.getText().toString();
                 String username = mUsernameEt.getText().toString();
                 String password = mPasswordEt.getText().toString();
+                String email = mEmailEt.getText().toString();
 
-                if(name.length() < 3){
-                    Toast.makeText(this, getString(R.string.register_invalid_name), Toast.LENGTH_LONG).show();
+                if(firstName.length() < 3){
+                    Toast.makeText(this, getString(R.string.register_invalid_firstName), Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                if(lastName.length() < 3){
+                    Toast.makeText(this, getString(R.string.register_invalid_lastName), Toast.LENGTH_LONG).show();
                     return;
                 }
 
@@ -65,22 +74,22 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     return;
                 }
 
-                User user = new User(name, username, password);
-                registerUser(user);
+                Manager manager = new Manager(firstName, lastName, username, password, email);
+                registerUser(manager);
 
                 break;
         }
     }
 
     /**
-     * This method creates a new user in backend.
-     * @param user - User to create.
+     * This method creates a new manager in backend.
+     * @param manager - Manager to create.
      */
-    private void registerUser(User user){
+    private void registerUser(Manager manager){
         if(mProgress != null &&  !mProgress.isShowing())
             mProgress.show();
 
-        new RegisterTask(this).execute(user);
+        new RegisterTask(this).execute(manager);
     }
 
     @Override
@@ -101,7 +110,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 message = getString(R.string.register_invalid_username);
                 break;
             case 4:
-                message = getString(R.string.register_invalid_name);
+                message = getString(R.string.register_invalid_firstName);
                 break;
             case 5:
                 message = getString(R.string.register_invalid_password);

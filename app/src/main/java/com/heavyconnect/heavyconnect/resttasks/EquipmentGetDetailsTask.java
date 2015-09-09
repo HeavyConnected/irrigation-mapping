@@ -4,8 +4,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.heavyconnect.heavyconnect.entities.Equipment;
-import com.heavyconnect.heavyconnect.entities.User;
-import com.heavyconnect.heavyconnect.rest.EquipmentListResult;
 import com.heavyconnect.heavyconnect.rest.HttpRetrofitClient;
 import com.heavyconnect.heavyconnect.utils.Constants;
 

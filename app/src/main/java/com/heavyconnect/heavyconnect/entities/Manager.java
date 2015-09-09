@@ -3,34 +3,39 @@ package com.heavyconnect.heavyconnect.entities;
 /**
  * Created by andremenezes on 8/4/15.
  */
-public class User {
-    private String name;
+public class Manager {
+    private String firstName;
+    private String lastName;
     private String username;
     private String password;
     private String token;
     private String email;
 
-    public User(){
+    public Manager(){
 
     }
 
-    public User (String name, String username, String password, String email){
-        this.name = name;
+    public Manager(String firstName, String lastName, String username, String password, String email){
+        this.firstName = firstName;
         this.username = username;
         this.password = password;
         this.email = email;
+        this.lastName = lastName;
     }
 
-    public User(String username, String password){
+    public Manager(String username, String password){
         this.username = username;
         this.password = password;
-        this.name = "";
+        this.firstName = "";
         this.email = "";
+        this.lastName = "";
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
+
+    public void setLastName(String lastName) { this.lastName = lastName; }
 
     public void setUsername(String username) {
         this.username = username;
@@ -46,9 +51,11 @@ public class User {
 
     public void setEmail(String email) { this.email = email; }
 
-    public String getName() {
-        return name;
+    public String getFirstName() {
+        return firstName;
     }
+
+    public String getLastName() { return lastName; }
 
     public String getEmail() { return email; }
 

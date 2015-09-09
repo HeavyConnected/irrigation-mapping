@@ -2,14 +2,14 @@ package com.heavyconnect.heavyconnect.resttasks;
 
 import android.os.AsyncTask;
 
-import com.heavyconnect.heavyconnect.entities.User;
+import com.heavyconnect.heavyconnect.entities.Manager;
 import com.heavyconnect.heavyconnect.rest.EquipmentListResult;
 import com.heavyconnect.heavyconnect.rest.HttpRetrofitClient;
 
 /**
  * This class represents the equipment list task.
  */
-public class EquipmentListTask extends AsyncTask<User, Void, EquipmentListResult> {
+public class EquipmentListTask extends AsyncTask<Manager, Void, EquipmentListResult> {
 
     private TaskCallback callback;
 
@@ -18,12 +18,12 @@ public class EquipmentListTask extends AsyncTask<User, Void, EquipmentListResult
     }
 
     @Override
-    protected EquipmentListResult doInBackground(User... params) {
+    protected EquipmentListResult doInBackground(Manager... params) {
         HttpRetrofitClient retrofitClient = new HttpRetrofitClient();
-        User user = params[0];
+        Manager manager = params[0];
 
         try {
-            return retrofitClient.client.fetchUserEquips(user.getToken());
+            return retrofitClient.client.fetchUserEquips(manager.getToken());
         } catch (Exception e) {
             e.printStackTrace();
         }

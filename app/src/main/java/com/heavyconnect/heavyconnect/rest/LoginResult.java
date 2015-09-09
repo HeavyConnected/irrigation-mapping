@@ -1,7 +1,7 @@
 package com.heavyconnect.heavyconnect.rest;
 
 import com.google.gson.annotations.SerializedName;
-import com.heavyconnect.heavyconnect.entities.User;
+import com.heavyconnect.heavyconnect.entities.Manager;
 
 /**
  * This class represents the RegisterResult.
@@ -15,7 +15,8 @@ public class LoginResult {
 
     private boolean success = false;
     private String username;
-    private String name;
+    private String firstName;
+    private String lastName;
 
     @SerializedName("api-token")
     private String token;
@@ -30,12 +31,13 @@ public class LoginResult {
         return code;
     }
 
-    public User getUser() {
+    public Manager getUser() {
         if (code != OK)
             return null;
 
-        User result = new User();
-        result.setName(name);
+        Manager result = new Manager();
+        result.setFirstName(firstName);
+        result.setLastName(lastName);
         result.setUsername(username);
         result.setToken(token);
 

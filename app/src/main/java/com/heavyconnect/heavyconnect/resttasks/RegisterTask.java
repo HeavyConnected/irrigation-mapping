@@ -2,14 +2,14 @@ package com.heavyconnect.heavyconnect.resttasks;
 
 import android.os.AsyncTask;
 
-import com.heavyconnect.heavyconnect.entities.User;
+import com.heavyconnect.heavyconnect.entities.Manager;
 import com.heavyconnect.heavyconnect.rest.HttpRetrofitClient;
 import com.heavyconnect.heavyconnect.rest.RegisterResult;
 
 /**
  * This class represents the register task.
  */
-public class RegisterTask extends AsyncTask<User, Void, RegisterResult> {
+public class RegisterTask extends AsyncTask<Manager, Void, RegisterResult> {
 
     private TaskCallback callback;
 
@@ -18,12 +18,12 @@ public class RegisterTask extends AsyncTask<User, Void, RegisterResult> {
     }
 
     @Override
-    protected RegisterResult doInBackground(User... params) {
+    protected RegisterResult doInBackground(Manager... params) {
         HttpRetrofitClient retrofitClient = new HttpRetrofitClient();
-        User user = params[0];
+        Manager manager = params[0];
 
         try {
-            return retrofitClient.client.createUser(user.getName(), user.getUsername(), user.getPassword());
+            return retrofitClient.client.createUser(manager.getFirstName(), manager.getLastName(), manager.getUsername(), manager.getPassword(), manager.getEmail());
         } catch (Exception e) {
             e.printStackTrace();
         }
