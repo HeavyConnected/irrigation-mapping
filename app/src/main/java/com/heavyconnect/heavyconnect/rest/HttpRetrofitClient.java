@@ -51,7 +51,7 @@ public class HttpRetrofitClient {
         EquipmentDetailsResult createEquip(
                 @Header("Authorization") String token,
                 @Field("name") String name,
-                @Field("model_number") int modelNumber,
+                @Field("model_number") String modelNumber,
                 @Field("asset_number") int assetNumber,
                 @Field("status") int status,
                 @Field("hours") int hours,
@@ -71,7 +71,7 @@ public class HttpRetrofitClient {
                 @Header("Authorization") String token,
                 @Path("id") int equipId,
                 @Field("name") String name,
-                @Field("model_number") int modelNumber,
+                @Field("model_number") String modelNumber,
                 @Field("asset_number") int assetNumber,
                 @Field("status") int status,
                 @Field("hours") int hours,

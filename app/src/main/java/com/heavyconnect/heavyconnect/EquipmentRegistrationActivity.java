@@ -241,7 +241,7 @@ public class EquipmentRegistrationActivity extends AppCompatActivity implements 
         mEquip.setId(mEquipId);
         mEquip.setName(name);
         mEquip.setStatus(status);
-        mEquip.setModelNumber(Integer.parseInt(model));
+        mEquip.setModelNumber(model);
         mEquip.setAssetNumber(Integer.parseInt(asset));
         mEquip.setEngineHours(Integer.parseInt(hours));
 
@@ -339,7 +339,7 @@ public class EquipmentRegistrationActivity extends AppCompatActivity implements 
         if(result instanceof Equipment){
             mEquip = (Equipment) result;
             mNameEt.setText(mEquip.getName());
-            mEquipModelEt.setText(Integer.toString(mEquip.getModelNumber()));
+            mEquipModelEt.setText(mEquip.getModelNumber());
             mAssetNumberEt.setText(Integer.toString(mEquip.getAssetNumber()));
             mEngineHoursEt.setText(Integer.toString(mEquip.getEngineHours()));
 

@@ -16,7 +16,7 @@ public class Equipment {
     private String name;
 
     @SerializedName("model_number")
-    private int modelNumber;
+    private String modelNumber;
 
     @SerializedName("asset_number")
     private int assetNumber;
@@ -74,11 +74,11 @@ public class Equipment {
         this.manager = manager;
     }
 
-    public int getModelNumber() {
+    public String getModelNumber() {
         return modelNumber;
     }
 
-    public void setModelNumber(int modelNumber) {
+    public void setModelNumber(String modelNumber) {
         this.modelNumber = modelNumber;
     }
 
