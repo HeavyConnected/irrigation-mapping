@@ -23,7 +23,7 @@ public class RegisterTask extends AsyncTask<User, Void, RegisterResult> {
         User user = params[0];
 
         try {
-            return retrofitClient.client.createUser(user.getName(), user.getUsername(), user.getPassword());
+            return retrofitClient.client.createUser(user.getName(), user.getUsername(), user.getPassword(), user.getEmail());
         } catch (Exception e) {
             e.printStackTrace();
         }

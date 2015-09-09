@@ -8,21 +8,24 @@ public class User {
     private String username;
     private String password;
     private String token;
+    private String email;
 
     public User(){
 
     }
 
-    public User (String name, String username, String password){
+    public User (String name, String username, String password, String email){
         this.name = name;
         this.username = username;
         this.password = password;
+        this.email = email;
     }
 
     public User(String username, String password){
         this.username = username;
         this.password = password;
         this.name = "";
+        this.email = "";
     }
 
     public void setName(String name) {
@@ -41,9 +44,13 @@ public class User {
         this.token = token;
     }
 
+    public void setEmail(String email) { this.email = email; }
+
     public String getName() {
         return name;
     }
+
+    public String getEmail() { return email; }
 
     public String getUsername() {
         return username;

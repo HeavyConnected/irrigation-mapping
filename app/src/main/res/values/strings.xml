@@ -102,6 +102,7 @@
     <string name="register_username">Username</string>
     <string name="register_password">Password</string>
     <string name="register_sign_up">Sign up</string>
+    <string name="register_email">Email</string>
 
     <string name="register_signing_up">Creating a new user...</string>
 

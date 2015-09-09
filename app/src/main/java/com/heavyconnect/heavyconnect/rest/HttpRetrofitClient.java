@@ -34,7 +34,8 @@ public class HttpRetrofitClient {
         RegisterResult createUser(
                 @Field("first_name") String name,
                 @Field("username") String username,
-                @Field("password") String password);
+                @Field("password") String password,
+                @Field("email") String email);
 
         @FormUrlEncoded
         @POST("/login/")

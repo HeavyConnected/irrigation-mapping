@@ -19,7 +19,7 @@ import com.heavyconnect.heavyconnect.resttasks.RegisterTask;
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener, TaskCallback {
 
     private Button mRegisterBt;
-    private EditText mNameEt, mUsernameEt, mPasswordEt;
+    private EditText mNameEt, mUsernameEt, mPasswordEt, mEmailEt;
     private ProgressDialog mProgress;
 
     @Override
@@ -30,6 +30,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         mNameEt = (EditText) findViewById(R.id.register_name);
         mUsernameEt = (EditText) findViewById(R.id.register_username);
         mPasswordEt = (EditText) findViewById(R.id.register_password);
+        mEmailEt = (EditText) findViewById(R.id.register_email);
 
         mRegisterBt = (Button) findViewById(R.id.register_bt);
         mRegisterBt.setOnClickListener(this);
@@ -49,6 +50,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 String name = mNameEt.getText().toString();
                 String username = mUsernameEt.getText().toString();
                 String password = mPasswordEt.getText().toString();
+                String email = mEmailEt.getText().toString();
 
                 if(name.length() < 3){
                     Toast.makeText(this, getString(R.string.register_invalid_name), Toast.LENGTH_LONG).show();
@@ -65,7 +67,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     return;
                 }
 
-                User user = new User(name, username, password);
+                User user = new User(name, username, password, email);
                 registerUser(user);
 
                 break;
