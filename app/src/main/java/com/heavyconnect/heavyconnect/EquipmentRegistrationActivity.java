@@ -5,8 +5,8 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.location.Location;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -28,6 +28,8 @@ import com.heavyconnect.heavyconnect.resttasks.EquipmentSaveChangesTask;
 import com.heavyconnect.heavyconnect.resttasks.RemoveEquipmentTask;
 import com.heavyconnect.heavyconnect.resttasks.TaskCallback;
 import com.heavyconnect.heavyconnect.utils.StorageUtils;
+
+import java.util.ArrayList;
 
 /**
  * This class represents the Equipment Registration screen.
@@ -74,6 +76,8 @@ public class EquipmentRegistrationActivity extends AppCompatActivity implements 
 
     private int mMode = EQUIPMENT_REGISTRATION_MODE;
     private int mEquipId = 0;
+
+    private boolean mUpdateLocation = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,6 +155,10 @@ public class EquipmentRegistrationActivity extends AppCompatActivity implements 
 
 
         mGPSTracker = new GPSTracker(this);
+        if(!mGPSTracker.canGetLocation()){
+            Toast.makeText(this, getString(R.string.equip_reg_disabled_gps_error), Toast.LENGTH_LONG).show();
+            finish();
+        }
         mGPSTracker.setOnLocationChangedListener(this);
 
         if(mMode == EQUIPMENT_REGISTRATION_MODE) {
@@ -186,7 +194,12 @@ public class EquipmentRegistrationActivity extends AppCompatActivity implements 
                 mRemoveDialog.show();
                 break;
             case R.id.equip_reg_map:
-                //TODO: Implement map.
+                ArrayList<Equipment> equips = new ArrayList<Equipment>();
+                equips.add(mEquip);
+
+                Intent it = new Intent(this, MapActivity.class);
+                it.putExtra(MapActivity.EQUIPS_KEY, equips);
+                startActivity(it);
                 break;
             case R.id.equip_reg_save:
                 saveEquip();
@@ -240,10 +253,13 @@ public class EquipmentRegistrationActivity extends AppCompatActivity implements 
 
         mEquip.setId(mEquipId);
         mEquip.setName(name);
-        mEquip.setStatus(status);
         mEquip.setModelNumber(model);
         mEquip.setAssetNumber(Integer.parseInt(asset));
+        if(mEquip.getStatus() != status || mEquip.getEngineHours() != Integer.parseInt(hours))
+            mUpdateLocation = true;
+
         mEquip.setEngineHours(Integer.parseInt(hours));
+        mEquip.setStatus(status);
 
 
         isSendingEquip = true;
@@ -251,7 +267,14 @@ public class EquipmentRegistrationActivity extends AppCompatActivity implements 
             mProgress.setMessage(getString(R.string.equip_reg_sending));
             if (mMode == EQUIPMENT_REGISTRATION_MODE) {
                 new EquipmentRegistrationTask(this).execute(mUser.getToken(), mEquip);
+
             } else {
+
+                if(mUpdateLocation){
+                    mEquip.setLatitude(mLocation.getLatitude());
+                    mEquip.setLongitude(mLocation.getLongitude());
+                }
+
                 new EquipmentSaveChangesTask(this).execute(mUser.getToken(), mEquip);
             }
         }else {
@@ -266,7 +289,6 @@ public class EquipmentRegistrationActivity extends AppCompatActivity implements 
      * Removes equipment.
      */
     private void removeEquip(){
-
 
         if(mProgress != null && !mProgress.isShowing())
             mProgress.show();
@@ -338,6 +360,7 @@ public class EquipmentRegistrationActivity extends AppCompatActivity implements 
 
         if(result instanceof Equipment){
             mEquip = (Equipment) result;
+
             mNameEt.setText(mEquip.getName());
             mEquipModelEt.setText(mEquip.getModelNumber());
             mAssetNumberEt.setText(Integer.toString(mEquip.getAssetNumber()));
@@ -360,12 +383,16 @@ public class EquipmentRegistrationActivity extends AppCompatActivity implements 
     @Override
     public void onLocationChanged(Location location) {
         mLocation = location;
-        mEquip.setLatitude(mLocation.getLatitude());
-        mEquip.setLongitude(mLocation.getLongitude());
 
         if(isSendingEquip){
             mProgress.setMessage(getString(R.string.equip_reg_sending));
-            if(mMode == EQUIPMENT_REGISTRATION_MODE) {
+
+            if(mMode == EQUIPMENT_REGISTRATION_MODE || mUpdateLocation) {
+                mEquip.setLatitude(mLocation.getLatitude());
+                mEquip.setLongitude(mLocation.getLongitude());
+            }
+
+            if (mMode == EQUIPMENT_REGISTRATION_MODE) {
                 new EquipmentRegistrationTask(this).execute(mUser.getToken(), mEquip);
             }else{
                 new EquipmentSaveChangesTask(this).execute(mUser.getToken(), mEquip);

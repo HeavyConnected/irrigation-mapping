@@ -2,10 +2,12 @@ package com.heavyconnect.heavyconnect.entities;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * Created by felipepx on 9/2/15.
  */
-public class Equipment {
+public class Equipment implements Serializable {
 
     public static final int STATUS_OK = 1;
     public static final int STATUS_SERVICE = 2;

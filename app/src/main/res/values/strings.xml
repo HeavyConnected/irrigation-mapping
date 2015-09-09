@@ -1,6 +1,7 @@
 <resources>
     <!-- General Strings - BEGIN -->
     <string name="app_name">HeavyConnect</string>
+    <string name="google_api_key">AIzaSyDV6N9jcdDOvjbZmnl8Iof4QNaPIGod-Q4</string>
     <string name="action_logout">Logout</string>
     <string name="logout_message">See you soon...</string>
     <!-- General Strings - END -->
@@ -71,8 +72,14 @@
     <string name="equip_reg_remove_confirmation">Do you really want to remove this equipment?</string>
     <string name="equip_reg_remove_yes">Remove</string>
     <string name="equip_reg_remove_no">Cancel</string>
+
+    <string name="equip_reg_disabled_gps_error">You need to enable your GPS to proceed...</string>
     <!-- EquipmentRegistrationActivity - END -->
 
+    <!--MapActivity - BEGIN-->
+    <string name="map_loading">Loading...</string>
+    <string name="map_load_failure">Failed when loading equipment list. Verify your Internet connection and try again...</string>
+    <!--MapActivity - END-->
 
     <!--LoginActivity - BEGIN-->
     <string name="login_username">Username</string>

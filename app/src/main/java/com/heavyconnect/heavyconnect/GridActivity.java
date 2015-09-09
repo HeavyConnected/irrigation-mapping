@@ -52,6 +52,9 @@ public class GridActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.grid_equip: // Equipments
                 startActivity(new Intent(this, EquipmentListActivity.class));
                 break;
+            case R.id.grid_map:
+                startActivity(new Intent(this, MapActivity.class));
+                break;
             case R.id.grid_exit: // Logout
                 logout();
                 break;

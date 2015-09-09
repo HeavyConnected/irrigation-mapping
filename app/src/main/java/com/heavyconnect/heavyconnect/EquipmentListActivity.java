@@ -54,6 +54,7 @@ public class EquipmentListActivity extends AppCompatActivity implements View.OnC
         mProgress.setTitle(null);
         mProgress.setMessage(getString(R.string.equip_list_loading));
         mProgress.setIndeterminate(true);
+        mProgress.setCancelable(false);
 
         mAddEquip = (Button) findViewById(R.id.equip_list_add);
         mAddEquip.setOnClickListener(this);
