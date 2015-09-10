@@ -18,7 +18,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.heavyconnect.heavyconnect.entities.Equipment;
-import com.heavyconnect.heavyconnect.entities.User;
+import com.heavyconnect.heavyconnect.entities.Manager;
 import com.heavyconnect.heavyconnect.geolocation.GPSTracker;
 import com.heavyconnect.heavyconnect.geolocation.OnLocationChangedListener;
 import com.heavyconnect.heavyconnect.rest.EquipmentDetailsResult;
@@ -65,7 +65,7 @@ public class EquipmentRegistrationActivity extends AppCompatActivity implements 
     private Button mSaveBt;
 
     private ProgressDialog mProgress;
-    private User mUser;
+    private Manager mManager;
 
     private Location mLocation;
     private Equipment mEquip = new Equipment();
@@ -89,7 +89,7 @@ public class EquipmentRegistrationActivity extends AppCompatActivity implements 
         mProgress.setIndeterminate(true);
         mProgress.setCancelable(false);
 
-        if(!StorageUtils.getIsLoggedIn(this) || (mUser = StorageUtils.getUserData(this)) == null){
+        if(!StorageUtils.getIsLoggedIn(this) || (mManager = StorageUtils.getUserData(this)) == null){
             startActivity(new Intent(this, LoginActivity.class));
             Toast.makeText(this, getString(R.string.equip_reg_user_isnt_logged_in), Toast.LENGTH_LONG).show();
             finish();
@@ -177,7 +177,7 @@ public class EquipmentRegistrationActivity extends AppCompatActivity implements 
             if(mProgress != null && !mProgress.isShowing())
                 mProgress.show();
 
-            new EquipmentGetDetailsTask(this).execute(mUser.getToken(), mEquipId);
+            new EquipmentGetDetailsTask(this).execute(mManager.getToken(), mEquipId);
         }
     }
 
@@ -266,7 +266,7 @@ public class EquipmentRegistrationActivity extends AppCompatActivity implements 
         if (mLocation != null) {
             mProgress.setMessage(getString(R.string.equip_reg_sending));
             if (mMode == EQUIPMENT_REGISTRATION_MODE) {
-                new EquipmentRegistrationTask(this).execute(mUser.getToken(), mEquip);
+                new EquipmentRegistrationTask(this).execute(mManager.getToken(), mEquip);
 
             } else {
 
@@ -275,7 +275,7 @@ public class EquipmentRegistrationActivity extends AppCompatActivity implements 
                     mEquip.setLongitude(mLocation.getLongitude());
                 }
 
-                new EquipmentSaveChangesTask(this).execute(mUser.getToken(), mEquip);
+                new EquipmentSaveChangesTask(this).execute(mManager.getToken(), mEquip);
             }
         }else {
             mProgress.setMessage(getString(R.string.equip_reg_getting_location));
@@ -312,7 +312,7 @@ public class EquipmentRegistrationActivity extends AppCompatActivity implements 
                 setResult(Activity.RESULT_OK);
                 finish();
             }
-        }).execute(mUser.getToken(), mEquip.getId());
+        }).execute(mManager.getToken(), mEquip.getId());
     }
 
     /**
@@ -393,9 +393,9 @@ public class EquipmentRegistrationActivity extends AppCompatActivity implements 
             }
 
             if (mMode == EQUIPMENT_REGISTRATION_MODE) {
-                new EquipmentRegistrationTask(this).execute(mUser.getToken(), mEquip);
+                new EquipmentRegistrationTask(this).execute(mManager.getToken(), mEquip);
             }else{
-                new EquipmentSaveChangesTask(this).execute(mUser.getToken(), mEquip);
+                new EquipmentSaveChangesTask(this).execute(mManager.getToken(), mEquip);
             }
         }
     }

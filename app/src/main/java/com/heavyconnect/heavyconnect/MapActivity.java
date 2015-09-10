@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
@@ -23,9 +22,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.vision.Frame;
 import com.heavyconnect.heavyconnect.entities.Equipment;
-import com.heavyconnect.heavyconnect.entities.User;
+import com.heavyconnect.heavyconnect.entities.Manager;
 import com.heavyconnect.heavyconnect.rest.EquipmentListResult;
 import com.heavyconnect.heavyconnect.resttasks.EquipmentListTask;
 import com.heavyconnect.heavyconnect.resttasks.TaskCallback;
@@ -54,14 +52,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     private ArrayList<Equipment> mEquips = new ArrayList<Equipment>();
     private ProgressDialog mProgress;
-    private User mUser;
+    private Manager mManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
-        if(!StorageUtils.getIsLoggedIn(this) || (mUser = StorageUtils.getUserData(this)) == null){
+        if(!StorageUtils.getIsLoggedIn(this) || (mManager = StorageUtils.getUserData(this)) == null){
             startActivity(new Intent(this, LoginActivity.class));
             Toast.makeText(this, getString(R.string.map_loading), Toast.LENGTH_LONG).show();
             finish();
@@ -118,7 +116,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         if(mProgress != null &&  !mProgress.isShowing())
             mProgress.show();
 
-        new EquipmentListTask(this).execute(mUser);
+        new EquipmentListTask(this).execute(mManager);
     }
 
     @Override
