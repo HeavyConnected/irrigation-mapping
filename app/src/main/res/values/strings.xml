@@ -126,4 +126,9 @@
     <string name="register_registration_failed">User registration failed! Try again later...</string>
     <string name="register_registration_success">User successfully registered!</string>
     <!--RegisterActivity - END-->
+    
+    <!--FieldLocations - BEGIN-->
+    <string name="field_locations_array">Field1</string>
+    <string name="field_locations_array">Field2</string>
+    <string name=""
 </resources>
