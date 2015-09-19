@@ -129,5 +129,9 @@
     <!--RegisterActivity - END-->
     
     <!--FieldLocations - BEGIN-->
+    <string name="field_0_locations_array">Field1</string>
+    <string name="field_1_locations_array">Field2</string>
+    <string name="field_2_locations_array">Field3</string>
+    <!--FieldLocations - END-->
 
 </resources>

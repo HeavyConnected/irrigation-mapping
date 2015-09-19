@@ -18,5 +18,10 @@ public class IrrigationMapActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_irrigation_map);
         mFieldLocations = getResources().getStringArray(R.array.field_locations_array);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+
+        // Set Adapter for the list view
+
     }
 }
