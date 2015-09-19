@@ -1,0 +1,44 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    android:padding="@dimen/activity_margin"
+    android:layout_width="match_parent"
+    android:weightSum="1">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:id="@+id/dialog_ask_message"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/SectionText"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="26dp">
+
+        <Button
+            android:id="@+id/dialog_ask_cancel"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/green_button_bg"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:layout_marginRight="2dp"/>
+
+        <Button
+            android:id="@+id/dialog_ask_ok"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/green_button_bg"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:layout_marginLeft="2dp"/>
+
+    </LinearLayout>
+</LinearLayout>

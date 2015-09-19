@@ -1,0 +1,29 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".EquipmentListActivity">
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="@string/equip_list_add"
+        android:id="@+id/equip_list_add"
+        android:background="@drawable/green_button_bg"
+        android:textColor="#fff"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="@dimen/activity_margin"
+        android:layout_marginRight="@dimen/activity_margin"
+        android:layout_marginBottom="@dimen/activity_margin"/>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/equip_list_add"
+        android:padding="@dimen/activity_margin"
+        android:scrollbars="vertical"
+        android:fadeScrollbars="false"
+        android:id="@+id/equip_list_view"
+        android:divider="#00ffffff"/>
+
+</RelativeLayout>

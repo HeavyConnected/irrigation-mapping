@@ -1,0 +1,129 @@
+<resources>
+    <!-- General Strings - BEGIN -->
+    <string name="app_name">HeavyConnect</string>
+    <string name="google_api_key">AIzaSyDV6N9jcdDOvjbZmnl8Iof4QNaPIGod-Q4</string>
+    <string name="action_logout">Logout</string>
+    <string name="logout_message">See you soon...</string>
+    <!-- General Strings - END -->
+
+    <!-- GridActivity - BEGIN -->
+    <string name="grid_equipment">Equipment</string>
+    <string name="grid_map">Map</string>
+    <string name="grid_settings">Settings</string>
+    <string name="grid_exit">Exit</string>
+    <string name="grid_user_isnt_logged_in">You need to login...</string>
+    <!-- GridActivity - END -->
+
+    <!-- EquipmentListActivity - BEGIN -->
+    <string name="equip_list_title">Equipments</string>
+    <string name="equip_list_add">Add Equipment</string>
+
+    <string name="equip_list_user_isnt_logged_in">You need to login...</string>
+    <string name="equip_list_loading">Loading...</string>
+
+    <string name="equip_list_load_failure">Failed when trying to get the equipment list... Try again...</string>
+    <!-- EquipmentListActivity - END -->
+
+    <!-- EquipmentRegistrationActivity - BEGIN -->
+    <string name="equip_reg_title">Equipment Registration</string>
+
+    <string name="equip_reg_name">Name</string>
+    <string name="equip_reg_name_hint">Ex: Tractor</string>
+
+    <string name="equip_reg_model">Model Code</string>
+    <string name="equip_reg_model_hint">Ex: F94215614</string>
+
+    <string name="equip_reg_asset">Asset Number</string>
+    <string name="equip_reg_asset_hint">Ex: 416510249</string>
+
+    <string name="equip_reg_hour">Engine Hours / Equipment Miles</string>
+    <string name="equip_reg_hour_hint">Ex: 100</string>
+
+    <string name="equip_reg_status">Status</string>
+    <string name="equip_reg_status_ok">OK</string>
+    <string name="equip_reg_status_service">SERVICE</string>
+    <string name="equip_reg_status_broken">BROKEN</string>
+
+    <string name="equip_reg_btn_reg">Register</string>
+    <string name="equip_reg_btn_clf">Clear</string>
+
+    <string name="equip_reg_btn_remove">Remove</string>
+    <string name="equip_reg_btn_map">Map</string>
+    <string name="equip_reg_btn_save">Save</string>
+
+    <string name="equip_reg_getting_location">Getting your location...</string>
+    <string name="equip_reg_sending">Sending info...</string>
+    <string name="equip_reg_user_isnt_logged_in">You need to login...</string>
+
+    <string name="equip_reg_invalid_name">Invalid name! Verify the equipment information and try again.</string>
+    <string name="equip_reg_invalid_model_number">Invalid model code! Verify the equipment information and try again.</string>
+    <string name="equip_reg_invalid_asset_number">Invalid asset number! Verify the equipment information and try again.</string>
+    <string name="equip_reg_invalid_engine_hours_value">Invalid engine hours value! Verify the equipment information and try again.</string>
+    <string name="equip_reg_registration_failure">Equipment registration failed. Try again...</string>
+    <string name="equip_reg_registration_success">Equipment successfully added.</string>
+
+    <string name="equip_reg_loading">Loading...</string>
+    <string name="equip_reg_invalid_equip_id">Invalid equipment ID.</string>
+    <string name="equip_reg_successfully_saved">Equipment successfully saved.</string>
+    <string name="equip_reg_failed_when_removing">Failed when trying to remove. Try again...</string>
+    <string name="equip_reg_successfully_removed">Equipment successfully removed.</string>
+    <string name="equip_reg_loading_failure">Failed when loading equipment information. Try again...</string>
+
+    <string name="equip_reg_remove_confirmation">Do you really want to remove this equipment?</string>
+    <string name="equip_reg_remove_yes">Remove</string>
+    <string name="equip_reg_remove_no">Cancel</string>
+
+    <string name="equip_reg_disabled_gps_error">You need to enable your GPS to proceed...</string>
+    <!-- EquipmentRegistrationActivity - END -->
+
+    <!--MapActivity - BEGIN-->
+    <string name="map_loading">Loading...</string>
+    <string name="map_load_failure">Failed when loading equipment list. Verify your Internet connection and try again...</string>
+    <!--MapActivity - END-->
+
+    <!--LoginActivity - BEGIN-->
+    <string name="login_username">Username</string>
+    <string name="login_password">Password</string>
+    <string name="login_sign_in">Login</string>
+    <string name="login_register">Register here</string>
+
+    <string name="login_signing_in">Signing in...</string>
+    <string name="login_welcome_back">Welcome back</string>
+
+    <string name="login_short_username">Invalid username. Your username must have 3 or more characters.</string>
+    <string name="login_short_password">Invalid password. Your password must have 4 or more characters.</string>
+
+    <string name="login_invalid_method">Invalid login method. Contact the support.</string>
+    <string name="login_invalid_data">Login failed. After verify your information, try again.</string>
+    <string name="login_invalid_username_or_password">Invalid username or password.</string>
+    <string name="login_user_no_longer_active">This manager is no longer active.</string>
+    <string name="login_invalid_username">Invalid username. Verify your information and try again.</string>
+    <string name="login_invalid_password">Invalid password. Verify your information and try again.</string>
+    <string name="login_sign_in_failure">Login failed! Verify your information and try again...</string>
+    <!--LoginActivity - END-->
+
+
+    <!--RegisterActivity - BEGIN-->
+    <string name="register_title">Sign Up</string>
+    <string name="register_firstName">First Name</string>
+    <string name="register_lastName">Last Name</string>
+    <string name="register_username">Username</string>
+    <string name="register_password">Password</string>
+    <string name="register_sign_up">Sign up</string>
+    <string name="register_email">Email</string>
+
+    <string name="register_signing_up">Creating a new manager...</string>
+
+    <string name="register_invalid_firstName">Invalid First Name. Verify your information and try again.</string>
+    <string name="register_invalid_lastName">Invalist Last Name. Verify your information and try again.</string>
+    <string name="register_short_username">Invalid username. Your username must have 3 or more characters.</string>
+    <string name="register_short_password">Invalid password. Your password must have 4 or more characters.</string>
+    <string name="register_invalid_method">Invalid register method. Contact the support.</string>
+    <string name="register_invalid_data">User registration failed. Try again after verify your information.</string>
+    <string name="register_invalid_username">Invalid username. Verify your information and try again.</string>
+    <string name="register_invalid_password">Invalid password. Verify your information and try again.</string>
+    <string name="register_user_already_exists">This manager already exists! Try to use another username.</string>
+    <string name="register_registration_failed">User registration failed! Try again later...</string>
+    <string name="register_registration_success">User successfully registered!</string>
+    <!--RegisterActivity - END-->
+</resources>
