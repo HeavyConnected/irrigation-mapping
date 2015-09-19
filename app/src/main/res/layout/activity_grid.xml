@@ -5,154 +5,229 @@
     android:layout_height="match_parent"
     tools:context=".GridActivity">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_above="@+id/grid_farm"
-        android:padding="@dimen/activity_margin"
-        android:gravity="center">
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="horizontal"
-            android:gravity="center">
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:clickable="true"
                 android:orientation="vertical"
-                android:gravity="center"
-                android:padding="4dp"
-                android:id="@+id/grid_equip">
+                android:layout_above="@+id/grid_farm"
+                android:padding="@dimen/activity_margin"
+                android:gravity="center">
 
-                <ImageView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:src="@drawable/equipment_icon"
-                    android:padding="8dp"/>
+                    android:orientation="horizontal"
+                    android:gravity="center">
 
-                <TextView
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:clickable="true"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:padding="4dp"
+                        android:id="@+id/grid_equip">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:src="@drawable/equipment_icon"
+                            android:padding="8dp"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/grid_equipment"
+                            android:gravity="center"
+                            android:layout_marginTop="4dp"
+                            android:singleLine="true"
+                            android:textAppearance="@style/SectionText"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:clickable="true"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:padding="4dp"
+                        android:layout_marginLeft="16dp"
+                        android:id="@+id/grid_map">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:src="@drawable/map_icon"
+                            android:padding="8dp"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/grid_map"
+                            android:gravity="center"
+                            android:layout_marginTop="4dp"
+                            android:singleLine="true"
+                            android:textAppearance="@style/SectionText"/>
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/grid_equipment"
+                    android:layout_height="0dp"
+                    android:orientation="horizontal"
                     android:gravity="center"
-                    android:layout_marginTop="4dp"
-                    android:singleLine="true"
-                    android:textAppearance="@style/SectionText"/>
-            </LinearLayout>
+                    android:layout_weight="1"
+                    android:layout_marginTop="16dp">
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:clickable="true"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:padding="4dp"
-                android:layout_marginLeft="16dp"
-                android:id="@+id/grid_map">
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:clickable="true"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:padding="4dp"
+                        android:id="@+id/grid_settings">
 
-                <ImageView
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:src="@drawable/settings_icon"
+                            android:padding="8dp"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/grid_settings"
+                            android:gravity="center"
+                            android:layout_marginTop="4dp"
+                            android:singleLine="true"
+                            android:textAppearance="@style/SectionText"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:clickable="true"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:padding="4dp"
+                        android:id="@+id/grid_exit"
+                        android:layout_marginLeft="16dp">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:src="@drawable/exit_icon"
+                            android:padding="8dp"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/grid_exit"
+                            android:gravity="center"
+                            android:layout_marginTop="4dp"
+                            android:singleLine="true"
+                            android:textAppearance="@style/SectionText"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:src="@drawable/map_icon"
-                    android:padding="8dp"/>
+                    android:orientation="horizontal"
+                    android:gravity="center">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/grid_map"
-                    android:gravity="center"
-                    android:layout_marginTop="4dp"
-                    android:singleLine="true"
-                    android:textAppearance="@style/SectionText"/>
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:clickable="true"
+                        android:orientation="vertical"
+                        android:padding="4dp"
+                        android:id="@+id/irrigation">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:src="@drawable/equipment_icon"
+                            android:padding="8dp"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/grid_irrigation"
+                            android:gravity="center"
+                            android:layout_marginTop="4dp"
+                            android:singleLine="true"
+                            android:textAppearance="@style/SectionText"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:clickable="true"
+                        android:orientation="vertical"
+                        android:padding="4dp"
+                        android:id="@+id/y">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:padding="8dp"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:layout_marginTop="4dp"
+                            android:singleLine="true"
+                            android:textAppearance="@style/SectionText"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+
             </LinearLayout>
 
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="125dp"
+                android:src="@drawable/farm"
+                android:scaleType="centerCrop"
+                android:layout_alignParentBottom="true"
+                android:id="@+id/grid_farm" />
 
         </LinearLayout>
 
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_weight="1"
-            android:layout_marginTop="16dp">
+    </ScrollView>
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:clickable="true"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:padding="4dp"
-                android:id="@+id/grid_settings">
 
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:src="@drawable/settings_icon"
-                    android:padding="8dp"/>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/grid_settings"
-                    android:gravity="center"
-                    android:layout_marginTop="4dp"
-                    android:singleLine="true"
-                    android:textAppearance="@style/SectionText"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:clickable="true"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:padding="4dp"
-                android:id="@+id/grid_exit"
-                android:layout_marginLeft="16dp">
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:src="@drawable/exit_icon"
-                    android:padding="8dp"/>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/grid_exit"
-                    android:gravity="center"
-                    android:layout_marginTop="4dp"
-                    android:singleLine="true"
-                    android:textAppearance="@style/SectionText"/>
-            </LinearLayout>
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="125dp"
-        android:src="@drawable/farm"
-        android:scaleType="centerCrop"
-        android:layout_alignParentBottom="true"
-        android:id="@+id/grid_farm" />
 
 </RelativeLayout>

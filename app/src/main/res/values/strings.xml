@@ -11,6 +11,7 @@
     <string name="grid_map">Map</string>
     <string name="grid_settings">Settings</string>
     <string name="grid_exit">Exit</string>
+    <string name="grid_irrigation">Irrigation</string>
     <string name="grid_user_isnt_logged_in">You need to login...</string>
     <!-- GridActivity - END -->
 

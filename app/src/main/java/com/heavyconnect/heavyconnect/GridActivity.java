@@ -18,6 +18,7 @@ public class GridActivity extends AppCompatActivity implements View.OnClickListe
     private LinearLayout mMap;
     private LinearLayout mSettings;
     private LinearLayout mExit;
+    private LinearLayout mIrrigationMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
