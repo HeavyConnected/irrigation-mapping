@@ -3,25 +3,29 @@
     android:layout_width="match_parent" android:layout_height="match_parent">
 
 
-
     <android.support.v4.widget.DrawerLayout
 
         android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <FrameLayout
-            android:id="@+id/irrigation_map_container"
+        <fragment
+            android:id="@+id/irrigation_map"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-        <!-- The Main Content View -->
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            class="com.google.android.gms.maps.SupportMapFragment"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/loc_text_view"/>
+
         <FrameLayout
             android:id="@+id/content_frame"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
         </FrameLayout>
 
-        <!-- The Navigation Drawer -->
         <ListView
             android:id="@+id/left_drawer"
             android:layout_width="240dp"

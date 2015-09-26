@@ -10,4 +10,6 @@ public class Constants {
     public static final int SOCKET_TIMEOUT = 30000;
 
     public static final float MAP_DEFAULT_MARKER_SMALL_ZOOM = 17.0f;
+
+    public static final float IRRIGATION_MAP_DEFAULT_MARKER_ZOOM = 100.0f;
 }

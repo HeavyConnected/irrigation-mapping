@@ -134,4 +134,7 @@
     <string name="field_2_locations_array">Field3</string>
     <!--FieldLocations - END-->
 
+    <!--IrrigationMap BEGIN-->
+    <string name="irrigation_map_load_failure">Failed when loading irrigation field maps. Verify your Internet connection and try again...</string>
+    <!--IrrigationMap END-->
 </resources>
