@@ -132,6 +132,9 @@
     <string name="field_0_locations_array">Field1</string>
     <string name="field_1_locations_array">Field2</string>
     <string name="field_2_locations_array">Field3</string>
+    <string name="action_search">Search</string>
+    <string name="open_drawer">Open</string>
+    <string name="close_drawer">Close</string>
     <!--FieldLocations - END-->
 
 </resources>

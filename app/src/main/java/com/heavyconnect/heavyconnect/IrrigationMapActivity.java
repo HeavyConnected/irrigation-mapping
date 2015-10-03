@@ -1,10 +1,17 @@
 package com.heavyconnect.heavyconnect;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
+import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
@@ -29,7 +36,11 @@ import com.heavyconnect.heavyconnect.utils.StorageUtils;
  * Created by anon on 9/19/15.
  */
 public class IrrigationMapActivity extends AppCompatActivity implements OnMapReadyCallback, ViewTreeObserver.OnGlobalLayoutListener, TaskCallback, GoogleMap.OnCameraChangeListener {
-    private String[] mFieldLocations;
+    private static final String PREFERENCES_KEY = "com.heavyconnect.heavyconnect.irrigation"; // Name of SharedPreferences file we will write to and read from
+    private static final String USER_LEARNED_DRAWER_KEY = "has_drawer_opened"; // Key that maps to value mUserLearnedDrawer in SharedPreferences
+    private Boolean mUserLearnedDrawer;
+
+    private String[] mFieldLocations; // Drawer ListView contents
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
 
@@ -55,6 +66,8 @@ public class IrrigationMapActivity extends AppCompatActivity implements OnMapRea
         }
 
         MapsInitializer.initialize(this);
+
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         mIrrigationMapContainer = (FrameLayout) findViewById(R.id.irrigation_map_container);
 
@@ -83,6 +96,18 @@ public class IrrigationMapActivity extends AppCompatActivity implements OnMapRea
                 Toast.makeText(getApplicationContext(),"Hello HappyTown", Toast.LENGTH_SHORT).show();
             }
         });
+
+        mUserLearnedDrawer = readFromPreferences(this, USER_LEARNED_DRAWER_KEY, false);
+        checkHasOpened(); // Checks if the user has previously accessed this screen. Opens the drawer the first time this screen is accessed.
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.search_menu, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -120,5 +145,24 @@ public class IrrigationMapActivity extends AppCompatActivity implements OnMapRea
     public void onTaskCompleted(Object result) {
         if(mProgress != null && mProgress.isShowing())
             mProgress.dismiss();
+    }
+
+    private void saveToPreferences(Context context, String preferenceName, boolean preferenceValue) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(PREFERENCES_KEY, Context.MODE_PRIVATE);
+        SharedPreferences.Editor preferencesEditor = sharedPreferences.edit();
+        preferencesEditor.putBoolean(preferenceName, preferenceValue);
+        preferencesEditor.apply();
+    }
+
+    private boolean readFromPreferences(Context context, String preferenceName, boolean defaultValue) {
+            SharedPreferences sharedPreferences = context.getSharedPreferences(PREFERENCES_KEY, Context.MODE_PRIVATE);
+            return sharedPreferences.getBoolean(preferenceName, false);
+    }
+
+    public void checkHasOpened() {
+        if(!mUserLearnedDrawer) {
+            mDrawerLayout.openDrawer(Gravity.LEFT);
+            saveToPreferences(this, USER_LEARNED_DRAWER_KEY, true);
+        }
     }
 }
