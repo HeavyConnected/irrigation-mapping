@@ -65,13 +65,17 @@
             android:label="@string/equip_reg_title"
             android:parentActivityName=".EquipmentListActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"
-            />
+            android:windowSoftInputMode="stateHidden"/>
+
         <activity android:name=".IrrigationMapActivity"
             android:label="Irrigation Map"
             android:parentActivityName=".GridActivity"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".EditFieldActivity"
+            android:label="Edit Field"
+            android:parentActivityName=".IrrigationMapActivity"
+            android:screenOrientation="portrait"/>
 
     </application>
 

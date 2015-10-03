@@ -38,7 +38,7 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
     // Map tracing
     private GoogleMap mIrrigationMap;
     private SupportMapFragment mIrrigationMapFragment;
-    private ArrayList<LatLng> mArrayPoints = new ArrayList<LatLng>();
+    private ArrayList<LatLng> mArrayPoints;
     private boolean mMarkerClicked = false;
     private PolygonOptions mPolygonOptions;
 
@@ -48,8 +48,6 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_irrigation_map);
-
-        mEditScreenButton = (Button) findViewById(R.id.edit_screen_button);
 
         if(!StorageUtils.getIsLoggedIn(this) || (mManager = StorageUtils.getUserData(this)) == null){
             startActivity(new Intent(this, LoginActivity.class));
@@ -67,23 +65,9 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
         // Initialize map
         mapSetup();
 
-        mEditScreenButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // TODO: Find out how to pass ArrayList of LatLng to next Activity
-                /*
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("arraypoints", mArrayPoints);
-                Intent intent = new Intent(getBaseContext(), EditFieldActivity.class);
-                intent.putExtra("arraypoints", mArrayPoints);
-                */
-            }
-        });
-
         mFieldLocations = getResources().getStringArray(R.array.field_locations_array);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
-
 
         // Set Adapter for the list view
         mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, mFieldLocations));
@@ -94,8 +78,6 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
                 Toast.makeText(getApplicationContext(),"Hello HappyTown", Toast.LENGTH_SHORT).show();
             }
         });
-
-
 
     }
     @Override
@@ -146,6 +128,7 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
             mPolygonOptions.strokeColor(Color.BLUE);
             mPolygonOptions.strokeWidth(7);
             mPolygonOptions.fillColor(Color.YELLOW);
+            // Draw full polygon on map
             mIrrigationMap.addPolygon(mPolygonOptions);
         }
     }
@@ -159,13 +142,28 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
                 .findFragmentById(R.id.irrigation_map);
         mIrrigationMap = mIrrigationMapFragment.getMap();
 
-        // TODO: Enable this upon floating action button click
         // Map functionality listeners and settings
         mIrrigationMap.setMyLocationEnabled(true);
+        mIrrigationMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+
         mIrrigationMap.setOnMapClickListener(this);
         mIrrigationMap.setOnMapLongClickListener(this);
         mIrrigationMap.setOnMarkerClickListener(this);
-        mIrrigationMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+
+        // This button appears after user creates a polygon
+        mEditScreenButton = (Button) findViewById(R.id.edit_screen_button);
+        mEditScreenButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Upon click, this button sends the the ArrayList of coordinates to the EditFieldActivity
+                // TODO: Find out how to pass ArrayList of LatLng to next Activity
+                Bundle bundle = new Bundle();
+                bundle.putParcelableArrayList("arraypoints", mArrayPoints);
+                Intent intent = new Intent(IrrigationMapActivity.this, EditFieldActivity.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
     }
 
 }
