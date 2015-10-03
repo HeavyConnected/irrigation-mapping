@@ -42,6 +42,9 @@ public class EditFieldActivity extends AppCompatActivity implements
     public void mapSetup() {
         // Create ArrayList of line points
         mLinePoints = new ArrayList<LatLng>();
+        // Instantiate ArrayList of Polyline objects
+        mPolylines = new ArrayList<>();
+
         // Instantiate map fragment
         mFieldMapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.field_map);
@@ -90,7 +93,6 @@ public class EditFieldActivity extends AppCompatActivity implements
     public void countPolylinePoints() {
         mMarkerClicked = true;
         mPolylineOptions = new PolylineOptions();
-        mPolylines = new ArrayList<>();
 
         mPolylineOptions.addAll(mLinePoints); // Add all points of line segment
         mPolylineOptions.color(Color.RED);
