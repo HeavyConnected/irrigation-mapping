@@ -4,8 +4,10 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -83,6 +85,15 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Toast.makeText(getApplicationContext(),"Hello HappyTown", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+        //inflaion of the Floating Action button
+        FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.floating_action);
+        floatingActionButton.setOnClickListener (new View.OnClickListener() {
+            public void onClick(View v) {
+                Log.d("IrrigationMapActivity", "floating Action Button pushed");
             }
         });
 
