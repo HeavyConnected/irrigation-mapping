@@ -17,7 +17,7 @@
         <fragment
             android:id="@+id/irrigation_map"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_alignParentTop="true"
             class="com.google.android.gms.maps.SupportMapFragment"/>
 
@@ -53,7 +53,8 @@
             android:choiceMode="singleChoice"
             android:divider="@android:color/transparent"
             android:dividerHeight="1dp"
-            android:background="#1B1B1B">
+            android:background="#fafafa"
+            android:foregroundGravity="left">
         </ListView>
 
     </android.support.v4.widget.DrawerLayout>
