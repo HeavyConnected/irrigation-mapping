@@ -9,12 +9,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <!-- Google Map -->
         <fragment
             android:id="@+id/irrigation_map"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             class="com.google.android.gms.maps.SupportMapFragment"/>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -37,6 +39,13 @@
             android:background="#1B1B1B">
         </ListView>
 
-
     </android.support.v4.widget.DrawerLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/edit_screen_button"
+        android:visibility="gone"
+        android:text="Edit"/>
+
 </RelativeLayout>
