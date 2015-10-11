@@ -2,6 +2,7 @@ package com.heavyconnect.heavyconnect.rest;
 
 import com.google.gson.Gson;
 import com.heavyconnect.heavyconnect.entities.Equipment;
+import com.heavyconnect.heavyconnect.entities.IrrigationFields;
 import com.heavyconnect.heavyconnect.utils.Constants;
 
 import java.io.IOException;
@@ -28,7 +29,9 @@ public class HttpRetrofitClient {
      * Interface containing all http operations.
      */
     public interface API {
-		
+
+
+
         @FormUrlEncoded
         @POST("/register/")
         RegisterResult createUser(
@@ -36,13 +39,53 @@ public class HttpRetrofitClient {
                 @Field("last_name") String lastName,
                 @Field("username") String username,
                 @Field("password") String password,
-                @Field("email") String email);
+                @Field("email") String Stemail);
 
         @FormUrlEncoded
         @POST("/login/")
         LoginResult fetchUser(
                 @Field("username") String username,
                 @Field("password") String password);
+
+        @GET("/irrigationFields/")
+        IrrigationListResult fetchUserIrrigationFields(
+                @Header("Authorization") String token);
+
+        @FormUrlEncoded
+        @POST("/irrigationFields/")
+        IrrigationFieldsDetailsResult createField(
+                @Header("Authorization") String token,
+                @Field("field_name") String fieldName,
+                @Field("pipe_length") double pipeLength,
+                @Field("pipe_depth") double pipeDepth,
+                @Field("pipe_row") int pipeRow,
+                @Field("longitude") double longitude,
+                @Field("latitude") double latitude
+        );
+
+        @GET("/irrigationFields/{id}")
+        IrrigationFields fetchIrrigationDetails(
+                @Header("Authorization") String token,
+                @Path("id") int fieldId
+        );
+
+        @FormUrlEncoded
+        @PUT("/irrigationFields/{id}")
+        IrrigationFieldsDetailsResult saveIrrigationFieldChanges(
+                @Header("Authorization") String token,
+                @Field("field_name") String fieldName,
+                @Field("pipe_length") double pipeLength,
+                @Field("pipe_depth") double pipeDepth,
+                @Field("pipe_row") int pipeRow,
+                @Field("longitude") double longitude,
+                @Field("latitude") double latitude
+        );
+
+        @DELETE("/irrigationFields/{id}")
+        Response removeIrrigationField(
+                @Header("Authorization") String token,
+                @Path("id") int equipId
+        );
 
         @GET("/equipment/")
         EquipmentListResult fetchUserEquips(
