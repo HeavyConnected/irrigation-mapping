@@ -147,6 +147,7 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
         finish();
     }
 
+
     @Override
     public void onTaskCompleted(Object result) {
         if(mProgress != null && mProgress.isShowing())
@@ -193,6 +194,15 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
             countPolygonPoints();
             // TODO: if (Drawer is !null) mEditScreenButton.setVisibility(View.GONE);
             mEditScreenButton.setVisibility(View.VISIBLE);
+        }
+
+        if(mMarkerClicked == true) {
+
+            Marker tempMarker = mIrrigationMap.addMarker(new MarkerOptions()
+            .position(marker.getPosition())
+            .title("This Field")
+            .snippet("Info about field"));
+            tempMarker.showInfoWindow();
         }
         return false;
     }
