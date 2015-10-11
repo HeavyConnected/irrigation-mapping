@@ -1,11 +1,16 @@
 package com.heavyconnect.heavyconnect;
 
+import android.app.LoaderManager;
 import android.app.ProgressDialog;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.Loader;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.content.CursorLoader;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +25,8 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -29,16 +36,19 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.heavyconnect.heavyconnect.entities.Manager;
 import com.heavyconnect.heavyconnect.resttasks.TaskCallback;
+import com.heavyconnect.heavyconnect.utils.PlaceProvider;
 import com.heavyconnect.heavyconnect.utils.StorageUtils;
 
 import java.util.ArrayList;
 
 
 public class IrrigationMapActivity extends AppCompatActivity implements TaskCallback,
-        GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnMarkerClickListener  {
+        GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnMarkerClickListener, LoaderManager.LoaderCallbacks<Cursor> {
     private static final String PREFERENCES_KEY = "com.heavyconnect.heavyconnect.irrigation"; // Name of SharedPreferences file we will write to and read from
     private static final String USER_LEARNED_DRAWER_KEY = "has_drawer_opened"; // Key that maps to value mUserLearnedDrawer in SharedPreferences
     private Boolean mUserLearnedDrawer;
+
+    private GoogleMap mGoogleMap;
 
     private String[] mFieldLocations; // Drawer ListView contents
     private DrawerLayout mDrawerLayout;
@@ -126,8 +136,46 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
         getMenuInflater().inflate(R.menu.search_menu, menu);
 
         MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int arg0, Bundle query) {
+        Loader<Cursor> cLoader = null;
+
+        if(arg0==0)
+            cLoader = new android.content.CursorLoader(getBaseContext(), PlaceProvider.SEARCH_URI, null, null, new String[]{ query.getString("query") }, null);
+        else if(arg0==1)
+            cLoader = new android.content.CursorLoader(getBaseContext(), PlaceProvider.DETAILS_URI, null, null, new String[]{ query.getString("query") }, null);
+        return cLoader;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> arg0, Cursor c) {
+        showLocations(c);
+    }
+
+    private void showLocations(Cursor c){
+        MarkerOptions markerOptions = null;
+        LatLng position = null;
+        mGoogleMap.clear();
+        while(c.moveToNext()){
+            markerOptions = new MarkerOptions();
+            position = new LatLng(Double.parseDouble(c.getString(1)),Double.parseDouble(c.getString(2)));
+            markerOptions.position(position);
+            markerOptions.title(c.getString(0));
+            mGoogleMap.addMarker(markerOptions);
+        }
+        if(position!=null){
+            CameraUpdate cameraPosition = CameraUpdateFactory.newLatLng(position);
+            mGoogleMap.animateCamera(cameraPosition);
+        }
     }
 
 
@@ -163,6 +211,33 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
             mDrawerLayout.openDrawer(Gravity.LEFT);
             saveToPreferences(this, USER_LEARNED_DRAWER_KEY, true);
         }
+    }
+
+    private void handleIntent(Intent intent) {
+        if (intent.getAction().equals(Intent.ACTION_SEARCH)){
+            doSearch(intent.getStringExtra(SearchManager.QUERY));
+        } else if(intent.getAction().equals(Intent.ACTION_VIEW)) {
+            getPlace(intent.getStringExtra(SearchManager.EXTRA_DATA_KEY));
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        handleIntent(intent);
+    }
+
+    private void doSearch(String query){
+        Bundle data = new Bundle();
+        data.putString("query", query);
+        getSupportLoaderManager().restartLoader(0, data, (android.support.v4.app.LoaderManager.LoaderCallbacks<Object>) this);
+    }
+
+    private void getPlace(String query){
+        Bundle data = new Bundle();
+        data.putString("query", query);
+        getSupportLoaderManager().restartLoader(1, data, (android.support.v4.app.LoaderManager.LoaderCallbacks<Object>) this);
     }
 
     @Override
@@ -218,6 +293,13 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
         mIrrigationMap.setOnMapLongClickListener(this);
         mIrrigationMap.setOnMarkerClickListener(this);
         mIrrigationMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+
+        // Search Map Stuff
+        mGoogleMap = mIrrigationMapFragment.getMap();
     }
 
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
+    }
 }
