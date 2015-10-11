@@ -14,6 +14,7 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 /**
@@ -28,6 +29,8 @@ public class EditFieldActivity extends AppCompatActivity implements
     private PolylineOptions mPolylineOptions; // Saves the points for one line segment
     private Boolean mMarkerClicked = false; // Determines when to close the line segment
     private ArrayList<Polyline> mPolylines; // Save all the line segments in this ArrayList
+    private HashMap<String, String[]> mHashMap = new HashMap<String, String[]>(); // Saves all the attributes for each line
+    private String[] mLineAttributes;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -35,8 +38,9 @@ public class EditFieldActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_edit_field);
 
         mArrayPoints = getIntent().getParcelableArrayListExtra("arraypoints");
-
         mapSetup();
+
+
     }
 
     public void mapSetup() {
@@ -54,6 +58,7 @@ public class EditFieldActivity extends AppCompatActivity implements
         mFieldMap.setMyLocationEnabled(true);
         mFieldMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 
+        // Allow map to be clicked
         mFieldMap.setOnMapClickListener(this);
         mFieldMap.setOnMapLongClickListener(this);
         mFieldMap.setOnMarkerClickListener(this);
@@ -84,8 +89,26 @@ public class EditFieldActivity extends AppCompatActivity implements
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        if(mLinePoints.get(0).equals(marker.getPosition())) {
-            countPolylinePoints();
+        for(int i = 0; i < mPolylines.size(); i++) {
+            // If the marker that they clicked on already belongs to a line
+            if (mPolylines.get(i).getPoints().contains(marker.getPosition())) {
+                Marker firstMarker = marker;
+                firstMarker.setPosition(mPolylines.get(i).getPoints().get(0));
+                showTextBox(firstMarker); // Show the text box and allow edit
+            }
+        }
+
+
+
+        if(!mLinePoints.isEmpty()) { // If they haven't closed a line and the line that they click on is the first
+            if (mLinePoints.get(0).equals(marker.getPosition())) {
+                countPolylinePoints(); // Create line and close it
+                addInfoBox(marker); // Create an info box for that line
+
+                // Reset attributes to allow drawing new lines
+                mLinePoints.clear();
+                mMarkerClicked = false;
+            }
         }
         return false;
     }
@@ -96,11 +119,31 @@ public class EditFieldActivity extends AppCompatActivity implements
 
         mPolylineOptions.addAll(mLinePoints); // Add all points of line segment
         mPolylineOptions.color(Color.RED);
-        Polyline polyline = mFieldMap.addPolyline(mPolylineOptions); // Add a line to the map
+        mPolylines.add(mFieldMap.addPolyline(mPolylineOptions)); // Add a line to the map
 
-        mPolylines.add(polyline);
-        // Reset attributes to allow drawing new lines
-        mLinePoints.clear();
-        mMarkerClicked = false;
     }
+
+    public void addInfoBox(Marker marker) {
+        mLineAttributes = new String[3];
+
+        Marker tempMarker = mFieldMap.addMarker(new MarkerOptions()
+                .position(marker.getPosition())
+                .title("Field Name")
+                .snippet("Row #: Length: Depth: "));
+        tempMarker.showInfoWindow();
+
+        mHashMap.put(marker.getPosition().toString(), mLineAttributes);
+    }
+
+    public void showTextBox(Marker marker) {
+        String[] lineAttributes = mHashMap.get(marker.getPosition().toString());
+
+        Marker tempMarker = mFieldMap.addMarker(new MarkerOptions()
+        .position(marker.getPosition())
+        .title("This Line")
+        .snippet("Row #: " + lineAttributes[0] + "Length: " + lineAttributes[1] + "Depth: " + lineAttributes[2]));
+        tempMarker.showInfoWindow();
+    }
+
+
 }
