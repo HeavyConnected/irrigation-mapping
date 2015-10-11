@@ -4,9 +4,9 @@
     android:hint="@string/search_hint"
     android:searchSettingsDescription="@string/search_settings"
 
-    android:searchSuggestAuthority="com.heavyconnect.heavyconnect.PlaceProvider"
+    android:searchSuggestAuthority="com.heavyconnect.heavyconnect.utils.PlaceProvider"
     android:searchSuggestIntentAction="android.intent.action.VIEW"
-    android:searchSuggestSelection=" ? "
+    android:searchSuggestSelection=" ?"
     android:searchSuggestThreshold="2">
 
 </searchable>

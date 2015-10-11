@@ -5,15 +5,19 @@ import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.Loader;
+import android.support.v4.content.Loader;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.view.MenuItemCompat;
+
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.view.Gravity;
 import android.view.Menu;
@@ -39,11 +43,13 @@ import com.heavyconnect.heavyconnect.resttasks.TaskCallback;
 import com.heavyconnect.heavyconnect.utils.PlaceProvider;
 import com.heavyconnect.heavyconnect.utils.StorageUtils;
 
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
+
 import java.util.ArrayList;
 
 
 public class IrrigationMapActivity extends AppCompatActivity implements TaskCallback,
-        GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnMarkerClickListener, LoaderManager.LoaderCallbacks<Cursor> {
+        GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnMarkerClickListener, LoaderCallbacks<Cursor> {
     private static final String PREFERENCES_KEY = "com.heavyconnect.heavyconnect.irrigation"; // Name of SharedPreferences file we will write to and read from
     private static final String USER_LEARNED_DRAWER_KEY = "has_drawer_opened"; // Key that maps to value mUserLearnedDrawer in SharedPreferences
     private Boolean mUserLearnedDrawer;
@@ -60,9 +66,10 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
     // Map tracing
     private GoogleMap mIrrigationMap;
     private SupportMapFragment mIrrigationMapFragment;
-    private ArrayList<LatLng> mArrayPoints = new ArrayList<LatLng>();
+    private ArrayList<LatLng> mArrayPoints;
     private boolean mMarkerClicked = false;
     private PolygonOptions mPolygonOptions;
+    private int countButtonClicks = 0;
 
     private Button mEditScreenButton;
 
@@ -71,24 +78,11 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_irrigation_map);
 
-        mEditScreenButton = (Button) findViewById(R.id.edit_screen_button);
-
         if(!StorageUtils.getIsLoggedIn(this) || (mManager = StorageUtils.getUserData(this)) == null){
             startActivity(new Intent(this, LoginActivity.class));
             Toast.makeText(this, getString(R.string.map_loading), Toast.LENGTH_LONG).show();
             finish();
         }
-
-        MapsInitializer.initialize(this);
-
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-
-        /*
-        mIrrigationMapFragment = SupportMapFragment.newInstance();
-        getSupportFragmentManager().beginTransaction().add(R.id.irrigation_map_container, mIrrigationMapFragment).commit();
-        mIrrigationMapFragment.getMapAsync(this); */
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mProgress = new ProgressDialog(this);
         mProgress.setTitle(null);
@@ -96,26 +90,20 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
         mProgress.setIndeterminate(true);
         mProgress.setCancelable(false);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
         // Initialize map
+        MapsInitializer.initialize(this);
         mapSetup();
 
-        mEditScreenButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // TODO: Find out how to pass ArrayList of LatLng to next Activity
-                /*
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("arraypoints", mArrayPoints);
-                Intent intent = new Intent(getBaseContext(), EditFieldActivity.class);
-                intent.putExtra("arraypoints", mArrayPoints);
-                */
-            }
-        });
+        if(getIntent().getAction() != null)
+            handleIntent(getIntent());
 
         mFieldLocations = getResources().getStringArray(R.array.field_locations_array);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
-
 
         // Set Adapter for the list view
         mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, mFieldLocations));
@@ -129,6 +117,33 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
 
         mUserLearnedDrawer = readFromPreferences(this, USER_LEARNED_DRAWER_KEY, false);
         checkHasOpened(); // Checks if the user has previously accessed this screen. Opens the drawer the first time this screen is accessed.
+
+
+        // FloatingActionButton to allow field tracing
+        final FloatingActionButton mActionEditButton = (FloatingActionButton) findViewById(R.id.floating_action);
+        mActionEditButton.setOnClickListener (new View.OnClickListener() {
+            public void onClick(View v) {
+                //make the field clickable to edit and change
+
+                Log.d("IrrigationMapActivity", "floating Action Button pushed");
+                //if the countButtonClicks is even the enable polygon map is created
+                if (countButtonClicks % 2 == 0) {
+                    mActionEditButton.setImageResource(R.drawable.red_pin);
+                    mapMarkerEnable();
+                    Log.d("IrrigationMapActivity", "Enable polygons");
+                }
+                //This clears all polygons created
+                else {
+                    mapMarkerDisable();
+                    Log.d("IrrigationMapActivity", "Disable polygons not working");
+                    mActionEditButton.setImageResource(R.drawable.green_pin);
+
+                }
+                countButtonClicks++;
+
+            }
+        });
+
     }
 
     @Override
@@ -140,7 +155,26 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
 
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
 
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        if(searchView != null) {
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        }
+
+        SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Log.d("UserQuery", query);
+                doSearch(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        };
+
+        searchView.setOnQueryTextListener(queryTextListener);
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -149,35 +183,60 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
     public Loader<Cursor> onCreateLoader(int arg0, Bundle query) {
         Loader<Cursor> cLoader = null;
 
+        Log.d("arg0", "arg0 = " + arg0);
+
         if(arg0==0)
-            cLoader = new android.content.CursorLoader(getBaseContext(), PlaceProvider.SEARCH_URI, null, null, new String[]{ query.getString("query") }, null);
+            cLoader = new CursorLoader(getBaseContext(), PlaceProvider.SEARCH_URI, null, null, new String[]{ query.getString("query") }, null);
         else if(arg0==1)
-            cLoader = new android.content.CursorLoader(getBaseContext(), PlaceProvider.DETAILS_URI, null, null, new String[]{ query.getString("query") }, null);
+            cLoader = new CursorLoader(getBaseContext(), PlaceProvider.DETAILS_URI, null, null, new String[]{ query.getString("query") }, null);
         return cLoader;
     }
 
     @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        showLocations(data);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        // This edit button appears after user creates a polygon
+        mEditScreenButton = (Button) findViewById(R.id.edit_screen_button);
+        mEditScreenButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle bundle = new Bundle();
+                bundle.putParcelableArrayList("arraypoints", mArrayPoints);
+                Intent intent = new Intent(IrrigationMapActivity.this, EditFieldActivity.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
+    }
+
+    /*
+    @Override
     public void onLoadFinished(Loader<Cursor> arg0, Cursor c) {
         showLocations(c);
-    }
+    } */
 
     private void showLocations(Cursor c){
         MarkerOptions markerOptions = null;
         LatLng position = null;
         mGoogleMap.clear();
-        while(c.moveToNext()){
-            markerOptions = new MarkerOptions();
-            position = new LatLng(Double.parseDouble(c.getString(1)),Double.parseDouble(c.getString(2)));
-            markerOptions.position(position);
-            markerOptions.title(c.getString(0));
-            mGoogleMap.addMarker(markerOptions);
+        if(c != null) {
+            while (c.moveToNext()) {
+                markerOptions = new MarkerOptions();
+                position = new LatLng(Double.parseDouble(c.getString(1)), Double.parseDouble(c.getString(2)));
+                markerOptions.position(position);
+                markerOptions.title(c.getString(0));
+                mGoogleMap.addMarker(markerOptions);
+            }
         }
-        if(position!=null){
+        if(position != null){
             CameraUpdate cameraPosition = CameraUpdateFactory.newLatLng(position);
             mGoogleMap.animateCamera(cameraPosition);
         }
     }
-
 
     @Override
     public void onTaskFailed(int errorCode) {
@@ -231,13 +290,13 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
     private void doSearch(String query){
         Bundle data = new Bundle();
         data.putString("query", query);
-        getSupportLoaderManager().restartLoader(0, data, (android.support.v4.app.LoaderManager.LoaderCallbacks<Object>) this);
+        getSupportLoaderManager().restartLoader(0, data, this);
     }
 
     private void getPlace(String query){
         Bundle data = new Bundle();
         data.putString("query", query);
-        getSupportLoaderManager().restartLoader(1, data, (android.support.v4.app.LoaderManager.LoaderCallbacks<Object>) this);
+        getSupportLoaderManager().restartLoader(1, data, this);
     }
 
     @Override
@@ -273,33 +332,58 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
             mPolygonOptions.strokeColor(Color.BLUE);
             mPolygonOptions.strokeWidth(7);
             mPolygonOptions.fillColor(Color.YELLOW);
-            mIrrigationMap.addPolygon(mPolygonOptions);
+            mIrrigationMap.addPolygon(mPolygonOptions); // Draw full polygon on map
         }
     }
 
-    public void mapSetup() {
-        // Create ArrayList of coordinates
-        mArrayPoints = new ArrayList<LatLng>();
+    public void mapMarkerEnable() {
+        // Map functionality listeners and settings
+        mIrrigationMap.setOnMapClickListener(this);
+        mIrrigationMap.setOnMapLongClickListener(this);
+        mIrrigationMap.setOnMarkerClickListener(this);
+    }
 
+    public void mapMarkerDisable() {
+        //this will clear all markers and polygons
+        mIrrigationMap.setOnMapClickListener(null);
+        mIrrigationMap.setOnMapLongClickListener(null);
+        mIrrigationMap.setOnMarkerClickListener(null);
+        mIrrigationMap.clear();
+        mArrayPoints.clear();
+        mMarkerClicked = false;
+    }
+
+    //this sets up the map after the edit button is clicked
+    public void mapSetup() {
+        // Instantiate ArrayList of points
+        mArrayPoints = new ArrayList<LatLng>();
         // Instantiate map fragment
         mIrrigationMapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.irrigation_map);
         mIrrigationMap = mIrrigationMapFragment.getMap();
 
-        // TODO: Enable this upon floating action button click
         // Map functionality listeners and settings
         mIrrigationMap.setMyLocationEnabled(true);
-        mIrrigationMap.setOnMapClickListener(this);
-        mIrrigationMap.setOnMapLongClickListener(this);
-        mIrrigationMap.setOnMarkerClickListener(this);
         mIrrigationMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 
         // Search Map Stuff
         mGoogleMap = mIrrigationMapFragment.getMap();
     }
 
+    /*
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-
-    }
+        // This edit button appears after user creates a polygon
+        mEditScreenButton = (Button) findViewById(R.id.edit_screen_button);
+        mEditScreenButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle bundle = new Bundle();
+                bundle.putParcelableArrayList("arraypoints", mArrayPoints);
+                Intent intent = new Intent(IrrigationMapActivity.this, EditFieldActivity.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
+    } */
 }
