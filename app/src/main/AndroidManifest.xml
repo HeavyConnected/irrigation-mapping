@@ -51,6 +51,9 @@
         <meta-data android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
+        <meta-data android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_api_key"/>
+
 
         <activity
             android:name=".LoginActivity"
@@ -110,8 +113,7 @@
             android:authorities="com.heavyconnect.heavyconnect.utils.PlaceProvider"
             android:exported="false" />
 
-        <meta-data android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_api_key"/>
+
         <!-- Specifies the Android API Key, which is obtained from Google API Console
         <meta-data android:name="com.google.android.maps.v2.API_KEY"
             android:value="com.google.android.geo.API_KEY" /> -->

@@ -1,10 +1,14 @@
 package com.heavyconnect.heavyconnect;
 
+import android.app.Activity;
 import android.app.LoaderManager;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.support.v4.content.Loader;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -23,6 +27,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -45,7 +50,10 @@ import com.heavyconnect.heavyconnect.utils.StorageUtils;
 
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 
 public class IrrigationMapActivity extends AppCompatActivity implements TaskCallback,
@@ -146,6 +154,51 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
 
     }
 
+    public void onSearch(String query) {
+        InputMethodManager imm = (InputMethodManager) this.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        if (imm.isActive())
+            imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0); // hide keyboard
+        List<Address> addressList = new ArrayList<>();
+        mGoogleMap.clear();
+
+        if(query != null || query != "") {
+            Geocoder geocoder = new Geocoder(this);
+            Location myLocation = mGoogleMap.getMyLocation(); // Get our current location
+            String myPostalCode = "";
+            String myAdminArea = "";
+            try {
+                Address myAddress = geocoder.getFromLocation(myLocation.getLatitude(), myLocation.getLongitude(), 1).get(0);
+                myPostalCode = myAddress.getPostalCode(); // Get current postal code for search
+                myAdminArea = myAddress.getAdminArea(); // Get current state for search
+                Log.d("Postal Code", myPostalCode);
+                Log.d("Admin Area", myAdminArea);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                if(myLocation != null)
+                    addressList = geocoder.getFromLocationName(myPostalCode + " " + query + " " + myAdminArea, 1);
+                else
+                    addressList = geocoder.getFromLocationName(query, 1);
+                //addressList = geocoder.getFromLocationName()
+                //geocoder.getFrom
+
+                // Sets marker to location found and zooms in
+                Address address = addressList.get(0);
+                LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+                mGoogleMap.addMarker(new MarkerOptions().position(latLng).title(query));
+                mGoogleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+                mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,10));
+                // Zoom in, animating the camera.
+                mGoogleMap.animateCamera(CameraUpdateFactory.zoomIn());
+                // Zoom out to zoom level 10, animating with a duration of 2 seconds.
+                mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(15), 4000, null);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.search_menu, menu);
@@ -164,7 +217,7 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
             @Override
             public boolean onQueryTextSubmit(String query) {
                 Log.d("UserQuery", query);
-                doSearch(query);
+                onSearch(query);
                 return true;
             }
 
