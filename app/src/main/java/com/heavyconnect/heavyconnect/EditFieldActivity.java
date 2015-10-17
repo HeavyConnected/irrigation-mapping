@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -12,6 +13,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import java.lang.Math;
 
 import java.util.ArrayList;
 
@@ -28,6 +30,8 @@ public class EditFieldActivity extends AppCompatActivity implements
     private PolylineOptions mPolylineOptions; // Saves the points for one line segment
     private Boolean mMarkerClicked = false; // Determines when to close the line segment
     private ArrayList<Polyline> mPolylines; // Save all the line segments in this ArrayList
+    private boolean isRedrawn;
+    private ArrayList<LatLng> mSavedPoints;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -35,6 +39,8 @@ public class EditFieldActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_edit_field);
 
         mArrayPoints = getIntent().getParcelableArrayListExtra("arraypoints");
+        mSavedPoints = getIntent().getParcelableArrayListExtra("savedpoints");
+        isRedrawn = getIntent().getBooleanExtra("isredrawn", false);
 
         mapSetup();
     }
@@ -60,10 +66,25 @@ public class EditFieldActivity extends AppCompatActivity implements
 
         // Draw traced field on edit screen map
         PolygonOptions mPolygonOptions = new PolygonOptions();
+        LatLng center;
+        if(isRedrawn)
+        {
+            mPolygonOptions.addAll(mSavedPoints);
+            center = findCenter(mSavedPoints);
+        }
+        else
+        {
+            mPolygonOptions.addAll(mArrayPoints);
+            center = findCenter(mSavedPoints);
+        }
         mPolygonOptions.addAll(mArrayPoints);
         mPolygonOptions.strokeColor(Color.BLUE);
         mPolygonOptions.strokeWidth(7);
         mFieldMap.addPolygon(mPolygonOptions);
+
+        //mFieldMap.addMarker(new MarkerOptions().position(center));
+        //mFieldMap.moveCamera(CameraUpdateFactory.newLatLngZoom(center, 15));
+        //mFieldMap.animateCamera(CameraUpdateFactory.zoomIn());
     }
 
 
@@ -103,4 +124,34 @@ public class EditFieldActivity extends AppCompatActivity implements
         mLinePoints.clear();
         mMarkerClicked = false;
     }
+
+    public LatLng findCenter(ArrayList<LatLng> points){
+        double avgX = 0, avgY = 0, avgZ = 0;
+        for(int i = 0; i < points.size(); i++){
+            double lat, lon;
+            lat = points.get(i).latitude;
+            lon = points.get(i).longitude;
+
+
+            lat = lat * (Math.PI / 180); // convert deg to rad
+            lon = lon * (Math.PI / 180);
+
+            avgX += Math.cos(lat) * Math.cos(lon); // convert the avg
+            avgY += Math.cos(lat) * Math.sin(lon);
+            avgZ += Math.sin(lat);
+        }
+        avgX /= points.size();
+        avgY /= points.size();
+        avgZ /= points.size();
+
+        double lon = Math.atan2(avgY, avgX);
+        double hyp = Math.sqrt(avgX * avgX + avgY * avgY);
+        double lat = Math.atan2(avgZ, hyp);
+        lon = lon * (180 / Math.PI);
+        lat = lat * (180 / Math.PI);
+
+        LatLng newLatLon = new LatLng(lat, lon);
+        return newLatLon;
+    }
+
 }
