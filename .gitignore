@@ -28,3 +28,4 @@ proguard/
 
 # .idea folfer
 .idea/
+.idea/workspace.xml
