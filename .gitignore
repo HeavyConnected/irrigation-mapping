@@ -28,4 +28,7 @@ proguard/
 
 # .idea folfer
 .idea/
+<<<<<<< HEAD
 .idea/workspace.xml
+=======
+>>>>>>> ce92c1dc08803731b7c5052092f0ade33b66165d

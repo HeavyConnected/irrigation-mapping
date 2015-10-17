@@ -44,9 +44,11 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.heavyconnect.heavyconnect.entities.Manager;
+import com.heavyconnect.heavyconnect.resttasks.LoginTask;
 import com.heavyconnect.heavyconnect.resttasks.TaskCallback;
 import com.heavyconnect.heavyconnect.utils.PlaceProvider;
 import com.heavyconnect.heavyconnect.utils.StorageUtils;
+import java.lang.Math;
 
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 
@@ -54,6 +56,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.HashMap;
 
 
 public class IrrigationMapActivity extends AppCompatActivity implements TaskCallback,
@@ -75,6 +78,11 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
     private GoogleMap mIrrigationMap;
     private SupportMapFragment mIrrigationMapFragment;
     private ArrayList<LatLng> mArrayPoints;
+    private ArrayList<LatLng> mFieldWindowLocations; // holds center location for each field
+    private HashMap<LatLng, ArrayList<LatLng>> mSavedfieldLocaions; // holds all cleared field locations
+    private ArrayList<LatLng> mSavedArrayPoints;
+    private LatLng current;
+    private boolean isRedrawn = false;
     private boolean mMarkerClicked = false;
     private PolygonOptions mPolygonOptions;
     private int countButtonClicks = 0;
@@ -139,12 +147,28 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
                     mActionEditButton.setImageResource(R.drawable.red_pin);
                     mapMarkerEnable();
                     Log.d("IrrigationMapActivity", "Enable polygons");
+
+
                 }
                 //This clears all polygons created
                 else {
+                    ArrayList<LatLng> temp = new ArrayList<LatLng>();
+                    temp.addAll(mArrayPoints);
+                    mSavedfieldLocaions.put(current, temp);
                     mapMarkerDisable();
                     Log.d("IrrigationMapActivity", "Disable polygons not working");
                     mActionEditButton.setImageResource(R.drawable.green_pin);
+                    // since not editing fields, show markers on each owned field
+                    for(int i = 0; i < mFieldWindowLocations.size(); i++)
+                    {
+                        Marker tempMarker = mIrrigationMap.addMarker(new MarkerOptions()
+                                .position(mFieldWindowLocations.get(i))
+                                .title("Field: " + Integer.toString(i))
+                                .snippet("Pipe Depth: 32 inches"));
+                        tempMarker.showInfoWindow();
+                    }
+
+
 
                 }
                 countButtonClicks++;
@@ -300,6 +324,7 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
         finish();
     }
 
+
     @Override
     public void onTaskCompleted(Object result) {
         if(mProgress != null && mProgress.isShowing())
@@ -369,12 +394,71 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        if(mArrayPoints.get(0).equals(marker.getPosition())) {
+
+        if((countButtonClicks % 2 != 0) && (mSavedfieldLocaions.get(marker.getPosition()) != null))
+        {
+            ArrayList<LatLng> temp = mSavedfieldLocaions.get(marker.getPosition());
+            redrawPolygonPoints(temp);
+        }
+
+        else if(mArrayPoints.get(0).equals(marker.getPosition())) {
             countPolygonPoints();
             // TODO: if (Drawer is !null) mEditScreenButton.setVisibility(View.GONE);
             mEditScreenButton.setVisibility(View.VISIBLE);
         }
+
+        if(mMarkerClicked == true) {
+
+            double avgX = 0, avgY = 0, avgZ = 0;
+            for(int i = 0; i < mArrayPoints.size(); i++){
+                double lat, lon;
+                lat = mArrayPoints.get(i).latitude;
+                lon = mArrayPoints.get(i).longitude;
+
+
+                lat = lat * (Math.PI / 180); // convert deg to rad
+                lon = lon * (Math.PI / 180);
+
+                avgX += Math.cos(lat) * Math.cos(lon); // convert the avg
+                avgY += Math.cos(lat) * Math.sin(lon);
+                avgZ += Math.sin(lat);
+            }
+            avgX /= mArrayPoints.size();
+            avgY /= mArrayPoints.size();
+            avgZ /= mArrayPoints.size();
+
+            double lon = Math.atan2(avgY, avgX);
+            double hyp = Math.sqrt(avgX * avgX + avgY * avgY);
+            double lat = Math.atan2(avgZ, hyp);
+            lon = lon * (180 / Math.PI);
+            lat = lat * (180 / Math.PI);
+
+            LatLng newLatLon = new LatLng(lat, lon);
+            mFieldWindowLocations.add(newLatLon);
+            current = newLatLon;
+
+
+            /*
+            Marker tempMarker = mIrrigationMap.addMarker(new MarkerOptions()
+                    .position(newLatLon)
+                    .title("Field: A113")
+                    .snippet("Pipe Depth: 32 inches"));
+            tempMarker.showInfoWindow();
+            */
+
+        }
         return false;
+    }
+
+    public void redrawPolygonPoints(ArrayList<LatLng> coordinates) {
+        mSavedArrayPoints = coordinates;
+        isRedrawn = true;
+        mPolygonOptions = new PolygonOptions();
+        mPolygonOptions.addAll(coordinates);
+        mPolygonOptions.strokeColor(Color.BLUE);
+        mPolygonOptions.strokeWidth(7);
+        mPolygonOptions.fillColor(Color.YELLOW);
+        mIrrigationMap.addPolygon(mPolygonOptions);
     }
 
     public void countPolygonPoints() {
@@ -410,6 +494,10 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
     public void mapSetup() {
         // Instantiate ArrayList of points
         mArrayPoints = new ArrayList<LatLng>();
+        mFieldWindowLocations = new ArrayList<LatLng>();
+        mSavedfieldLocaions = new HashMap<LatLng, ArrayList<LatLng>>();
+        mSavedArrayPoints = new ArrayList<LatLng>();
+        current = new LatLng(0,0);
         // Instantiate map fragment
         mIrrigationMapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.irrigation_map);
@@ -433,10 +521,14 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
             public void onClick(View view) {
                 Bundle bundle = new Bundle();
                 bundle.putParcelableArrayList("arraypoints", mArrayPoints);
+                bundle.putParcelableArrayList("savedpoints", mSavedArrayPoints);
+                bundle.putBoolean("isredrawn", isRedrawn);
                 Intent intent = new Intent(IrrigationMapActivity.this, EditFieldActivity.class);
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
         });
+<<<<<<< HEAD
     } */
+
 }
