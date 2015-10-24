@@ -10,6 +10,30 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
 
+    <!-- Protect the map component of the application using application signature -->
+    <permission
+        android:name="com.heavyconnect.heavyconnect.permission.MAPS_RECEIVE"
+        android:protectionLevel="signature" />
+
+    <!-- Allows to receive map -->
+    <uses-permission android:name="com.heavyconnect.heavyconnect.permission.MAPS_RECEIVE" />
+
+    <!-- Used by the Google Maps Android API V2 to download map tiles from Google Maps servers -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- Allows the Google Maps Android API V2 to cache map tile data in the device's external storage area -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <!-- Allows the Google Maps Android API V2 to use WiFi or mobile cell data (or both) to determine the device's location -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <!-- Allows the Google Maps Android API V2 to use the Global Positioning System (GPS)
+    to determine the device's location to within a very small area -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <!-- Allows to contact Google Serves -->
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+
 
     <!-- Google Maps Android API V2 requires OpenGL ES version 2 -->
     <uses-feature
@@ -29,6 +53,7 @@
 
         <meta-data android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_api_key"/>
+
 
         <activity
             android:name=".LoginActivity"
@@ -69,13 +94,29 @@
 
         <activity android:name=".IrrigationMapActivity"
             android:label="Irrigation Map"
+            android:launchMode="singleTop"
             android:parentActivityName=".GridActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait">
+
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH"></action>
+            </intent-filter>
+        </activity>
 
         <activity android:name=".EditFieldActivity"
             android:label="Edit Field"
             android:parentActivityName=".IrrigationMapActivity"
             android:screenOrientation="portrait"/>
+
+        <provider
+            android:name=".utils.PlaceProvider"
+            android:authorities="com.heavyconnect.heavyconnect.utils.PlaceProvider"
+            android:exported="false" />
+
+
+        <!-- Specifies the Android API Key, which is obtained from Google API Console
+        <meta-data android:name="com.google.android.maps.v2.API_KEY"
+            android:value="com.google.android.geo.API_KEY" /> -->
 
     </application>
 
