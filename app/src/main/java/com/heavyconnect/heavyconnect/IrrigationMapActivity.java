@@ -1,28 +1,23 @@
 package com.heavyconnect.heavyconnect;
 
 import android.app.Activity;
-import android.app.LoaderManager;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.Location;
-import android.support.v4.content.Loader;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.view.MenuItemCompat;
-
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -44,23 +39,17 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.heavyconnect.heavyconnect.entities.Manager;
-import com.heavyconnect.heavyconnect.resttasks.LoginTask;
 import com.heavyconnect.heavyconnect.resttasks.TaskCallback;
-import com.heavyconnect.heavyconnect.utils.PlaceProvider;
 import com.heavyconnect.heavyconnect.utils.StorageUtils;
-import java.lang.Math;
-
-import android.support.v4.app.LoaderManager.LoaderCallbacks;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 import java.util.HashMap;
+import java.util.List;
 
 
 public class IrrigationMapActivity extends AppCompatActivity implements TaskCallback,
-        GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnMarkerClickListener, LoaderCallbacks<Cursor> {
+        GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnMarkerClickListener/*, LoaderCallbacks<Cursor> */{
     private static final String PREFERENCES_KEY = "com.heavyconnect.heavyconnect.irrigation"; // Name of SharedPreferences file we will write to and read from
     private static final String USER_LEARNED_DRAWER_KEY = "has_drawer_opened"; // Key that maps to value mUserLearnedDrawer in SharedPreferences
     private Boolean mUserLearnedDrawer;
@@ -113,9 +102,9 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
         // Initialize map
         MapsInitializer.initialize(this);
         mapSetup();
-
+/*
         if(getIntent().getAction() != null)
-            handleIntent(getIntent());
+            handleIntent(getIntent());*/
 
         mFieldLocations = getResources().getStringArray(R.array.field_locations_array);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -255,7 +244,7 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
 
         return super.onCreateOptionsMenu(menu);
     }
-
+/*
     @Override
     public Loader<Cursor> onCreateLoader(int arg0, Bundle query) {
         Loader<Cursor> cLoader = null;
@@ -269,10 +258,12 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
         return cLoader;
     }
 
+
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         showLocations(data);
     }
+
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
@@ -290,12 +281,13 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
         });
     }
 
-    /*
+
+
     @Override
     public void onLoadFinished(Loader<Cursor> arg0, Cursor c) {
         showLocations(c);
-    } */
-
+    }
+*/
     private void showLocations(Cursor c){
         MarkerOptions markerOptions = null;
         LatLng position = null;
@@ -349,7 +341,7 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
             saveToPreferences(this, USER_LEARNED_DRAWER_KEY, true);
         }
     }
-
+/*
     private void handleIntent(Intent intent) {
         if (intent.getAction().equals(Intent.ACTION_SEARCH)){
             doSearch(intent.getStringExtra(SearchManager.QUERY));
@@ -365,6 +357,7 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
         handleIntent(intent);
     }
 
+
     private void doSearch(String query){
         Bundle data = new Bundle();
         data.putString("query", query);
@@ -376,7 +369,7 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
         data.putString("query", query);
         getSupportLoaderManager().restartLoader(1, data, this);
     }
-
+*/
     @Override
     public void onMapClick(LatLng latLng) {
         if(mMarkerClicked == false) {
@@ -436,47 +429,6 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
             mFieldWindowLocations.add(newLatLon);
             current = newLatLon;
         }
-        /*
-        if(mMarkerClicked == true) {
-
-            double avgX = 0, avgY = 0, avgZ = 0;
-            for(int i = 0; i < mArrayPoints.size(); i++){
-                double lat, lon;
-                lat = mArrayPoints.get(i).latitude;
-                lon = mArrayPoints.get(i).longitude;
-
-
-                lat = lat * (Math.PI / 180); // convert deg to rad
-                lon = lon * (Math.PI / 180);
-
-                avgX += Math.cos(lat) * Math.cos(lon); // convert the avg
-                avgY += Math.cos(lat) * Math.sin(lon);
-                avgZ += Math.sin(lat);
-            }
-            avgX /= mArrayPoints.size();
-            avgY /= mArrayPoints.size();
-            avgZ /= mArrayPoints.size();
-
-            double lon = Math.atan2(avgY, avgX);
-            double hyp = Math.sqrt(avgX * avgX + avgY * avgY);
-            double lat = Math.atan2(avgZ, hyp);
-            lon = lon * (180 / Math.PI);
-            lat = lat * (180 / Math.PI);
-
-            LatLng newLatLon = new LatLng(lat, lon);
-            mFieldWindowLocations.add(newLatLon);
-            current = newLatLon;
-
-
-            /*
-            Marker tempMarker = mIrrigationMap.addMarker(new MarkerOptions()
-                    .position(newLatLon)
-                    .title("Field: A113")
-                    .snippet("Pipe Depth: 32 inches"));
-            tempMarker.showInfoWindow();
-            */
-
-        //}
 
 
         return false;
@@ -541,11 +493,7 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
 
         // Search Map Stuff
         mGoogleMap = mIrrigationMapFragment.getMap();
-    }
 
-    /*
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
         // This edit button appears after user creates a polygon
         mEditScreenButton = (Button) findViewById(R.id.edit_screen_button);
         mEditScreenButton.setOnClickListener(new View.OnClickListener() {
@@ -564,7 +512,5 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
                 startActivity(intent);
             }
         });
-<<<<<<< HEAD
-    } */
-
+    }
 }
