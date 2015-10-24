@@ -220,14 +220,44 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
         {
             ArrayList<LatLng> temp = mSavedfieldLocaions.get(marker.getPosition());
             redrawPolygonPoints(temp);
+            current = marker.getPosition();
+            isRedrawn = true;
         }
 
         else if(mArrayPoints.get(0).equals(marker.getPosition())) {
             countPolygonPoints();
             // TODO: if (Drawer is !null) mEditScreenButton.setVisibility(View.GONE);
             mEditScreenButton.setVisibility(View.VISIBLE);
-        }
 
+            double avgX = 0, avgY = 0, avgZ = 0;
+            for(int i = 0; i < mArrayPoints.size(); i++){
+                double lat, lon;
+                lat = mArrayPoints.get(i).latitude;
+                lon = mArrayPoints.get(i).longitude;
+
+
+                lat = lat * (Math.PI / 180); // convert deg to rad
+                lon = lon * (Math.PI / 180);
+
+                avgX += Math.cos(lat) * Math.cos(lon); // convert the avg
+                avgY += Math.cos(lat) * Math.sin(lon);
+                avgZ += Math.sin(lat);
+            }
+            avgX /= mArrayPoints.size();
+            avgY /= mArrayPoints.size();
+            avgZ /= mArrayPoints.size();
+
+            double lon = Math.atan2(avgY, avgX);
+            double hyp = Math.sqrt(avgX * avgX + avgY * avgY);
+            double lat = Math.atan2(avgZ, hyp);
+            lon = lon * (180 / Math.PI);
+            lat = lat * (180 / Math.PI);
+
+            LatLng newLatLon = new LatLng(lat, lon);
+            mFieldWindowLocations.add(newLatLon);
+            current = newLatLon;
+        }
+        /*
         if(mMarkerClicked == true) {
 
             double avgX = 0, avgY = 0, avgZ = 0;
@@ -267,7 +297,9 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
             tempMarker.showInfoWindow();
             */
 
-        }
+        //}
+
+
         return false;
     }
 
@@ -333,7 +365,11 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
         mEditScreenButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(countButtonClicks % 2 == 0)
+                    return;
                 Bundle bundle = new Bundle();
+                Log.v("mArrayPoints", Integer.toString(mArrayPoints.size()));
+                Log.v("mSavedArrayPoints", Integer.toString(mSavedArrayPoints.size()));
                 bundle.putParcelableArrayList("arraypoints", mArrayPoints);
                 bundle.putParcelableArrayList("savedpoints", mSavedArrayPoints);
                 bundle.putBoolean("isredrawn", isRedrawn);
