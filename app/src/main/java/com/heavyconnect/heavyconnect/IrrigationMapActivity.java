@@ -27,6 +27,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -76,6 +77,8 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
     private PolygonOptions mPolygonOptions;
     private int countButtonClicks = 0;
 
+    private ArrayList<LatLng> temp;
+
     private Button mEditScreenButton;
 
     @Override
@@ -94,6 +97,8 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
         mProgress.setMessage(getString(R.string.equip_list_loading));
         mProgress.setIndeterminate(true);
         mProgress.setCancelable(false);
+
+        temp = new ArrayList<>();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -139,7 +144,7 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
 
 
                 }
-                //This clears all polygons created
+                //This cleamSavedfieldrs all polygons created
                 else {
                     ArrayList<LatLng> temp = new ArrayList<LatLng>();
                     temp.addAll(mArrayPoints);
@@ -388,8 +393,9 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
     @Override
     public boolean onMarkerClick(Marker marker) {
 
-        if((countButtonClicks % 2 != 0) && (mSavedfieldLocaions.get(marker.getPosition()) != null))
-        {
+        marker.hideInfoWindow();
+        if((countButtonClicks % 2 != 0) && (mSavedfieldLocaions.get(marker.getPosition()) != null)) // if you are on edit and
+        {                                                                                           // the marker is stored in msfl
             ArrayList<LatLng> temp = mSavedfieldLocaions.get(marker.getPosition());
             redrawPolygonPoints(temp);
             current = marker.getPosition();
@@ -428,14 +434,16 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
             LatLng newLatLon = new LatLng(lat, lon);
             mFieldWindowLocations.add(newLatLon);
             current = newLatLon;
+            //countButtonClicks++;
         }
 
 
-        return false;
+        return true;
     }
 
     public void redrawPolygonPoints(ArrayList<LatLng> coordinates) {
         mSavedArrayPoints = coordinates;
+        Log.d("mSavedArrayPoints len", mSavedArrayPoints.toString());
         isRedrawn = true;
         mPolygonOptions = new PolygonOptions();
         mPolygonOptions.addAll(coordinates);
@@ -476,6 +484,9 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
 
     //this sets up the map after the edit button is clicked
     public void mapSetup() {
+
+
+
         // Instantiate ArrayList of points
         mArrayPoints = new ArrayList<LatLng>();
         mFieldWindowLocations = new ArrayList<LatLng>();
@@ -491,6 +502,8 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
         mIrrigationMap.setMyLocationEnabled(true);
         mIrrigationMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 
+        mIrrigationMap.setInfoWindowAdapter(new CustomInfoWindowAdapter()); // enables the use of the new infowindow
+
         // Search Map Stuff
         mGoogleMap = mIrrigationMapFragment.getMap();
 
@@ -502,8 +515,8 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
                 if(countButtonClicks % 2 == 0)
                     return;
                 Bundle bundle = new Bundle();
-                Log.v("mArrayPoints", Integer.toString(mArrayPoints.size()));
-                Log.v("mSavedArrayPoints", Integer.toString(mSavedArrayPoints.size()));
+                Log.d("mArrayPoints", Integer.toString(mArrayPoints.size()));
+                Log.d("mSavedArrayPoints", Integer.toString(mSavedArrayPoints.size()));
                 bundle.putParcelableArrayList("arraypoints", mArrayPoints);
                 bundle.putParcelableArrayList("savedpoints", mSavedArrayPoints);
                 bundle.putBoolean("isredrawn", isRedrawn);
@@ -512,5 +525,30 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
                 startActivity(intent);
             }
         });
+    }
+
+    class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
+        private final View myContentsView;
+
+        CustomInfoWindowAdapter() {
+            myContentsView = getLayoutInflater().inflate(R.layout.field_info_window, null);
+        }
+
+        @Override
+        public View getInfoContents(Marker marker) {
+            TextView tvTitle = ((TextView) myContentsView.findViewById(R.id.field_name));
+            tvTitle.setText(marker.getTitle());
+            TextView tvSnippet = ((TextView) myContentsView.findViewById(R.id.depth));
+            tvSnippet.setText(marker.getSnippet());
+            TextView tvPipenum = ((TextView)myContentsView.findViewById(R.id.num_pipes));
+            tvPipenum.setText("32 pipes");
+            return myContentsView;
+
+        }
+
+        @Override
+        public View getInfoWindow(Marker marker) {
+            return null;
+        }
     }
 }
