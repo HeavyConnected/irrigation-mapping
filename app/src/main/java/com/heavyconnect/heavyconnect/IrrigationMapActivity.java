@@ -400,6 +400,7 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
             redrawPolygonPoints(temp);
             current = marker.getPosition();
             isRedrawn = true;
+            return false;
         }
 
         else if(mArrayPoints.get(0).equals(marker.getPosition())) {
@@ -435,10 +436,11 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
             mFieldWindowLocations.add(newLatLon);
             current = newLatLon;
             //countButtonClicks++;
+            return true;
         }
 
 
-        return true;
+        return false;
     }
 
     public void redrawPolygonPoints(ArrayList<LatLng> coordinates) {
