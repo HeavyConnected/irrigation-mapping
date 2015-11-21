@@ -1,14 +1,18 @@
 package com.heavyconnect.heavyconnect;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.app.LoaderManager;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.provider.ContactsContract;
 import android.support.v4.content.Loader;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -43,9 +47,13 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
+import com.heavyconnect.heavyconnect.database.IrrigationContract;
+import com.heavyconnect.heavyconnect.database.IrrigationDbHelper;
 import com.heavyconnect.heavyconnect.entities.Manager;
 import com.heavyconnect.heavyconnect.resttasks.LoginTask;
 import com.heavyconnect.heavyconnect.resttasks.TaskCallback;
+import com.heavyconnect.heavyconnect.utils.DataEntryTest;
+import com.heavyconnect.heavyconnect.utils.FieldNameDialogFragment;
 import com.heavyconnect.heavyconnect.utils.PlaceProvider;
 import com.heavyconnect.heavyconnect.utils.StorageUtils;
 import java.lang.Math;
@@ -53,6 +61,7 @@ import java.lang.Math;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -60,12 +69,15 @@ import java.util.HashMap;
 
 
 public class IrrigationMapActivity extends AppCompatActivity implements TaskCallback,
-        GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnMarkerClickListener, LoaderCallbacks<Cursor> {
+        GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnMarkerClickListener {
     private static final String PREFERENCES_KEY = "com.heavyconnect.heavyconnect.irrigation"; // Name of SharedPreferences file we will write to and read from
     private static final String USER_LEARNED_DRAWER_KEY = "has_drawer_opened"; // Key that maps to value mUserLearnedDrawer in SharedPreferences
     private Boolean mUserLearnedDrawer;
 
     private GoogleMap mGoogleMap;
+
+    private static String mFieldName;
+    private static final int FIELD_NAME_REQUEST_CODE = 1;
 
     private String[] mFieldLocations; // Drawer ListView contents
     private DrawerLayout mDrawerLayout;
@@ -89,10 +101,31 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
 
     private Button mEditScreenButton;
 
+    // Database members
+    private Button mDataEntry;
+    private SQLiteDatabase mIrrigationDataBase;
+    private IrrigationDbHelper mIrrigationDbHelper;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_irrigation_map);
+
+        // DataBase
+        mIrrigationDbHelper = new IrrigationDbHelper(this);
+
+        mEditScreenButton = (Button) findViewById(R.id.edit_screen_button);
+
+
+        mDataEntry = (Button) findViewById(R.id.data_entry);
+        mDataEntry.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), DataEntryTest.class);
+                startActivity(intent);
+            }
+        });
 
         if(!StorageUtils.getIsLoggedIn(this) || (mManager = StorageUtils.getUserData(this)) == null){
             startActivity(new Intent(this, LoginActivity.class));
@@ -114,14 +147,15 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
         MapsInitializer.initialize(this);
         mapSetup();
 
+        /*
         if(getIntent().getAction() != null)
-            handleIntent(getIntent());
+            handleIntent(getIntent()); */
 
         mFieldLocations = getResources().getStringArray(R.array.field_locations_array);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
-        // Set Adapter for the list view
+        /* Set Adapter for the list view
         mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, mFieldLocations));
         // Set onClick listener
         mDrawerList.setOnItemClickListener(new ListView.OnItemClickListener() {
@@ -129,7 +163,10 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Toast.makeText(getApplicationContext(),"Hello HappyTown", Toast.LENGTH_SHORT).show();
             }
-        });
+        });*/
+
+        // Populate Navigation Drawer List
+        populateNavigationDrawerList();
 
         mUserLearnedDrawer = readFromPreferences(this, USER_LEARNED_DRAWER_KEY, false);
         checkHasOpened(); // Checks if the user has previously accessed this screen. Opens the drawer the first time this screen is accessed.
@@ -147,8 +184,6 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
                     mActionEditButton.setImageResource(R.drawable.red_pin);
                     mapMarkerEnable();
                     Log.d("IrrigationMapActivity", "Enable polygons");
-
-
                 }
                 //This clears all polygons created
                 else {
@@ -167,15 +202,10 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
                                 .snippet("Pipe Depth: 32 inches"));
                         tempMarker.showInfoWindow();
                     }
-
-
-
                 }
                 countButtonClicks++;
-
             }
         });
-
     }
 
     public void onSearch(String query) {
@@ -256,6 +286,7 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
         return super.onCreateOptionsMenu(menu);
     }
 
+    /*
     @Override
     public Loader<Cursor> onCreateLoader(int arg0, Bundle query) {
         Loader<Cursor> cLoader = null;
@@ -267,12 +298,14 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
         else if(arg0==1)
             cLoader = new CursorLoader(getBaseContext(), PlaceProvider.DETAILS_URI, null, null, new String[]{ query.getString("query") }, null);
         return cLoader;
-    }
+    } */
 
+    /*
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         showLocations(data);
     }
+
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
@@ -288,7 +321,7 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
                 startActivity(intent);
             }
         });
-    }
+    } */
 
     /*
     @Override
@@ -350,14 +383,16 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
         }
     }
 
+    /*
     private void handleIntent(Intent intent) {
         if (intent.getAction().equals(Intent.ACTION_SEARCH)){
             doSearch(intent.getStringExtra(SearchManager.QUERY));
         } else if(intent.getAction().equals(Intent.ACTION_VIEW)) {
             getPlace(intent.getStringExtra(SearchManager.EXTRA_DATA_KEY));
         }
-    }
+    } */
 
+    /*
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -369,13 +404,14 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
         Bundle data = new Bundle();
         data.putString("query", query);
         getSupportLoaderManager().restartLoader(0, data, this);
-    }
+    } */
 
+    /*
     private void getPlace(String query){
         Bundle data = new Bundle();
         data.putString("query", query);
         getSupportLoaderManager().restartLoader(1, data, this);
-    }
+    } */
 
     @Override
     public void onMapClick(LatLng latLng) {
@@ -405,6 +441,9 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
             countPolygonPoints();
             // TODO: if (Drawer is !null) mEditScreenButton.setVisibility(View.GONE);
             mEditScreenButton.setVisibility(View.VISIBLE);
+
+            FieldNameDialogFragment nameDialogFragment = FieldNameDialogFragment.getInstance();
+            nameDialogFragment.show(getFragmentManager(), "field_name_fragment");
         }
 
         if(mMarkerClicked == true) {
@@ -511,6 +550,70 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
         mGoogleMap = mIrrigationMapFragment.getMap();
     }
 
+    public void populateNavigationDrawerList() {
+        ArrayList<String> fieldNames = new ArrayList<>();
+
+        mIrrigationDataBase = mIrrigationDbHelper.getReadableDatabase();
+        // Iterate through database
+        // Define a projection that specifies which columns from the database
+        // you wil actually use after this query.
+        String[] projection = {
+                IrrigationContract.IrrigationEntry._ID,
+                IrrigationContract.IrrigationEntry.COLUMN_NAME_CENTER_COORDINATES,
+                IrrigationContract.IrrigationEntry.COLUMN_NAME_COORDINATES,
+                IrrigationContract.IrrigationEntry.COLUMN_NAME_FIELD_NAME,
+        };
+
+        String sortOrder =
+                IrrigationContract.IrrigationEntry.COLUMN_NAME_FIELD_NAME + " DESC";
+
+        Cursor cursor = mIrrigationDataBase.query(
+                IrrigationContract.IrrigationEntry.TABLE_NAME, // table to query
+                projection,                                    // columns returned
+                null,                                          // columns for WHERE clause
+                null,                                          // values for WHERE clause
+                null,                                          // row grouping
+                null,                                          // filter by group rows
+                sortOrder                                      // the sort order
+        );
+
+        // Query each field name in database
+        cursor.moveToFirst();
+        for(int i = 0; i < cursor.getCount(); i++) {
+            long itemId = cursor.getLong(
+                    cursor.getColumnIndexOrThrow(IrrigationContract.IrrigationEntry._ID)
+            );
+
+            String fieldName = cursor.getString(
+                    cursor.getColumnIndexOrThrow(IrrigationContract.IrrigationEntry.COLUMN_NAME_FIELD_NAME)
+            );
+
+            Log.d("Database Values", "ID: " + itemId +
+                            "\nField Name: " + fieldName
+            );
+            // Insert into array
+            fieldNames.add(fieldName);
+
+
+            cursor.moveToNext();
+        }
+        // Populate list view from adapter
+        // Set Adapter for the list view
+        mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, fieldNames));
+        // Set onClick listener
+        mDrawerList.setOnItemClickListener(new ListView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Toast.makeText(getApplicationContext(),"Hello HappyTown", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public static void updateFieldName(String fieldName) {
+        mFieldName = fieldName;
+        Log.d("IrrigationMapActivity", "Field Name: " + mFieldName);
+    }
+
     /*
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
@@ -528,7 +631,5 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
                 startActivity(intent);
             }
         });
-<<<<<<< HEAD
     } */
-
 }
