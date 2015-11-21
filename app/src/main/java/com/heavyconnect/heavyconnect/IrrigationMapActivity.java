@@ -477,6 +477,25 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
         // Search Map Stuff
         mGoogleMap = mIrrigationMapFragment.getMap();
 
+        // This edit button appears after user creates a polygon
+        mEditScreenButton = (Button) findViewById(R.id.edit_screen_button);
+        mEditScreenButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(countButtonClicks % 2 == 0)
+                    return;
+                Bundle bundle = new Bundle();
+                Log.d("mArrayPoints", Integer.toString(mArrayPoints.size()));
+                Log.d("mSavedArrayPoints", Integer.toString(mSavedArrayPoints.size()));
+                bundle.putParcelableArrayList("arraypoints", mArrayPoints);
+                bundle.putParcelableArrayList("savedpoints", mSavedArrayPoints);
+                bundle.putBoolean("isredrawn", isRedrawn);
+                Intent intent = new Intent(IrrigationMapActivity.this, EditFieldActivity.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
+
     }
 
     public void populateNavigationDrawerList() {
