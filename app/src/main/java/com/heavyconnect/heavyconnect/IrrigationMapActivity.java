@@ -17,16 +17,16 @@ import android.support.v4.content.Loader;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.view.MenuItemCompat;
-
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,6 +36,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -50,26 +51,20 @@ import com.google.android.gms.maps.model.PolygonOptions;
 import com.heavyconnect.heavyconnect.database.IrrigationContract;
 import com.heavyconnect.heavyconnect.database.IrrigationDbHelper;
 import com.heavyconnect.heavyconnect.entities.Manager;
-import com.heavyconnect.heavyconnect.resttasks.LoginTask;
 import com.heavyconnect.heavyconnect.resttasks.TaskCallback;
 import com.heavyconnect.heavyconnect.utils.DataEntryTest;
 import com.heavyconnect.heavyconnect.utils.FieldNameDialogFragment;
 import com.heavyconnect.heavyconnect.utils.PlaceProvider;
 import com.heavyconnect.heavyconnect.utils.StorageUtils;
-import java.lang.Math;
-
-import android.support.v4.app.LoaderManager.LoaderCallbacks;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 import java.util.HashMap;
+import java.util.List;
 
 
-public class IrrigationMapActivity extends AppCompatActivity implements TaskCallback,
-        GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnMarkerClickListener {
+public class IrrigationMapActivity extends AppCompatActivity implements TaskCallback, GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnMarkerClickListener {
     private static final String PREFERENCES_KEY = "com.heavyconnect.heavyconnect.irrigation"; // Name of SharedPreferences file we will write to and read from
     private static final String USER_LEARNED_DRAWER_KEY = "has_drawer_opened"; // Key that maps to value mUserLearnedDrawer in SharedPreferences
     private Boolean mUserLearnedDrawer;
@@ -98,6 +93,8 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
     private boolean mMarkerClicked = false;
     private PolygonOptions mPolygonOptions;
     private int countButtonClicks = 0;
+
+    private ArrayList<LatLng> temp;
 
     private Button mEditScreenButton;
 
@@ -139,6 +136,8 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
         mProgress.setIndeterminate(true);
         mProgress.setCancelable(false);
 
+        temp = new ArrayList<>();
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -146,10 +145,9 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
         // Initialize map
         MapsInitializer.initialize(this);
         mapSetup();
-
-        /*
+/*
         if(getIntent().getAction() != null)
-            handleIntent(getIntent()); */
+            handleIntent(getIntent());*/
 
         mFieldLocations = getResources().getStringArray(R.array.field_locations_array);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -185,7 +183,7 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
                     mapMarkerEnable();
                     Log.d("IrrigationMapActivity", "Enable polygons");
                 }
-                //This clears all polygons created
+                //This cleamSavedfieldrs all polygons created
                 else {
                     ArrayList<LatLng> temp = new ArrayList<LatLng>();
                     temp.addAll(mArrayPoints);
@@ -286,49 +284,6 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
         return super.onCreateOptionsMenu(menu);
     }
 
-    /*
-    @Override
-    public Loader<Cursor> onCreateLoader(int arg0, Bundle query) {
-        Loader<Cursor> cLoader = null;
-
-        Log.d("arg0", "arg0 = " + arg0);
-
-        if(arg0==0)
-            cLoader = new CursorLoader(getBaseContext(), PlaceProvider.SEARCH_URI, null, null, new String[]{ query.getString("query") }, null);
-        else if(arg0==1)
-            cLoader = new CursorLoader(getBaseContext(), PlaceProvider.DETAILS_URI, null, null, new String[]{ query.getString("query") }, null);
-        return cLoader;
-    } */
-
-    /*
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        showLocations(data);
-    }
-
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-        // This edit button appears after user creates a polygon
-        mEditScreenButton = (Button) findViewById(R.id.edit_screen_button);
-        mEditScreenButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Bundle bundle = new Bundle();
-                bundle.putParcelableArrayList("arraypoints", mArrayPoints);
-                Intent intent = new Intent(IrrigationMapActivity.this, EditFieldActivity.class);
-                intent.putExtras(bundle);
-                startActivity(intent);
-            }
-        });
-    } */
-
-    /*
-    @Override
-    public void onLoadFinished(Loader<Cursor> arg0, Cursor c) {
-        showLocations(c);
-    } */
-
     private void showLocations(Cursor c){
         MarkerOptions markerOptions = null;
         LatLng position = null;
@@ -383,36 +338,6 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
         }
     }
 
-    /*
-    private void handleIntent(Intent intent) {
-        if (intent.getAction().equals(Intent.ACTION_SEARCH)){
-            doSearch(intent.getStringExtra(SearchManager.QUERY));
-        } else if(intent.getAction().equals(Intent.ACTION_VIEW)) {
-            getPlace(intent.getStringExtra(SearchManager.EXTRA_DATA_KEY));
-        }
-    } */
-
-    /*
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        setIntent(intent);
-        handleIntent(intent);
-    }
-
-    private void doSearch(String query){
-        Bundle data = new Bundle();
-        data.putString("query", query);
-        getSupportLoaderManager().restartLoader(0, data, this);
-    } */
-
-    /*
-    private void getPlace(String query){
-        Bundle data = new Bundle();
-        data.putString("query", query);
-        getSupportLoaderManager().restartLoader(1, data, this);
-    } */
-
     @Override
     public void onMapClick(LatLng latLng) {
         if(mMarkerClicked == false) {
@@ -431,10 +356,14 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
     @Override
     public boolean onMarkerClick(Marker marker) {
 
-        if((countButtonClicks % 2 != 0) && (mSavedfieldLocaions.get(marker.getPosition()) != null))
-        {
+        marker.hideInfoWindow();
+        if((countButtonClicks % 2 != 0) && (mSavedfieldLocaions.get(marker.getPosition()) != null)) // if you are on edit and
+        {                                                                                           // the marker is stored in msfl
             ArrayList<LatLng> temp = mSavedfieldLocaions.get(marker.getPosition());
             redrawPolygonPoints(temp);
+            current = marker.getPosition();
+            isRedrawn = true;
+            return false;
         }
 
         else if(mArrayPoints.get(0).equals(marker.getPosition())) {
@@ -475,22 +404,17 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
             LatLng newLatLon = new LatLng(lat, lon);
             mFieldWindowLocations.add(newLatLon);
             current = newLatLon;
-
-
-            /*
-            Marker tempMarker = mIrrigationMap.addMarker(new MarkerOptions()
-                    .position(newLatLon)
-                    .title("Field: A113")
-                    .snippet("Pipe Depth: 32 inches"));
-            tempMarker.showInfoWindow();
-            */
-
+            //countButtonClicks++;
+            return true;
         }
+
+
         return false;
     }
 
     public void redrawPolygonPoints(ArrayList<LatLng> coordinates) {
         mSavedArrayPoints = coordinates;
+        Log.d("mSavedArrayPoints len", mSavedArrayPoints.toString());
         isRedrawn = true;
         mPolygonOptions = new PolygonOptions();
         mPolygonOptions.addAll(coordinates);
@@ -531,12 +455,14 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
 
     //this sets up the map after the edit button is clicked
     public void mapSetup() {
+
+
         // Instantiate ArrayList of points
         mArrayPoints = new ArrayList<LatLng>();
         mFieldWindowLocations = new ArrayList<LatLng>();
         mSavedfieldLocaions = new HashMap<LatLng, ArrayList<LatLng>>();
         mSavedArrayPoints = new ArrayList<LatLng>();
-        current = new LatLng(0,0);
+        current = new LatLng(0, 0);
         // Instantiate map fragment
         mIrrigationMapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.irrigation_map);
@@ -546,8 +472,11 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
         mIrrigationMap.setMyLocationEnabled(true);
         mIrrigationMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 
+        mIrrigationMap.setInfoWindowAdapter(new CustomInfoWindowAdapter()); // enables the use of the new infowindow
+
         // Search Map Stuff
         mGoogleMap = mIrrigationMapFragment.getMap();
+
     }
 
     public void populateNavigationDrawerList() {
@@ -614,22 +543,28 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
         Log.d("IrrigationMapActivity", "Field Name: " + mFieldName);
     }
 
-    /*
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-        // This edit button appears after user creates a polygon
-        mEditScreenButton = (Button) findViewById(R.id.edit_screen_button);
-        mEditScreenButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Bundle bundle = new Bundle();
-                bundle.putParcelableArrayList("arraypoints", mArrayPoints);
-                bundle.putParcelableArrayList("savedpoints", mSavedArrayPoints);
-                bundle.putBoolean("isredrawn", isRedrawn);
-                Intent intent = new Intent(IrrigationMapActivity.this, EditFieldActivity.class);
-                intent.putExtras(bundle);
-                startActivity(intent);
-            }
-        });
-    } */
+    class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
+        private final View myContentsView;
+
+        CustomInfoWindowAdapter() {
+            myContentsView = getLayoutInflater().inflate(R.layout.field_info_window, null);
+        }
+
+        @Override
+        public View getInfoContents(Marker marker) {
+            TextView tvTitle = ((TextView) myContentsView.findViewById(R.id.field_name));
+            tvTitle.setText(marker.getTitle());
+            TextView tvSnippet = ((TextView) myContentsView.findViewById(R.id.depth));
+            tvSnippet.setText(marker.getSnippet());
+            TextView tvPipenum = ((TextView)myContentsView.findViewById(R.id.num_pipes));
+            tvPipenum.setText("32 pipes");
+            return myContentsView;
+
+        }
+
+        @Override
+        public View getInfoWindow(Marker marker) {
+            return null;
+        }
+    }
 }
