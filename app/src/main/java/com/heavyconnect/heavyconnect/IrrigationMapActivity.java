@@ -68,7 +68,7 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
     private SupportMapFragment mIrrigationMapFragment;
     private ArrayList<LatLng> mArrayPoints;
     private ArrayList<LatLng> mFieldWindowLocations; // holds center location for each field
-    private HashMap<LatLng, ArrayList<LatLng>> mSavedfieldLocaions; // holds all cleared field locations
+    public HashMap<LatLng, ArrayList<LatLng>> mSavedfieldLocaions; // holds all cleared field locations
     private ArrayList<LatLng> mSavedArrayPoints;
     private LatLng current;
     private boolean isRedrawn = false;

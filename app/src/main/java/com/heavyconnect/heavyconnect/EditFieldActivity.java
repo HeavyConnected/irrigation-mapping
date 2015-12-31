@@ -3,6 +3,7 @@ package com.heavyconnect.heavyconnect;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -13,6 +14,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.heavyconnect.heavyconnect.utils.EditLineAttributesDialogFragment;
+
 import java.lang.Math;
 
 import java.util.ArrayList;
@@ -120,6 +123,21 @@ public class EditFieldActivity extends AppCompatActivity implements
                 Marker firstMarker = marker;
                 firstMarker.setPosition(mPolylines.get(i).getPoints().get(0));
                 showTextBox(firstMarker); // Show the text box and allow edit
+
+
+
+                //*************************************************************************
+                // setInfoWindow
+
+
+                Log.d("EditFieldAc", marker.getPosition().toString());
+
+                //call the getIntance to method to instantiate the dialogFragment and set the arguments
+                EditLineAttributesDialogFragment dialogFragment = EditLineAttributesDialogFragment.getInstance(marker.getPosition().toString());
+
+                //displays the dialog fragment with a transaction and tag as parameters
+                Log.d("EditFieldActivity", "the Fragment is going to be created");
+                dialogFragment.show(getFragmentManager(), "EditAttributesDialog");
             }
         }
 
@@ -185,8 +203,10 @@ public class EditFieldActivity extends AppCompatActivity implements
                 .title("Field Name")
                 .snippet("Row #: Length: Depth: "));
         tempMarker.showInfoWindow();
-
         mHashMap.put(marker.getPosition().toString(), mLineAttributes);
+
+
+
     }
 
     public void showTextBox(Marker marker) {
