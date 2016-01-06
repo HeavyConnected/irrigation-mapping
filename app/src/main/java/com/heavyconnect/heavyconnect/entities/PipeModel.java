@@ -1,25 +1,22 @@
 package com.heavyconnect.heavyconnect.entities;
 
 /**
- * Created by juice on 10/31/15.
+ * Created by anitagarcia on 1/6/16.
  */
-public class FieldModel {
-
-    private String mFieldName;
-    private String mCenterCoorfinates;
+public class PipeModel {
+    // Under construction
+/*
+    private String mLength;
+    private String mDepth;
+    private String mRow;
     private String mCoordinates;
+    private String mFieldId;
 
-    public String getFieldName() {
-        return mFieldName;
-    }
-
-    public String getCenterCoorfinates() {
-        return mCenterCoorfinates;
-    }
-
+    public String getPipeId();
     public String getCoordinates() {
         return mCoordinates;
     }
+
 
     public void setFieldName(String fieldName) {
         mFieldName = fieldName;
@@ -32,4 +29,5 @@ public class FieldModel {
     public void setCoordinates(String mCoordinates) {
         this.mCoordinates = mCoordinates;
     }
+}*/
 }

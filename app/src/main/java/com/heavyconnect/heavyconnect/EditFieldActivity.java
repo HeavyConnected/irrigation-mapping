@@ -1,4 +1,7 @@
 package com.heavyconnect.heavyconnect;
+// Questions
+// What is mSavedPoints
+// Why do we need to find center coordinate? (can we just send in a putExtra with centerCoordinate?)
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -43,7 +46,6 @@ public class EditFieldActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_edit_field);
 
         mArrayPoints = getIntent().getParcelableArrayListExtra("arraypoints");
-
         mSavedPoints = getIntent().getParcelableArrayListExtra("savedpoints");
         isRedrawn = getIntent().getBooleanExtra("isredrawn", false);
 

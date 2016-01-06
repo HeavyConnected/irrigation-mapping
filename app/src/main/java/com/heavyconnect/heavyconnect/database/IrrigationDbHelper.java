@@ -19,11 +19,11 @@ public class IrrigationDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        final String CREATE_SQL_FIELD_TABLE = "CREATE TABLE " + IrrigationContract.IrrigationEntry.TABLE_NAME +
-                " (" + IrrigationContract.IrrigationEntry._ID  + " INTEGER, " +
-                IrrigationContract.IrrigationEntry.COLUMN_NAME_FIELD_NAME + " VARCHAR(10), " +
-                IrrigationContract.IrrigationEntry.COLUMN_NAME_CENTER_COORDINATES + " VARCHAR(10) PRIMARY KEY, " +
-                IrrigationContract.IrrigationEntry.COLUMN_NAME_COORDINATES + " VARCHAR(10)" +
+        final String CREATE_SQL_FIELD_TABLE = "CREATE TABLE " + IrrigationContract.FieldEntry.TABLE_NAME +
+                " (" + IrrigationContract.FieldEntry._ID  + " INTEGER, " +
+                IrrigationContract.FieldEntry.COLUMN_NAME_FIELD_NAME + " VARCHAR(10), " +
+                IrrigationContract.FieldEntry.COLUMN_NAME_CENTER_COORDINATES + " VARCHAR(10) PRIMARY KEY, " +
+                IrrigationContract.FieldEntry.COLUMN_NAME_COORDINATES + " VARCHAR(10)" +
                 ");";
 
         db.execSQL(CREATE_SQL_FIELD_TABLE);
@@ -31,7 +31,7 @@ public class IrrigationDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + IrrigationContract.IrrigationEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + IrrigationContract.FieldEntry.TABLE_NAME);
         onCreate(db);
     }
 }

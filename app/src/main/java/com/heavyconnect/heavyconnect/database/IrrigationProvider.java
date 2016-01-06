@@ -58,7 +58,7 @@ public class IrrigationProvider extends ContentProvider {
         {
             case FIELD_NAME_WITH_COORDINATES:
                 retCursor = mOpenHelper.getReadableDatabase().query(
-                        IrrigationContract.IrrigationEntry.TABLE_NAME,
+                        IrrigationContract.FieldEntry.TABLE_NAME,
                         projection,
                         selection,
                         selectionArgs,
@@ -91,9 +91,9 @@ public class IrrigationProvider extends ContentProvider {
         switch(match)
         {
             case FIELD_NAME_WITH_COORDINATES: {
-                long _id = db.insert(IrrigationContract.IrrigationEntry.TABLE_NAME, null, values);
+                long _id = db.insert(IrrigationContract.FieldEntry.TABLE_NAME, null, values);
                 if ( _id > 0 )
-                    returnUri = IrrigationContract.IrrigationEntry.buildFieldUri(_id);
+                    returnUri = IrrigationContract.FieldEntry.buildFieldUri(_id);
                 else
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 break;
