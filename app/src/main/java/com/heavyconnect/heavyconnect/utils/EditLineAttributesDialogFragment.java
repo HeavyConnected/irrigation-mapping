@@ -71,10 +71,10 @@ public class EditLineAttributesDialogFragment extends DialogFragment implements 
             public void onClick(DialogInterface dialog, int which) {
 
                 String x = mEditRow.getText().toString();
-                Log.d("editLineAttriDEPTH", x);
+                Log.d("editLineAttriRow", x);
 
                 String y = mEditLength.getText().toString();
-                Log.d("editLineAttriROW", y);
+                Log.d("editLineAttrLenght", y);
 
                 String z = mEditDepth.getText().toString();
                 Log.d("editLineAttriDEPTH", z);

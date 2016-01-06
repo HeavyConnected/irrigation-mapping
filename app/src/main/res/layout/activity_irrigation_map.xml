@@ -43,6 +43,14 @@
                 app:backgroundTint="#FFFF00"
                 app:rippleColor="#FFF"
                 android:layout_gravity="right|top" />
+
+            <Button
+                android:id="@+id/data_entry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Data Entry"
+                android:layout_gravity="bottom|center"/>
+
         </FrameLayout>
 
         <ListView

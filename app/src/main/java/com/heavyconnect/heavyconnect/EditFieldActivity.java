@@ -50,9 +50,7 @@ public class EditFieldActivity extends AppCompatActivity implements
         mSavedPoints = getIntent().getParcelableArrayListExtra("savedpoints");
         isRedrawn = getIntent().getBooleanExtra("isredrawn", false);
 
-
         mapSetup();
-
 
     }
 
@@ -119,6 +117,7 @@ public class EditFieldActivity extends AppCompatActivity implements
     public boolean onMarkerClick(Marker marker) {
         for(int i = 0; i < mPolylines.size(); i++) {
             // If the marker that they clicked on already belongs to a line
+
             if (mPolylines.get(i).getPoints().contains(marker.getPosition())) {
                 Marker firstMarker = marker;
                 firstMarker.setPosition(mPolylines.get(i).getPoints().get(0));
