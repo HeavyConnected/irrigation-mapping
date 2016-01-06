@@ -15,26 +15,38 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true">
-
-        <Button
+        <!--
+        <Button3
+            android:id="@+id/b1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="B1"/>
+            android:text="NULL"/>
+            -->
 
         <Button
+            android:id="@+id/b2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="B2"/>
+            android:text="NULL"/>
 
         <Button
+            android:id="@+id/button_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="B3"/>
+            android:text="Delete"/>
 
         <Button
+            android:id="@+id/button_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="B4"/>
+            android:visibility="gone"
+            android:text="Cancel"/>
+
+        <Button
+            android:id="@+id/button_done"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Done"/>
 
         </LinearLayout>
 
