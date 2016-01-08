@@ -70,15 +70,14 @@ public class EditLineAttributesDialogFragment extends DialogFragment implements 
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                String x = mEditRow.getText().toString();
-                Log.d("editLineAttriRow", x);
+                String row = mEditRow.getText().toString();
+                Log.d("editLineAttriRow", row);
 
-                String y = mEditLength.getText().toString();
-                Log.d("editLineAttrLenght", y);
+                String length = mEditLength.getText().toString();
+                Log.d("editLineAttrLenght", length);
 
-                String z = mEditDepth.getText().toString();
-                Log.d("editLineAttriDEPTH", z);
-
+                String depth = mEditDepth.getText().toString();
+                Log.d("editLineAttriDEPTH", depth);
 
             }
         });

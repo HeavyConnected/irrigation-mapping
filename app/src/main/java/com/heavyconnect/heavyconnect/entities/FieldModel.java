@@ -21,8 +21,8 @@ public class FieldModel {
         return mCoordinates;
     }
 
-    public void setFieldName(String mFieldName) {
-        this.mFieldName = mFieldName;
+    public void setFieldName(String fieldName) {
+        mFieldName = fieldName;
     }
 
     public void setCenterCoorfinates(String mCenterCoorfinates) {

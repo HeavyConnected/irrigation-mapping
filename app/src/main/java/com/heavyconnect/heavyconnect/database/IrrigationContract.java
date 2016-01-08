@@ -19,7 +19,7 @@ public final class IrrigationContract {
     public IrrigationContract(){}
 
     // Database Table
-    public static final class IrrigationEntry implements BaseColumns{
+    public static final class FieldEntry implements BaseColumns{
 
         public static final Uri CONTENT_URI =
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_LOCATION).build();

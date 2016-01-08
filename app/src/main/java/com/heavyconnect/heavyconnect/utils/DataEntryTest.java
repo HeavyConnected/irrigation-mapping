@@ -145,9 +145,9 @@ public class DataEntryTest extends AppCompatActivity {
         // Create a new map of values, where column names are the keys
         ContentValues values = new ContentValues();
 
-        values.put(IrrigationContract.IrrigationEntry.COLUMN_NAME_CENTER_COORDINATES, centerCoordinate);
-        values.put(IrrigationContract.IrrigationEntry.COLUMN_NAME_COORDINATES, coordinates);
-        values.put(IrrigationContract.IrrigationEntry.COLUMN_NAME_FIELD_NAME, fieldName);
+        values.put(IrrigationContract.FieldEntry.COLUMN_NAME_CENTER_COORDINATES, centerCoordinate);
+        values.put(IrrigationContract.FieldEntry.COLUMN_NAME_COORDINATES, coordinates);
+        values.put(IrrigationContract.FieldEntry.COLUMN_NAME_FIELD_NAME, fieldName);
 
         /* First values inserted for testing
         values.put(IrrigationContract.IrrigationEntry.COLUMN_NAME_CENTER_COORDINATES, "36.641879,-121.658534");
@@ -157,7 +157,7 @@ public class DataEntryTest extends AppCompatActivity {
         // Insert the new row returning the primary key value of the new row
         long newRowId;
         newRowId = mIrrigationDatabase.insert(
-                IrrigationContract.IrrigationEntry.TABLE_NAME,
+                IrrigationContract.FieldEntry.TABLE_NAME,
                 null, values);
 
         mIrrigationDatabase = mIrrigationDbHelper.getReadableDatabase();
@@ -165,17 +165,17 @@ public class DataEntryTest extends AppCompatActivity {
         // Define a projection that specifies which columns from the database
         // you wil actually use after this query.
         String[] projection = {
-                IrrigationContract.IrrigationEntry._ID,
-                IrrigationContract.IrrigationEntry.COLUMN_NAME_CENTER_COORDINATES,
-                IrrigationContract.IrrigationEntry.COLUMN_NAME_COORDINATES,
-                IrrigationContract.IrrigationEntry.COLUMN_NAME_FIELD_NAME,
+                IrrigationContract.FieldEntry._ID,
+                IrrigationContract.FieldEntry.COLUMN_NAME_CENTER_COORDINATES,
+                IrrigationContract.FieldEntry.COLUMN_NAME_COORDINATES,
+                IrrigationContract.FieldEntry.COLUMN_NAME_FIELD_NAME,
         };
 
         String sortOrder =
-                IrrigationContract.IrrigationEntry.COLUMN_NAME_FIELD_NAME + " DESC";
+                IrrigationContract.FieldEntry.COLUMN_NAME_FIELD_NAME + " DESC";
 
         Cursor cursor = mIrrigationDatabase.query(
-                IrrigationContract.IrrigationEntry.TABLE_NAME, // table to query
+                IrrigationContract.FieldEntry.TABLE_NAME, // table to query
                 projection,                                    // columns returned
                 null,                                          // columns for WHERE clause
                 null,                                          // values for WHERE clause
@@ -187,19 +187,19 @@ public class DataEntryTest extends AppCompatActivity {
         cursor.moveToFirst();
         for(int i = 0; i < cursor.getCount(); i++) {
             long itemId = cursor.getLong(
-                    cursor.getColumnIndexOrThrow(IrrigationContract.IrrigationEntry._ID)
+                    cursor.getColumnIndexOrThrow(IrrigationContract.FieldEntry._ID)
             );
 
             String fieldName = cursor.getString(
-                    cursor.getColumnIndexOrThrow(IrrigationContract.IrrigationEntry.COLUMN_NAME_FIELD_NAME)
+                    cursor.getColumnIndexOrThrow(IrrigationContract.FieldEntry.COLUMN_NAME_FIELD_NAME)
             );
 
             String centerCoordinates = cursor.getString(
-                    cursor.getColumnIndexOrThrow(IrrigationContract.IrrigationEntry.COLUMN_NAME_CENTER_COORDINATES)
+                    cursor.getColumnIndexOrThrow(IrrigationContract.FieldEntry.COLUMN_NAME_CENTER_COORDINATES)
             );
 
             String coordinates = cursor.getString(
-                    cursor.getColumnIndexOrThrow(IrrigationContract.IrrigationEntry.COLUMN_NAME_COORDINATES)
+                    cursor.getColumnIndexOrThrow(IrrigationContract.FieldEntry.COLUMN_NAME_COORDINATES)
             );
 
             Log.d("Database Values", "ID: " + itemId +
@@ -214,11 +214,11 @@ public class DataEntryTest extends AppCompatActivity {
 
     private void deleteData() {
         // Define 'where' part of the query
-        String selection = IrrigationContract.IrrigationEntry.COLUMN_NAME_FIELD_NAME + " LIKE ? ";
+        String selection = IrrigationContract.FieldEntry.COLUMN_NAME_FIELD_NAME + " LIKE ? ";
         // Specify arguments in placeholder order
         String[] selectionArgs = {deleteText};
         // Issue SQL statement
-        mIrrigationDatabase.delete(IrrigationContract.IrrigationEntry.TABLE_NAME, selection, selectionArgs);
+        mIrrigationDatabase.delete(IrrigationContract.FieldEntry.TABLE_NAME, selection, selectionArgs);
 
     }
 

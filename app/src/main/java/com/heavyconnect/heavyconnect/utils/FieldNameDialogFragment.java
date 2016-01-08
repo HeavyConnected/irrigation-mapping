@@ -19,6 +19,7 @@ import android.widget.EditText;
 
 import com.heavyconnect.heavyconnect.IrrigationMapActivity;
 import com.heavyconnect.heavyconnect.R;
+import com.heavyconnect.heavyconnect.entities.FieldModel;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -69,6 +70,8 @@ public class FieldNameDialogFragment extends DialogFragment {
         nameDialog.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                if(mFieldName == null)
+                    dialog.cancel();
                 sendResult(Activity.RESULT_OK);
             }
         });
@@ -99,6 +102,6 @@ public class FieldNameDialogFragment extends DialogFragment {
         Intent intent = new Intent();
         intent.putExtra("field_name", mFieldName);
 
-        IrrigationMapActivity.updateFieldName(mFieldName);
+        IrrigationMapActivity.submitFieldEntry(mFieldName);
     }
 }

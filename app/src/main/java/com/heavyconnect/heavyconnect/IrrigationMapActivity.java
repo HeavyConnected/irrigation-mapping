@@ -1,21 +1,13 @@
 package com.heavyconnect.heavyconnect;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.LoaderManager;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.Location;
-import android.provider.ContactsContract;
-import android.support.v4.content.Loader;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
@@ -48,31 +40,29 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
+import com.heavyconnect.heavyconnect.adapters.FieldListAdapter;
 import com.heavyconnect.heavyconnect.database.IrrigationContract;
 import com.heavyconnect.heavyconnect.database.IrrigationDbHelper;
+import com.heavyconnect.heavyconnect.entities.FieldModel;
 import com.heavyconnect.heavyconnect.entities.Manager;
 import com.heavyconnect.heavyconnect.resttasks.TaskCallback;
-import com.heavyconnect.heavyconnect.utils.DataEntryTest;
+import com.heavyconnect.heavyconnect.utils.DataBaseHelper;
 import com.heavyconnect.heavyconnect.utils.FieldNameDialogFragment;
-import com.heavyconnect.heavyconnect.utils.PlaceProvider;
 import com.heavyconnect.heavyconnect.utils.StorageUtils;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 
-public class IrrigationMapActivity extends AppCompatActivity implements TaskCallback, GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnMarkerClickListener {
+public class IrrigationMapActivity extends AppCompatActivity implements TaskCallback,
+        GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnMarkerClickListener/*, LoaderCallbacks<Cursor> */{
     private static final String PREFERENCES_KEY = "com.heavyconnect.heavyconnect.irrigation"; // Name of SharedPreferences file we will write to and read from
     private static final String USER_LEARNED_DRAWER_KEY = "has_drawer_opened"; // Key that maps to value mUserLearnedDrawer in SharedPreferences
     private Boolean mUserLearnedDrawer;
 
     private GoogleMap mGoogleMap;
-
-    private static String mFieldName;
-    private static final int FIELD_NAME_REQUEST_CODE = 1;
 
     private String[] mFieldLocations; // Drawer ListView contents
     private DrawerLayout mDrawerLayout;
@@ -96,40 +86,43 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
 
     private ArrayList<LatLng> temp;
 
-    private Button mEditScreenButton;
+    private static Button mEditScreenButton;
 
     // Database members
     private Button mDataEntry;
-    private SQLiteDatabase mIrrigationDataBase;
+    private SQLiteDatabase mIrrigationDataBase; // Field Location
     private IrrigationDbHelper mIrrigationDbHelper;
+
+    // Values being input into database
+    private static String mFieldName;
+    // These values have been converted from ints
+    // over to strings in order to be stored into db.
+    String dbCenterCoordinate;
+    String dbCoordinates;
+
+
+    // Database models
+    private static FieldModel mFieldModel;
+    // TODO: Create a pipeModel
+
+    //Database
+    private static DataBaseHelper mDatabaseHelper;
+
+    // Holds field model to be populated onto naviagtion drawer list
+    List<FieldModel> mDrawerFieldInfo;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_irrigation_map);
 
-        // DataBase
         mIrrigationDbHelper = new IrrigationDbHelper(this);
-
-        mEditScreenButton = (Button) findViewById(R.id.edit_screen_button);
-
-
-        mDataEntry = (Button) findViewById(R.id.data_entry);
-        mDataEntry.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), DataEntryTest.class);
-                startActivity(intent);
-            }
-        });
 
         if(!StorageUtils.getIsLoggedIn(this) || (mManager = StorageUtils.getUserData(this)) == null){
             startActivity(new Intent(this, LoginActivity.class));
             Toast.makeText(this, getString(R.string.map_loading), Toast.LENGTH_LONG).show();
             finish();
         }
-
         mProgress = new ProgressDialog(this);
         mProgress.setTitle(null);
         mProgress.setMessage(getString(R.string.equip_list_loading));
@@ -153,7 +146,8 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
-        /* Set Adapter for the list view
+       /*
+        // Set Adapter for the list view
         mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, mFieldLocations));
         // Set onClick listener
         mDrawerList.setOnItemClickListener(new ListView.OnItemClickListener() {
@@ -182,6 +176,8 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
                     mActionEditButton.setImageResource(R.drawable.red_pin);
                     mapMarkerEnable();
                     Log.d("IrrigationMapActivity", "Enable polygons");
+
+
                 }
                 //This cleamSavedfieldrs all polygons created
                 else {
@@ -200,10 +196,15 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
                                 .snippet("Pipe Depth: 32 inches"));
                         tempMarker.showInfoWindow();
                     }
+
+
+
                 }
                 countButtonClicks++;
+
             }
         });
+
     }
 
     public void onSearch(String query) {
@@ -254,6 +255,7 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.search_menu, menu);
+        mDatabaseHelper = new DataBaseHelper(this);
 
         MenuItem searchItem = menu.findItem(R.id.action_search);
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
@@ -337,7 +339,6 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
             saveToPreferences(this, USER_LEARNED_DRAWER_KEY, true);
         }
     }
-
     @Override
     public void onMapClick(LatLng latLng) {
         if(mMarkerClicked == false) {
@@ -367,15 +368,10 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
         }
 
         else if(mArrayPoints.get(0).equals(marker.getPosition())) {
+            mFieldModel = new FieldModel();
             countPolygonPoints();
+
             // TODO: if (Drawer is !null) mEditScreenButton.setVisibility(View.GONE);
-            mEditScreenButton.setVisibility(View.VISIBLE);
-
-            FieldNameDialogFragment nameDialogFragment = FieldNameDialogFragment.getInstance();
-            nameDialogFragment.show(getFragmentManager(), "field_name_fragment");
-        }
-
-        if(mMarkerClicked == true) {
 
             double avgX = 0, avgY = 0, avgZ = 0;
             for(int i = 0; i < mArrayPoints.size(); i++){
@@ -405,11 +401,35 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
             mFieldWindowLocations.add(newLatLon);
             current = newLatLon;
             //countButtonClicks++;
+
+
+            /* -- Store into field model to be stored into database  -- */
+            // Convert center coordinate into string
+            dbCenterCoordinate = current.toString();
+            Log.d("LatLong" , "Center Coordinate: " + current);
+            // Insert into field model
+            mFieldModel.setCenterCoorfinates(dbCenterCoordinate);
+
+            // Convert coordinates into string
+            for(int i = 0; i < mArrayPoints.size(); i++) {
+                dbCoordinates += mArrayPoints.get(i).toString() + ",";
+            }
+
+            // Preprocess coordinates to take in numbers and commas only
+
+            // Insert into field model
+            mFieldModel.setCoordinates(dbCoordinates);
+
+            displayDialog();
+
             return true;
         }
-
-
         return false;
+    }
+
+    private void displayDialog() {
+        FieldNameDialogFragment nameDialogFragment = FieldNameDialogFragment.getInstance();
+        nameDialogFragment.show(getFragmentManager(), "field_name_fragment");
     }
 
     public void redrawPolygonPoints(ArrayList<LatLng> coordinates) {
@@ -457,12 +477,13 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
     public void mapSetup() {
 
 
+
         // Instantiate ArrayList of points
         mArrayPoints = new ArrayList<LatLng>();
         mFieldWindowLocations = new ArrayList<LatLng>();
         mSavedfieldLocaions = new HashMap<LatLng, ArrayList<LatLng>>();
         mSavedArrayPoints = new ArrayList<LatLng>();
-        current = new LatLng(0, 0);
+        current = new LatLng(0,0);
         // Instantiate map fragment
         mIrrigationMapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.irrigation_map);
@@ -495,28 +516,29 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
                 startActivity(intent);
             }
         });
-
     }
-
+    // Populate Navigation Drawer List
     public void populateNavigationDrawerList() {
-        ArrayList<String> fieldNames = new ArrayList<>();
+        // Field model to be put into mDrawerFieldInfo array list
+        FieldModel localFieldModel;
+        mDrawerFieldInfo = new ArrayList<>();
 
         mIrrigationDataBase = mIrrigationDbHelper.getReadableDatabase();
         // Iterate through database
         // Define a projection that specifies which columns from the database
         // you wil actually use after this query.
         String[] projection = {
-                IrrigationContract.IrrigationEntry._ID,
-                IrrigationContract.IrrigationEntry.COLUMN_NAME_CENTER_COORDINATES,
-                IrrigationContract.IrrigationEntry.COLUMN_NAME_COORDINATES,
-                IrrigationContract.IrrigationEntry.COLUMN_NAME_FIELD_NAME,
+                IrrigationContract.FieldEntry._ID,
+                IrrigationContract.FieldEntry.COLUMN_NAME_CENTER_COORDINATES,
+                IrrigationContract.FieldEntry.COLUMN_NAME_COORDINATES,
+                IrrigationContract.FieldEntry.COLUMN_NAME_FIELD_NAME,
         };
 
         String sortOrder =
-                IrrigationContract.IrrigationEntry.COLUMN_NAME_FIELD_NAME + " DESC";
+                IrrigationContract.FieldEntry.COLUMN_NAME_FIELD_NAME + " DESC";
 
         Cursor cursor = mIrrigationDataBase.query(
-                IrrigationContract.IrrigationEntry.TABLE_NAME, // table to query
+                IrrigationContract.FieldEntry.TABLE_NAME, // table to query
                 projection,                                    // columns returned
                 null,                                          // columns for WHERE clause
                 null,                                          // values for WHERE clause
@@ -528,38 +550,66 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
         // Query each field name in database
         cursor.moveToFirst();
         for(int i = 0; i < cursor.getCount(); i++) {
+            localFieldModel = new FieldModel();
             long itemId = cursor.getLong(
-                    cursor.getColumnIndexOrThrow(IrrigationContract.IrrigationEntry._ID)
+                    cursor.getColumnIndexOrThrow(IrrigationContract.FieldEntry._ID)
             );
 
             String fieldName = cursor.getString(
-                    cursor.getColumnIndexOrThrow(IrrigationContract.IrrigationEntry.COLUMN_NAME_FIELD_NAME)
+                    cursor.getColumnIndexOrThrow(IrrigationContract.FieldEntry.COLUMN_NAME_FIELD_NAME)
             );
+            String centerCoordinate = cursor.getString(
+                    cursor.getColumnIndexOrThrow(IrrigationContract.FieldEntry.COLUMN_NAME_CENTER_COORDINATES)
+            );
+            String coordinates = cursor.getString(
+                    cursor.getColumnIndexOrThrow(IrrigationContract.FieldEntry.COLUMN_NAME_COORDINATES)
+            );
+           // Insert fieldName, centerCoordinate, and coordinate into FieldModel
+            if(fieldName != null ){
+                //TODO: Clean up coordinate string (extract alpha and special characters except commas and '-')
+                localFieldModel.setFieldName(fieldName);
+                localFieldModel.setCenterCoorfinates(centerCoordinate);
+                localFieldModel.setCoordinates(coordinates);
+            }
 
-            Log.d("Database Values", "ID: " + itemId +
+           /* Log.d("Database Values", "ID: " + itemId +
                             "\nField Name: " + fieldName
-            );
-            // Insert into array
-            fieldNames.add(fieldName);
+            );*/
 
+            // Insert field model into array
+            mDrawerFieldInfo.add(localFieldModel);
 
             cursor.moveToNext();
         }
+        // Field List Adapter
+        FieldListAdapter fieldListAdapter = new FieldListAdapter(this, mDrawerFieldInfo);
         // Populate list view from adapter
         // Set Adapter for the list view
-        mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, fieldNames));
+        mDrawerList.setAdapter(fieldListAdapter);
         // Set onClick listener
         mDrawerList.setOnItemClickListener(new ListView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(getApplicationContext(),"Hello HappyTown", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getApplicationContext(), EditFieldActivity.class);
+                // TODO: Convert coordinates to LatLng, store in array list, and pass
+                // TODO: array list as Extra.
+                intent.putExtra("center_coordinates", mFieldModel.getCenterCoorfinates());
+                intent.putExtra("coordinates", mFieldModel.getCoordinates());
+                startActivity(intent);
+                //Toast.makeText(getApplicationContext(), "Hello HappyTown", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    public static void updateFieldName(String fieldName) {
+    public static void submitFieldEntry(String fieldName) {
         mFieldName = fieldName;
-        Log.d("IrrigationMapActivity", "Field Name: " + mFieldName);
+        mFieldModel.setFieldName(mFieldName);
+        if(mFieldName != null)
+            mEditScreenButton.setVisibility(View.VISIBLE);
+        // Store field model into
+        mDatabaseHelper.put(mFieldModel);
+
+        Log.d("IrrigationMapActivity", "Field Name: " + mFieldModel.getFieldName());
     }
 
     class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
@@ -580,7 +630,6 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
             return myContentsView;
 
         }
-
         @Override
         public View getInfoWindow(Marker marker) {
             return null;

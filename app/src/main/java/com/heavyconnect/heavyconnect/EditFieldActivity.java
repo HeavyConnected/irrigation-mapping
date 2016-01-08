@@ -1,4 +1,7 @@
 package com.heavyconnect.heavyconnect;
+// Questions
+// What is mSavedPoints
+// Why do we need to find center coordinate? (can we just send in a putExtra with centerCoordinate?)
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -38,6 +41,8 @@ public class EditFieldActivity extends AppCompatActivity implements
     private ArrayList<LatLng> mSavedPoints;
     private HashMap<String, String[]> mHashMap = new HashMap<String, String[]>(); // Saves all the attributes for each line
     private String[] mLineAttributes;
+    private String mPipeCoordinates;
+
 
 
     @Override
@@ -46,7 +51,6 @@ public class EditFieldActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_edit_field);
 
         mArrayPoints = getIntent().getParcelableArrayListExtra("arraypoints");
-
         mSavedPoints = getIntent().getParcelableArrayListExtra("savedpoints");
         isRedrawn = getIntent().getBooleanExtra("isredrawn", false);
 
@@ -129,10 +133,14 @@ public class EditFieldActivity extends AppCompatActivity implements
                 // setInfoWindow
 
 
+                    //polylines[i]
+
                 Log.d("EditFieldAc", marker.getPosition().toString());
 
                 //call the getIntance to method to instantiate the dialogFragment and set the arguments
                 EditLineAttributesDialogFragment dialogFragment = EditLineAttributesDialogFragment.getInstance(marker.getPosition().toString());
+
+                Log.d("send arguments", marker.getPosition().toString());
 
                 //displays the dialog fragment with a transaction and tag as parameters
                 Log.d("EditFieldActivity", "the Fragment is going to be created");
@@ -162,6 +170,11 @@ public class EditFieldActivity extends AppCompatActivity implements
         mPolylineOptions.addAll(mLinePoints); // Add all points of line segment
         mPolylineOptions.color(Color.RED);
         mPolylines.add(mFieldMap.addPolyline(mPolylineOptions)); // Add a line to the map
+
+        for(int i = 0; i < mLinePoints.size(); i++){
+            Log.d("points in line", mLinePoints.get(i).toString());
+        }
+
 
     }
 
