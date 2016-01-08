@@ -96,8 +96,8 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
     private static String mFieldName;
     // These values have been converted from ints
     // over to strings in order to be stored into db.
-    String dbCenterCoordinate;
-    String dbCoordinates;
+    String dbCenterCoordinate = "";
+    String dbCoordinates = "";
 
 
     // Database models
@@ -597,36 +597,20 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
         mDrawerList.setOnItemClickListener(new ListView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                //Intent intent = new Intent(getApplicationContext(), EditFieldActivity.class);
-                // TODO: Convert coordinates to LatLng, store in array list, and pass
-                // TODO: array list as Extra.
-                //intent.putExtra("center_coordinates", mFieldModel.getCenterCoorfinates());
-                //intent.putExtra("coordinates", mFieldModel.getCoordinates());
-                //startActivity(intent);
-
                 mGoogleMap.clear();
                 mArrayPoints.clear();
                 String[] latlng = mDrawerFieldInfo.get(i).getCoordinates().split(",");
                 Toast.makeText(getApplicationContext(), mDrawerFieldInfo.get(i).getCoordinates(), Toast.LENGTH_LONG).show();
 
-
                 for(int j = 0; j < latlng.length - 1; j += 2)
                 {
                     Log.i("IrrigationMapActivity", "lat: " + latlng[j]);
                     Log.i("IrrigationMapActivity", "long: " + latlng[j + 1]);
-                    //LatLng location = new LatLng(Double.parseDouble(latlng[j]), Double.parseDouble(latlng[j + 1]));
-                    //mArrayPoints.add(location);
+                    LatLng location = new LatLng(Double.parseDouble(latlng[j]), Double.parseDouble(latlng[j + 1]));
+                    mArrayPoints.add(location);
                 }
-                /*
-                for(int k = 0; k < mArrayPoints.size(); k++)
-                {
-                    Log.i("IrrigationMapActivity", "latitude: " + mArrayPoints.get(i).latitude);
-                    Log.i("IrrigationMapActivity", "longitude: " + mArrayPoints.get(i).longitude);
 
-                }*/
-
-               // mPolygonOptions.addAll(mArrayPoints);
-                //redrawPolygonPoints(mArrayPoints);
+                redrawPolygonPoints(mArrayPoints);
             }
         });
     }
