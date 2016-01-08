@@ -9,7 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -18,7 +17,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
-
+import com.heavyconnect.heavyconnect.utils.EditLineAttributesDialogFragment;
+import java.lang.Math;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ListIterator;
@@ -41,6 +41,8 @@ public class EditFieldActivity extends AppCompatActivity implements
     private ArrayList<LatLng> mSavedPoints;
     private HashMap<String, String[]> mHashMap = new HashMap<String, String[]>(); // Saves all the attributes for each line
     private String[] mLineAttributes;
+    private String mPipeCoordinates = "";
+
 
     // Toolbar buttons
     private Button mDoneButton;
@@ -92,7 +94,6 @@ public class EditFieldActivity extends AppCompatActivity implements
                 mDeleteButton.setVisibility(View.VISIBLE);
             }
         });
-
 
     }
 
@@ -175,6 +176,17 @@ public class EditFieldActivity extends AppCompatActivity implements
                     firstMarker.setPosition(mPolylines.get(i).getPoints().get(0));
                     showTextBox(firstMarker); // Show the text box and allow edit
                 }
+
+                Log.d("EditFieldAc", marker.getPosition().toString());
+
+                //call the getIntance to method to instantiate the dialogFragment and set the arguments
+                EditLineAttributesDialogFragment dialogFragment = EditLineAttributesDialogFragment.getInstance(marker.getPosition().toString(), mPipeCoordinates);
+
+                Log.d("send arguments", marker.getPosition().toString());
+
+                //displays the dialog fragment with a transaction and tag as parameters
+                Log.d("EditFieldActivity", "the Fragment is going to be created");
+                dialogFragment.show(getFragmentManager(), "EditAttributesDialog");
             }
 
             if (!mLinePoints.isEmpty()) { // If they haven't closed a line and the line that they click on is the first
@@ -204,6 +216,15 @@ public class EditFieldActivity extends AppCompatActivity implements
         for (int i = 0; i < mPolylines.size(); i++) {
             Log.i("prepForDatabase", "i = " + i + " " + mPolylines.get(i).getPoints().toString());
         }
+        for(int i = 0; i < mLinePoints.size(); i++){
+            Log.d("points in line", Double.toString(mLinePoints.get(i).latitude));
+            mPipeCoordinates += Double.toString(mLinePoints.get(i).latitude) + ",";
+            mPipeCoordinates += Double.toString(mLinePoints.get(i).longitude) + ",";
+        }
+        // Omit last comma
+       // Log.d("points in line", mPipeCoordinates.substring(0, mPipeCoordinates.length() - 2));
+       mPipeCoordinates.substring(0, mPipeCoordinates.length() - 2);
+
     }
 
     public LatLng findCenter(ArrayList<LatLng> points) {
@@ -243,8 +264,10 @@ public class EditFieldActivity extends AppCompatActivity implements
                 .title("Field Name")
                 .snippet("Row #: Length: Depth: "));
         tempMarker.showInfoWindow();
-
         mHashMap.put(marker.getPosition().toString(), mLineAttributes);
+
+
+
     }
 
     public void showTextBox(Marker marker) {

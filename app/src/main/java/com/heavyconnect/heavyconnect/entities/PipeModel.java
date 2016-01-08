@@ -5,29 +5,44 @@ package com.heavyconnect.heavyconnect.entities;
  */
 public class PipeModel {
     // Under construction
-/*
+
     private String mLength;
     private String mDepth;
     private String mRow;
     private String mCoordinates;
     private String mFieldId;
 
-    public String getPipeId();
-    public String getCoordinates() {
-        return mCoordinates;
+    public PipeModel(){
+
+    }
+    public PipeModel(String length, String depth, String row, String coordinates, String fieldId){
+        mLength = length;
+        mDepth = depth;
+        mRow = row;
+        mCoordinates = coordinates;
+        mFieldId = fieldId;
+    }
+    public String getLength(){return mLength;}
+    public String getDepth() {return mDepth;}
+    public String getRow() {return mRow;}
+    public String getCoordinates() {return mCoordinates;}
+    public String getFieldId() {return mFieldId;}
+
+    public void setLength(String length) {
+        mLength = length;
+    }
+    public void setDepth(String depth) {
+        mDepth = depth;
+    }
+    public void setRow(String row) {
+        mRow = row;
     }
 
-
-    public void setFieldName(String fieldName) {
-        mFieldName = fieldName;
+    public void setCoordinates(String coordinates) {
+        mCoordinates = coordinates;
     }
 
-    public void setCenterCoorfinates(String mCenterCoorfinates) {
-        this.mCenterCoorfinates = mCenterCoorfinates;
+    public void setFieldId(String fieldId){
+        mFieldId = fieldId;
     }
-
-    public void setCoordinates(String mCoordinates) {
-        this.mCoordinates = mCoordinates;
-    }
-}*/
-}
+};

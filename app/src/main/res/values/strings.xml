@@ -25,6 +25,8 @@
     <string name="equip_list_load_failure">Failed when trying to get the equipment list... Try again...</string>
     <!-- EquipmentListActivity - END -->
 
+
+
     <!-- EquipmentRegistrationActivity - BEGIN -->
     <string name="equip_reg_title">Equipment Registration</string>
 
@@ -149,6 +151,19 @@
 
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <!-- PipeLinesAttribtes - BEGIN -->
+    <string name="pipe_row">Row</string>
+    <string name="pipe_row_hint">Ex: 5</string>
+
+    <string name="pipe_length">Length</string>
+    <string name="pipe_length_hint">Ex: 50 ft.</string>
+
+    <string name="pipe_depth">Depth</string>
+    <string name="pipe_depth_hint">Ex: 15 in.</string>
+
+
 
     <!--Places Search - END-->
 </resources>

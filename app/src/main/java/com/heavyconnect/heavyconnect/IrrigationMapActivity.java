@@ -75,7 +75,7 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
     private SupportMapFragment mIrrigationMapFragment;
     private ArrayList<LatLng> mArrayPoints;
     private ArrayList<LatLng> mFieldWindowLocations; // holds center location for each field
-    private HashMap<LatLng, ArrayList<LatLng>> mSavedfieldLocaions; // holds all cleared field locations
+    public HashMap<LatLng, ArrayList<LatLng>> mSavedfieldLocaions; // holds all cleared field locations
     private ArrayList<LatLng> mSavedArrayPoints;
     private LatLng current;
     private boolean isRedrawn = false;
@@ -411,10 +411,14 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
 
             // Convert coordinates into string
             for(int i = 0; i < mArrayPoints.size(); i++) {
-                dbCoordinates += mArrayPoints.get(i).toString() + ",";
+                // Preprocess coordinates to take in numbers and commas only
+
+                dbCoordinates += Double.toString(mArrayPoints.get(i).latitude) + ",";
+                dbCoordinates += Double.toString(mArrayPoints.get(i).longitude) + ",";
             }
 
-            // Preprocess coordinates to take in numbers and commas only
+            // Omit last comma
+           dbCoordinates = dbCoordinates.substring(0, dbCoordinates.length() - 2);
 
             // Insert into field model
             mFieldModel.setCoordinates(dbCoordinates);
