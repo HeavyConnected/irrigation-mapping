@@ -41,7 +41,7 @@ public class EditFieldActivity extends AppCompatActivity implements
     private ArrayList<LatLng> mSavedPoints;
     private HashMap<String, String[]> mHashMap = new HashMap<String, String[]>(); // Saves all the attributes for each line
     private String[] mLineAttributes;
-    private String mPipeCoordinates;
+    private String mPipeCoordinates = "";
 
 
 
@@ -138,7 +138,7 @@ public class EditFieldActivity extends AppCompatActivity implements
                 Log.d("EditFieldAc", marker.getPosition().toString());
 
                 //call the getIntance to method to instantiate the dialogFragment and set the arguments
-                EditLineAttributesDialogFragment dialogFragment = EditLineAttributesDialogFragment.getInstance(marker.getPosition().toString());
+                EditLineAttributesDialogFragment dialogFragment = EditLineAttributesDialogFragment.getInstance(marker.getPosition().toString(), mPipeCoordinates);
 
                 Log.d("send arguments", marker.getPosition().toString());
 
@@ -172,9 +172,13 @@ public class EditFieldActivity extends AppCompatActivity implements
         mPolylines.add(mFieldMap.addPolyline(mPolylineOptions)); // Add a line to the map
 
         for(int i = 0; i < mLinePoints.size(); i++){
-            Log.d("points in line", mLinePoints.get(i).toString());
+            Log.d("points in line", Double.toString(mLinePoints.get(i).latitude));
+            mPipeCoordinates += Double.toString(mLinePoints.get(i).latitude) + ",";
+            mPipeCoordinates += Double.toString(mLinePoints.get(i).longitude) + ",";
         }
-
+        // Omit last comma
+       // Log.d("points in line", mPipeCoordinates.substring(0, mPipeCoordinates.length() - 2));
+       mPipeCoordinates.substring(0, mPipeCoordinates.length() - 2);
 
     }
 

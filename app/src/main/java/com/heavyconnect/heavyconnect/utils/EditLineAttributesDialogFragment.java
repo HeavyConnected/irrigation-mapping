@@ -28,15 +28,17 @@ public class EditLineAttributesDialogFragment extends DialogFragment implements 
     private EditText mEditRow;;
     private EditText mEditLength;
     private EditText mEditDepth;
+    private String mPipeCoordinates;
     private String coordinate;
     private static final String COORD_KEY = "coordi";
+    private static final String PIPE_COORDINATES = "pipe_coordinates";
     Context mContext;
+
 
 
 
     public EditLineAttributesDialogFragment(){
         mContext = getActivity();
-
 
         Log.d("EditLIneAttributes", "the Fragment was created");
 
@@ -47,6 +49,9 @@ public class EditLineAttributesDialogFragment extends DialogFragment implements 
         super.onAttach(activity);
         //retrieves information from bundle arguments
         coordinate = getArguments().getString(COORD_KEY);
+        mPipeCoordinates = getArguments().getString(PIPE_COORDINATES);
+        Log.d("EditLIneAttributes", "" + mPipeCoordinates);
+
     }
 
     @Override
@@ -104,7 +109,7 @@ public class EditLineAttributesDialogFragment extends DialogFragment implements 
         return false;
     }
 
-    public static EditLineAttributesDialogFragment getInstance(String coordinate){
+    public static EditLineAttributesDialogFragment getInstance(String coordinate, String pipeCoordinates){
 
         //instantiates the dialogFragment
         EditLineAttributesDialogFragment dialogFragment = new EditLineAttributesDialogFragment();
@@ -113,6 +118,7 @@ public class EditLineAttributesDialogFragment extends DialogFragment implements 
         Bundle bundle = new Bundle();
 
         bundle.putString(COORD_KEY, coordinate);
+        bundle.putString(PIPE_COORDINATES, pipeCoordinates);
 
         dialogFragment.setArguments(bundle);
 
@@ -139,10 +145,6 @@ public class EditLineAttributesDialogFragment extends DialogFragment implements 
 
         mEditDepth = (EditText) view.findViewById(R.id.edit_depth);
         mEditDepth.setText(depth, TextView.BufferType.EDITABLE);
-
-
-
-
 
     }
 }

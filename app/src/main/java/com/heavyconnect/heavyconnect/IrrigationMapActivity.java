@@ -412,10 +412,14 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
 
             // Convert coordinates into string
             for(int i = 0; i < mArrayPoints.size(); i++) {
-                dbCoordinates += mArrayPoints.get(i).toString() + ",";
+                // Preprocess coordinates to take in numbers and commas only
+
+                dbCoordinates += Double.toString(mArrayPoints.get(i).latitude) + ",";
+                dbCoordinates += Double.toString(mArrayPoints.get(i).longitude) + ",";
             }
 
-            // Preprocess coordinates to take in numbers and commas only
+            // Omit last comma
+           dbCoordinates = dbCoordinates.substring(0, dbCoordinates.length() - 2);
 
             // Insert into field model
             mFieldModel.setCoordinates(dbCoordinates);
