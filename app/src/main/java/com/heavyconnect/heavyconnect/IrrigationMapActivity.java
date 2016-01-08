@@ -404,10 +404,14 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
 
             /* -- Store into field model to be stored into database  -- */
             // Convert center coordinate into string
-            dbCenterCoordinate = current.toString();
+
+            dbCenterCoordinate =  Double.toString(current.latitude) + "," + Double.toString(current.longitude);
             Log.d("LatLong" , "Center Coordinate: " + current);
             // Insert into field model
             mFieldModel.setCenterCoorfinates(dbCenterCoordinate);
+            Log.d("LatLong", "(**Center Coordinate: " + dbCenterCoordinate);
+
+
 
             // Convert coordinates into string
             for(int i = 0; i < mArrayPoints.size(); i++) {
