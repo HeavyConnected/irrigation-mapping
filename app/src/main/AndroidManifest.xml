@@ -2,13 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.heavyconnect.heavyconnect" >
 
-    <uses-permission android:name="ANDROID.PERMISSION.CHANGE_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
+    <uses-permission android:name="ANDROID.PERMISSION.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
 
     <!-- Protect the map component of the application using application signature -->
     <permission
@@ -27,13 +27,14 @@
     <!-- Allows the Google Maps Android API V2 to use WiFi or mobile cell data (or both) to determine the device's location -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
-    <!-- Allows the Google Maps Android API V2 to use the Global Positioning System (GPS)
-    to determine the device's location to within a very small area -->
+    <!--
+    Allows the Google Maps Android API V2 to use the Global Positioning System (GPS)
+    to determine the device's location to within a very small area
+    -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <!-- Allows to contact Google Serves -->
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
-
 
     <!-- Google Maps Android API V2 requires OpenGL ES version 2 -->
     <uses-feature
@@ -42,82 +43,84 @@
 
     <application
         android:allowBackup="true"
+        android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme"
-        android:hardwareAccelerated="true">
-
-
-        <meta-data android:name="com.google.android.gms.version"
+        android:theme="@style/AppTheme" >
+        <meta-data
+            android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-
-        <meta-data android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_api_key"/>
-
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_api_key" />
 
         <activity
             android:name=".LoginActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".RegisterActivity"
+        <activity
+            android:name=".RegisterActivity"
             android:label="@string/register_title"
             android:parentActivityName=".LoginActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"/>
-
-        <activity android:name=".GridActivity"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".GridActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".MapActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".MapActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"/>
-
+            android:screenOrientation="portrait" />
         <activity
             android:name=".EquipmentListActivity"
             android:label="@string/equip_list_title"
             android:parentActivityName=".GridActivity"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".EquipmentRegistrationActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".EquipmentRegistrationActivity"
             android:label="@string/equip_reg_title"
             android:parentActivityName=".EquipmentListActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"/>
-
-        <activity android:name=".IrrigationMapActivity"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".IrrigationMapActivity"
             android:label="Irrigation Map"
             android:launchMode="singleTop"
             android:parentActivityName=".GridActivity"
-            android:screenOrientation="portrait">
-
+            android:screenOrientation="portrait" >
             <intent-filter>
-                <action android:name="android.intent.action.SEARCH"></action>
+                <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".EditFieldActivity"
+        <activity
+            android:name=".EditFieldActivity"
             android:label="Edit Field"
             android:parentActivityName=".IrrigationMapActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <provider
             android:name=".utils.PlaceProvider"
             android:authorities="com.heavyconnect.heavyconnect.utils.PlaceProvider"
             android:exported="false" />
 
-
-        <!-- Specifies the Android API Key, which is obtained from Google API Console
+        <!--
+        Specifies the Android API Key, which is obtained from Google API Console
         <meta-data android:name="com.google.android.maps.v2.API_KEY"
-            android:value="com.google.android.geo.API_KEY" /> -->
+            android:value="com.google.android.geo.API_KEY" />
+        -->
 
+        <activity
+            android:name=".utils.DataEntryTest"
+            android:label="@string/title_activity_data_entry_test"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
     </application>
 
 </manifest>

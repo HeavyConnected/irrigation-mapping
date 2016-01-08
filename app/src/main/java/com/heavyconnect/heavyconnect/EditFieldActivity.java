@@ -1,4 +1,7 @@
 package com.heavyconnect.heavyconnect;
+// Questions
+// What is mSavedPoints
+// Why do we need to find center coordinate? (can we just send in a putExtra with centerCoordinate?)
 
 import android.graphics.Color;
 import android.os.Bundle;
