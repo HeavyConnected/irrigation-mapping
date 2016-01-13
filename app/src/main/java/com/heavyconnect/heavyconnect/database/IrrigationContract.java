@@ -37,7 +37,7 @@ public final class IrrigationContract {
     public static final class PipelineInfoEntry implements BaseColumns {
 
         public static final String TABLE_NAME = "pipe";
-        public static final String COLUMN_NAME_PIPE_ID = "pipe_id";
+      //  public static final String COLUMN_NAME_PIPE_ID = "pipe_id";
         public static final String COLUMN_NAME_LENGTH = "lenght";
         public static final String COLUMN_NAME_DEPTH = "depth";
         public static final String COLUMN_NAME_ROW = "row";
