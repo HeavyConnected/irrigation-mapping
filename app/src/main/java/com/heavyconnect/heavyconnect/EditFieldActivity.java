@@ -42,6 +42,7 @@ public class EditFieldActivity extends AppCompatActivity implements
     private HashMap<String, String[]> mHashMap = new HashMap<String, String[]>(); // Saves all the attributes for each line
     private String[] mLineAttributes;
     private String mPipeCoordinates = "";
+    private String mCenterCoordinates = new String();
 
 
     // Toolbar buttons
@@ -60,6 +61,8 @@ public class EditFieldActivity extends AppCompatActivity implements
         Log.v("EditFieldActivity", mArrayPoints.toString());
         mSavedPoints = getIntent().getParcelableArrayListExtra("savedpoints");
         isRedrawn = getIntent().getBooleanExtra("isredrawn", false);
+        mCenterCoordinates = getIntent().getStringExtra("center_coordinate");
+
 
         mapSetup();
         toolBarSetup();
@@ -180,7 +183,7 @@ public class EditFieldActivity extends AppCompatActivity implements
                 Log.d("EditFieldAc", marker.getPosition().toString());
 
                 //call the getIntance to method to instantiate the dialogFragment and set the arguments
-                EditLineAttributesDialogFragment dialogFragment = EditLineAttributesDialogFragment.getInstance(marker.getPosition().toString(), mPipeCoordinates);
+                EditLineAttributesDialogFragment dialogFragment = EditLineAttributesDialogFragment.getInstance(marker.getPosition().toString(), mPipeCoordinates, mCenterCoordinates);
 
                 Log.d("send arguments", marker.getPosition().toString());
 

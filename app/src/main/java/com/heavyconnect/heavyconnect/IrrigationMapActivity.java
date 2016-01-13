@@ -518,6 +518,7 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
                 bundle.putParcelableArrayList("arraypoints", mArrayPoints);
                 bundle.putParcelableArrayList("savedpoints", mSavedArrayPoints);
                 bundle.putBoolean("isredrawn", isRedrawn);
+                bundle.putString("center_coordinate", dbCenterCoordinate);
                 Intent intent = new Intent(IrrigationMapActivity.this, EditFieldActivity.class);
                 intent.putExtras(bundle);
                 startActivity(intent);

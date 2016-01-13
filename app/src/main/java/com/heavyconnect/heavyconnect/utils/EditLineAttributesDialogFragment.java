@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.heavyconnect.heavyconnect.R;
+import com.heavyconnect.heavyconnect.entities.PipeModel;
 
 /*
 * This class implements a dialogFragment, that edits attributes for each pipe line
@@ -29,13 +30,13 @@ public class EditLineAttributesDialogFragment extends DialogFragment implements 
     private EditText mEditLength;
     private EditText mEditDepth;
     private String mPipeCoordinates;
+    private String mCenterCoordinate;
     private String coordinate;
     private static final String COORD_KEY = "coordi";
     private static final String PIPE_COORDINATES = "pipe_coordinates";
+    private static final String CENTER_COORDINATE = "center_coordinate";
     Context mContext;
-
-
-
+    DataBaseHelper dataBaseHelper;
 
     public EditLineAttributesDialogFragment(){
         mContext = getActivity();
@@ -50,6 +51,8 @@ public class EditLineAttributesDialogFragment extends DialogFragment implements 
         //retrieves information from bundle arguments
         coordinate = getArguments().getString(COORD_KEY);
         mPipeCoordinates = getArguments().getString(PIPE_COORDINATES);
+        mCenterCoordinate = getArguments().getString(CENTER_COORDINATE);
+
         Log.d("EditLIneAttributes", "" + mPipeCoordinates);
 
     }
@@ -57,6 +60,8 @@ public class EditLineAttributesDialogFragment extends DialogFragment implements 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
+        // Instantiate database to store pipeModel
+        dataBaseHelper = new DataBaseHelper(getActivity());
 
         //creates a builder for an dialog fragment
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -84,6 +89,9 @@ public class EditLineAttributesDialogFragment extends DialogFragment implements 
                 String depth = mEditDepth.getText().toString();
                 Log.d("editLineAttriDEPTH", depth);
 
+                PipeModel pipeModel = new PipeModel(length, depth, row, mPipeCoordinates, mCenterCoordinate);
+                dataBaseHelper.put(pipeModel);
+
             }
         });
 
@@ -109,7 +117,7 @@ public class EditLineAttributesDialogFragment extends DialogFragment implements 
         return false;
     }
 
-    public static EditLineAttributesDialogFragment getInstance(String coordinate, String pipeCoordinates){
+    public static EditLineAttributesDialogFragment getInstance(String coordinate, String pipeCoordinates, String centerCoordinates){
 
         //instantiates the dialogFragment
         EditLineAttributesDialogFragment dialogFragment = new EditLineAttributesDialogFragment();
@@ -119,6 +127,7 @@ public class EditLineAttributesDialogFragment extends DialogFragment implements 
 
         bundle.putString(COORD_KEY, coordinate);
         bundle.putString(PIPE_COORDINATES, pipeCoordinates);
+        bundle.putString(CENTER_COORDINATE, centerCoordinates);
 
         dialogFragment.setArguments(bundle);
 
