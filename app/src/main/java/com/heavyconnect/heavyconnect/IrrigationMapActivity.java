@@ -115,8 +115,11 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_irrigation_map);
+        mDatabaseHelper = new DataBaseHelper(this);
 
         mIrrigationDbHelper = new IrrigationDbHelper(this);
+        mDatabaseHelper.getAllFields();
+        mDatabaseHelper.getAllPipes();
 
         if(!StorageUtils.getIsLoggedIn(this) || (mManager = StorageUtils.getUserData(this)) == null){
             startActivity(new Intent(this, LoginActivity.class));
@@ -255,7 +258,6 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.search_menu, menu);
-        mDatabaseHelper = new DataBaseHelper(this);
 
         MenuItem searchItem = menu.findItem(R.id.action_search);
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);

@@ -11,6 +11,10 @@ import com.heavyconnect.heavyconnect.database.IrrigationDbHelper;
 import com.heavyconnect.heavyconnect.entities.FieldModel;
 import com.heavyconnect.heavyconnect.entities.PipeModel;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by anitagarcia on 11/21/15.
  */
@@ -29,7 +33,160 @@ public final class DataBaseHelper {
         mIrrigationDbHelper = new IrrigationDbHelper(context);
     }
 
+
     // Methods
+
+    public List<FieldModel> getAllFields(){
+        List<FieldModel> list = new ArrayList<FieldModel>();
+        FieldModel field = new FieldModel();
+
+        mIrrigationDatabase = mIrrigationDbHelper.getReadableDatabase();
+        // Iterate through database
+        // Define a projection that specifies which columns from the database
+        // you wil actually use after this query.
+        String[] projection = {
+                IrrigationContract.FieldEntry._ID,
+                IrrigationContract.FieldEntry.COLUMN_NAME_CENTER_COORDINATES,
+                IrrigationContract.FieldEntry.COLUMN_NAME_COORDINATES,
+                IrrigationContract.FieldEntry.COLUMN_NAME_FIELD_NAME,
+        };
+
+        String sortOrder =
+                IrrigationContract.FieldEntry.COLUMN_NAME_FIELD_NAME + " DESC";
+
+        Cursor cursor = mIrrigationDatabase.query(
+                IrrigationContract.FieldEntry.TABLE_NAME, // table to query
+                projection,                                    // columns returned
+                null,                                          // columns for WHERE clause
+                null,                                          // values for WHERE clause
+                null,                                          // row grouping
+                null,                                          // filter by group rows
+                sortOrder                                      // the sort order
+        );
+
+        // Query each field name in database
+        cursor.moveToFirst();
+        for(int i = 0; i < cursor.getCount(); i++) {
+            field = new FieldModel();
+            long itemId = cursor.getLong(
+                    cursor.getColumnIndexOrThrow(IrrigationContract.FieldEntry._ID)
+            );
+
+            String fieldName = cursor.getString(
+                    cursor.getColumnIndexOrThrow(IrrigationContract.FieldEntry.COLUMN_NAME_FIELD_NAME)
+            );
+            String centerCoordinate = cursor.getString(
+                    cursor.getColumnIndexOrThrow(IrrigationContract.FieldEntry.COLUMN_NAME_CENTER_COORDINATES)
+            );
+            String coordinates = cursor.getString(
+                    cursor.getColumnIndexOrThrow(IrrigationContract.FieldEntry.COLUMN_NAME_COORDINATES)
+            );
+            // Insert fieldName, centerCoordinate, and coordinate into FieldModel
+            if (fieldName != null) {
+                //TODO: Clean up coordinate string (extract alpha and special characters except commas and '-')
+                field.setFieldName(fieldName);
+                field.setCenterCoorfinates(centerCoordinate);
+                field.setCoordinates(coordinates);
+            }
+
+           // Populate field model
+            field.setCenterCoorfinates(centerCoordinate);
+            field.setFieldName(fieldName);
+            field.setCoordinates(coordinates);
+
+            // Add field model to list
+            list.add(field);
+
+            cursor.moveToNext();
+        }
+
+        for(FieldModel x : list)
+        {
+            Log.d("DATABASEHELPER", "Field Name" + x.getFieldName());
+            Log.d("DATABASEHELPER", "Field Center Coordinates" + x.getCenterCoorfinates());
+            Log.d("DATABASEHELPER", "Field Coordinates " + x.getCoordinates());
+        }
+        return list;
+
+    }
+    public List<PipeModel> getAllPipes(){
+        List<PipeModel> list = new ArrayList<PipeModel>();
+        PipeModel pipe = new PipeModel();
+        mIrrigationDatabase = mIrrigationDbHelper.getReadableDatabase();
+        // Iterate through database
+        // Define a projection that specifies which columns from the database
+        // you wil actually use after this query.
+        String[] projection = {
+                IrrigationContract.PipelineInfoEntry._ID,
+                IrrigationContract.PipelineInfoEntry.COLUMN_NAME_DEPTH,
+                IrrigationContract.PipelineInfoEntry.COLUMN_NAME_LENGTH,
+                IrrigationContract.PipelineInfoEntry.COLUMN_NAME_ROW,
+                IrrigationContract.PipelineInfoEntry.COLUMN_NAME_FIELD_CENTER_COORDINATES,
+                IrrigationContract.PipelineInfoEntry.COLUMN_NAME_COORDINATES,
+        };
+
+        String sortOrder =
+                IrrigationContract.PipelineInfoEntry.COLUMN_NAME_FIELD_CENTER_COORDINATES + " DESC";
+
+        Cursor cursor = mIrrigationDatabase.query(
+                IrrigationContract.PipelineInfoEntry.TABLE_NAME, // table to query
+                projection,                                    // columns returned
+                null,                                          // columns for WHERE clause
+                null,                                          // values for WHERE clause
+                null,                                          // row grouping
+                null,                                          // filter by group rows
+                sortOrder                                      // the sort order
+        );
+
+        // Query each field name in database
+        cursor.moveToFirst();
+        for(int i = 0; i < cursor.getCount(); i++) {
+            pipe = new PipeModel();
+            // length, depth, row, coordinates, field id
+            long itemId = cursor.getLong(
+                    cursor.getColumnIndexOrThrow(IrrigationContract.PipelineInfoEntry._ID)
+            );
+
+            String centerCoordinates = cursor.getString(
+                    cursor.getColumnIndexOrThrow(IrrigationContract.PipelineInfoEntry.COLUMN_NAME_FIELD_CENTER_COORDINATES)
+            );
+
+            String coordinates = cursor.getString(
+                    cursor.getColumnIndexOrThrow(IrrigationContract.PipelineInfoEntry.COLUMN_NAME_COORDINATES)
+            );
+
+            String depth = cursor.getString(
+                    cursor.getColumnIndexOrThrow(IrrigationContract.PipelineInfoEntry.COLUMN_NAME_DEPTH)
+            );
+            String length = cursor.getString(
+                    cursor.getColumnIndexOrThrow(IrrigationContract.PipelineInfoEntry.COLUMN_NAME_LENGTH)
+            );
+            String row = cursor.getString(
+                    cursor.getColumnIndexOrThrow(IrrigationContract.PipelineInfoEntry.COLUMN_NAME_ROW)
+            );
+
+            // Populate pipe model
+            pipe.setFieldId(centerCoordinates);
+            pipe.setCoordinates(coordinates);
+            pipe.setDepth(depth);
+            pipe.setLength(length);
+            pipe.setRow(row);
+
+            // Insert pipe model into list
+            list.add(pipe);
+
+            cursor.moveToNext();
+        }
+        for(PipeModel x : list)
+        {
+            Log.d("DATABASEHELPER", "Pipe Length" + x.getLength());
+            Log.d("DATABASEHELPER", "Pipe Depth" + x.getDepth());
+            Log.d("DATABASEHELPER", "Pipe Row " + x.getRow());
+            Log.d("DATABASEHELPER", "Pipe Coordinates " + x.getCoordinates());
+            Log.d("DATABASEHELPER", "Pipe Center Coordinates" + x.getFieldId());
+        }
+        return list;
+    }
     public void put(FieldModel fieldModel)
     {
         mIrrigationDatabase = mIrrigationDbHelper.getWritableDatabase();

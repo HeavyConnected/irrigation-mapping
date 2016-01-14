@@ -50,8 +50,8 @@ public class IrrigationDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + IrrigationContract.FieldEntry.TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + IrrigationContract.PipelineInfoEntry.TABLE_NAME);
+       // db.execSQL("DROP TABLE IF EXISTS " + IrrigationContract.FieldEntry.TABLE_NAME);
+        //db.execSQL("DROP TABLE IF EXISTS " + IrrigationContract.PipelineInfoEntry.TABLE_NAME);
         onCreate(db);
     }
 }
