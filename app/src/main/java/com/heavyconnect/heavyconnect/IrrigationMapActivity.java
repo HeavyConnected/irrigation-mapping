@@ -25,7 +25,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -97,8 +96,8 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
     private static String mFieldName;
     // These values have been converted from ints
     // over to strings in order to be stored into db.
-    String dbCenterCoordinate;
-    String dbCoordinates;
+    String dbCenterCoordinate = "";
+    String dbCoordinates = "";
 
 
     // Database models
@@ -593,7 +592,7 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
             cursor.moveToNext();
         }
         // Field List Adapter
-        FieldListAdapter fieldListAdapter = new FieldListAdapter(this, mDrawerFieldInfo);
+        final FieldListAdapter fieldListAdapter = new FieldListAdapter(this, mDrawerFieldInfo);
         // Populate list view from adapter
         // Set Adapter for the list view
         mDrawerList.setAdapter(fieldListAdapter);
@@ -601,13 +600,20 @@ public class IrrigationMapActivity extends AppCompatActivity implements TaskCall
         mDrawerList.setOnItemClickListener(new ListView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(getApplicationContext(), EditFieldActivity.class);
-                // TODO: Convert coordinates to LatLng, store in array list, and pass
-                // TODO: array list as Extra.
-                intent.putExtra("center_coordinates", mFieldModel.getCenterCoorfinates());
-                intent.putExtra("coordinates", mFieldModel.getCoordinates());
-                startActivity(intent);
-                //Toast.makeText(getApplicationContext(), "Hello HappyTown", Toast.LENGTH_SHORT).show();
+                mGoogleMap.clear();
+                mArrayPoints.clear();
+                String[] latlng = mDrawerFieldInfo.get(i).getCoordinates().split(",");
+                Toast.makeText(getApplicationContext(), mDrawerFieldInfo.get(i).getCoordinates(), Toast.LENGTH_LONG).show();
+
+                for(int j = 0; j < latlng.length - 1; j += 2)
+                {
+                    Log.i("IrrigationMapActivity", "lat: " + latlng[j]);
+                    Log.i("IrrigationMapActivity", "long: " + latlng[j + 1]);
+                    LatLng location = new LatLng(Double.parseDouble(latlng[j]), Double.parseDouble(latlng[j + 1]));
+                    mArrayPoints.add(location);
+                }
+
+                redrawPolygonPoints(mArrayPoints);
             }
         });
     }

@@ -65,12 +65,15 @@
             android:foregroundGravity="left">
         </ListView>
 
+
+
     </android.support.v4.widget.DrawerLayout>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/edit_screen_button"
+        android:layout_alignParentRight="true"
         android:visibility="gone"
         android:text="Edit"/>
 

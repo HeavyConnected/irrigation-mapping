@@ -7,8 +7,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-
-import com.google.android.gms.maps.CameraUpdateFactory;
+import android.view.View;
+import android.widget.Button;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -18,18 +18,17 @@ import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.heavyconnect.heavyconnect.utils.EditLineAttributesDialogFragment;
-
 import java.lang.Math;
-
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.ListIterator;
 
 
 /**
  * Created by naelinaquino on 10/3/15.
  */
 public class EditFieldActivity extends AppCompatActivity implements
-        GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnMarkerClickListener{
+        GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnMarkerClickListener {
     private GoogleMap mFieldMap;
     private SupportMapFragment mFieldMapFragment;
     private ArrayList<LatLng> mArrayPoints = null; // Points that plot out field
@@ -37,6 +36,7 @@ public class EditFieldActivity extends AppCompatActivity implements
     private PolylineOptions mPolylineOptions; // Saves the points for one line segment
     private Boolean mMarkerClicked = false; // Determines when to close the line segment
     private ArrayList<Polyline> mPolylines; // Save all the line segments in this ArrayList
+    private ArrayList<Marker> mMarkers; // Saves all markers in this ArrayList
     private boolean isRedrawn;
     private ArrayList<LatLng> mSavedPoints;
     private HashMap<String, String[]> mHashMap = new HashMap<String, String[]>(); // Saves all the attributes for each line
@@ -45,6 +45,12 @@ public class EditFieldActivity extends AppCompatActivity implements
     private String mCenterCoordinates = new String();
 
 
+    // Toolbar buttons
+    private Button mDoneButton;
+    private Button mDeleteButton;
+    private Button mCancelButton;
+    private boolean mDeleteFlag = false;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,12 +58,45 @@ public class EditFieldActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_edit_field);
 
         mArrayPoints = getIntent().getParcelableArrayListExtra("arraypoints");
+        Log.v("EditFieldActivity", mArrayPoints.toString());
         mSavedPoints = getIntent().getParcelableArrayListExtra("savedpoints");
         isRedrawn = getIntent().getBooleanExtra("isredrawn", false);
         mCenterCoordinates = getIntent().getStringExtra("center_coordinate");
 
 
         mapSetup();
+        toolBarSetup();
+    }
+
+    public void toolBarSetup() {
+        mDoneButton = (Button) findViewById(R.id.button_done);
+        mDoneButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                prepForDatabase();
+            }
+        });
+
+        mDeleteButton = (Button) findViewById(R.id.button_delete);
+        mDeleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mDeleteFlag = true;
+                mDeleteButton.setVisibility(View.GONE);
+                mCancelButton.setVisibility(View.VISIBLE);
+            }
+        });
+
+        mCancelButton = (Button) findViewById(R.id.button_cancel);
+        mCancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mDeleteFlag = false;
+
+                mCancelButton.setVisibility(View.GONE);
+                mDeleteButton.setVisibility(View.VISIBLE);
+            }
+        });
 
     }
 
@@ -66,6 +105,8 @@ public class EditFieldActivity extends AppCompatActivity implements
         mLinePoints = new ArrayList<LatLng>();
         // Instantiate ArrayList of Polyline objects
         mPolylines = new ArrayList<>();
+        // Instantiate ArrayList of Marker objects
+        mMarkers = new ArrayList<>();
 
         // Instantiate map fragment
         mFieldMapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -84,13 +125,10 @@ public class EditFieldActivity extends AppCompatActivity implements
         // Draw traced field on edit screen map
         PolygonOptions mPolygonOptions = new PolygonOptions();
         LatLng center;
-        if(isRedrawn)
-        {
+        if (isRedrawn) {
             mPolygonOptions.addAll(mSavedPoints);
             center = findCenter(mSavedPoints);
-        }
-        else
-        {
+        } else {
             mPolygonOptions.addAll(mArrayPoints);
             center = findCenter(mSavedPoints);
         }
@@ -107,8 +145,13 @@ public class EditFieldActivity extends AppCompatActivity implements
 
     @Override
     public void onMapClick(LatLng latLng) {
-        if(mMarkerClicked == false) {
-            mFieldMap.addMarker(new MarkerOptions().position(latLng));
+        if (mDeleteFlag)
+            return;
+
+        if (mMarkerClicked == false) {
+            // TODO: If they click on the "closing marker", do not add another marker
+            Marker tempMarker = mFieldMap.addMarker(new MarkerOptions().position(latLng));
+            mMarkers.add(tempMarker); // Add into our archive of markers
             mLinePoints.add(latLng);
         }
     }
@@ -122,21 +165,20 @@ public class EditFieldActivity extends AppCompatActivity implements
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        for(int i = 0; i < mPolylines.size(); i++) {
-            // If the marker that they clicked on already belongs to a line
+        // If user clicked the delete button, proceed to delete line
+        // associated with clicked marker
+        if (mDeleteFlag) {
+            marker.remove(); // Deletes marker user clicks on
+            deleteMarker(marker);
 
-            if (mPolylines.get(i).getPoints().contains(marker.getPosition())) {
-                Marker firstMarker = marker;
-                firstMarker.setPosition(mPolylines.get(i).getPoints().get(0));
-                showTextBox(firstMarker); // Show the text box and allow edit
-
-
-
-                //*************************************************************************
-                // setInfoWindow
-
-
-                    //polylines[i]
+        } else {
+            for (int i = 0; i < mPolylines.size(); i++) {
+                // If the marker that they clicked on already belongs to a line
+                if (mPolylines.get(i).getPoints().contains(marker.getPosition())) {
+                    Marker firstMarker = marker;
+                    firstMarker.setPosition(mPolylines.get(i).getPoints().get(0));
+                    showTextBox(firstMarker); // Show the text box and allow edit
+                }
 
                 Log.d("EditFieldAc", marker.getPosition().toString());
 
@@ -149,20 +191,20 @@ public class EditFieldActivity extends AppCompatActivity implements
                 Log.d("EditFieldActivity", "the Fragment is going to be created");
                 dialogFragment.show(getFragmentManager(), "EditAttributesDialog");
             }
-        }
 
-
-
-        if(!mLinePoints.isEmpty()) { // If they haven't closed a line and the line that they click on is the first
-            if (mLinePoints.get(0).equals(marker.getPosition())) {
-                countPolylinePoints(); // Create line and close it
-                addInfoBox(marker); // Create an info box for that line
-
-                // Reset attributes to allow drawing new lines
-                mLinePoints.clear();
-                mMarkerClicked = false;
+            if (!mLinePoints.isEmpty()) { // If they haven't closed a line and the line that they click on is the first
+                if (mLinePoints.get(0).equals(marker.getPosition())) {
+                    // TODO: Put this check mark after they enter attributes
+                    //marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.green_check));
+                    countPolylinePoints(); // Create line and close it
+                    addInfoBox(marker); // Create an info box for that line
+                    // Reset attributes to allow drawing new lines
+                    mLinePoints.clear();
+                    mMarkerClicked = false;
+                }
             }
         }
+
         return false;
     }
 
@@ -174,6 +216,9 @@ public class EditFieldActivity extends AppCompatActivity implements
         mPolylineOptions.color(Color.RED);
         mPolylines.add(mFieldMap.addPolyline(mPolylineOptions)); // Add a line to the map
 
+        for (int i = 0; i < mPolylines.size(); i++) {
+            Log.i("prepForDatabase", "i = " + i + " " + mPolylines.get(i).getPoints().toString());
+        }
         for(int i = 0; i < mLinePoints.size(); i++){
             Log.d("points in line", Double.toString(mLinePoints.get(i).latitude));
             mPipeCoordinates += Double.toString(mLinePoints.get(i).latitude) + ",";
@@ -185,9 +230,9 @@ public class EditFieldActivity extends AppCompatActivity implements
 
     }
 
-    public LatLng findCenter(ArrayList<LatLng> points){
+    public LatLng findCenter(ArrayList<LatLng> points) {
         double avgX = 0, avgY = 0, avgZ = 0;
-        for(int i = 0; i < points.size(); i++){
+        for (int i = 0; i < points.size(); i++) {
             double lat, lon;
             lat = points.get(i).latitude;
             lon = points.get(i).longitude;
@@ -232,10 +277,54 @@ public class EditFieldActivity extends AppCompatActivity implements
         String[] lineAttributes = mHashMap.get(marker.getPosition().toString());
 
         Marker tempMarker = mFieldMap.addMarker(new MarkerOptions()
-        .position(marker.getPosition())
-        .title("This Line")
-        .snippet("Row #: " + lineAttributes[0] + "Length: " + lineAttributes[1] + "Depth: " + lineAttributes[2]));
+                .position(marker.getPosition())
+                .title("This Line")
+                .snippet("Row #: " + lineAttributes[0] + "Length: " + lineAttributes[1] + "Depth: " + lineAttributes[2]));
         tempMarker.showInfoWindow();
     }
 
+    public void prepForDatabase() {
+        // TODO: Check if mPolylines is null
+
+        // TODO: DATABASE PEOPLE: save these string representations into the database
+        Log.i("prepForDatabase", mArrayPoints.toString());
+
+        for (int i = 0; i < mPolylines.size(); i++) {
+            Log.i("prepForDatabase", "i = " + i + " " + mPolylines.get(i).getPoints().toString());
+        }
+
+    }
+
+    public void deleteMarker(Marker marker) {
+        Log.d("deleteMarker", "mDeleteFlag == true");
+
+        for (int i = 0; i < mPolylines.size(); i++) {
+            if (mPolylines.get(i).getPoints().contains(marker.getPosition())) { // If the marker they clicked is in a line
+                // Delete all markers associated with this line
+                ListIterator<LatLng> iterator = mPolylines.get(i).getPoints().listIterator();
+
+                int j = 0;
+                while(j < mPolylines.get(i).getPoints().size()) {
+                    int k = 0;
+                    int markerSize = mMarkers.size();
+                    while (k < markerSize) {
+                        if (mMarkers.get(k).getPosition().equals(mPolylines.get(i).getPoints().get(j))) {
+                            Log.d("deleteMarker", "mMarkers size: " + mMarkers.size() + " j= " + j + "myMarkers.size= " + markerSize);
+                            mMarkers.get(k).remove();
+                            markerSize--;
+                        } else {
+                            k++;
+                        }
+                    }
+                    j++;
+                }
+                // Removes points from Polyline
+                mPolylines.get(i).getPoints().clear();
+                // Delete polyline associated with user marker click
+                mPolylines.get(i).remove();
+                Log.d("deleteMarker", " " + mPolylines.get(i).getPoints().isEmpty());
+            }
+        }
+
+    }
 }
